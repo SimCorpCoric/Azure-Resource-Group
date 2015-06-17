@@ -1,0 +1,89 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "allowedValues": ["East US", "West US", "West Europe", "East Asia", "South East Asia"],
+      "metadata": {
+        "description": "Location to deploy to"
+      }
+    },
+
+    "prefix": {
+      "type": "string",
+      "metadata": {
+        "description": "Characters used for the prefix of each Azure object."
+      }
+    },
+
+    "clientID": {
+      "type": "int",
+      "metadata": {
+        "description": "Unique ClientID for the system."
+      }
+    }
+  },
+
+  "variables": {
+      "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
+      "concatonatedString": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+      "virtualNetworkName": "[concat('vn', variables('concatonatedString'))]",
+      "storageAccountName": "[concat('sa', variables('concatonatedString'))]",
+      "storageAccountType": "Standard_LRS",
+      "addressPrefix":"[concat('10.', parameters('clientID'), '.0.0/16')]",
+      "subnet2Name": "backend",
+      "subnet2Prefix" : "[concat('10.', parameters('clientID'), '.2.0/24')]",
+      "subnet3Name": "user",
+      "subnet3Prefix" : "[concat('10.', parameters('clientID'), '.3.0/24')]",
+      "subnet4Name": "frontend",
+      "subnet4Prefix" : "[concat('10.', parameters('clientID'), '.4.0/24')]"
+  },
+
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('StorageAccountName')]",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "[variables('storageAccountType')]"
+      }
+	},
+
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('virtualNetworkName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('addressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('subnet2Name')]",
+            "properties" : {
+                "addressPrefix": "[variables('subnet2Prefix')]"
+            }
+		      },
+		      {
+            "name": "[variables('subnet3Name')]",
+            "properties" : {
+                "addressPrefix": "[variables('subnet3Prefix')]"
+            }
+		      },
+		      {
+            "name": "[variables('subnet4Name')]",
+            "properties" : {
+                "addressPrefix": "[variables('subnet4Prefix')]"
+            }
+          }
+        ]
+      }
+    }
+
+  ]
+}

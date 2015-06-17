@@ -1,0 +1,17 @@
+{
+    "location": {
+        "value": "West Europe"
+    },
+    "prefix": {
+        "value": "cor"
+    },
+    "ClientID": {
+        "value": "cor"
+    },
+    "addressPrefix": {
+        "value": "10.0.0.0/16"
+    },
+    "subnetPrefix": {
+        "value": "10.0.0.0/24"
+    }
+}
