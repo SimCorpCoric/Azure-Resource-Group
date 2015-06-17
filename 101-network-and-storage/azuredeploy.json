@@ -4,6 +4,7 @@
   "parameters": {
     "location": {
       "type": "string",
+      "defaultValue": "West Europe",
       "allowedValues": ["East US", "West US", "West Europe", "East Asia", "South East Asia"],
       "metadata": {
         "description": "Location to deploy to"
@@ -12,6 +13,7 @@
 
     "prefix": {
       "type": "string",
+      "defaultValue": "cor",
       "metadata": {
         "description": "Characters used for the prefix of each Azure object."
       }
