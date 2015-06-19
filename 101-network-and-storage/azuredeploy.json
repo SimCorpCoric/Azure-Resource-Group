@@ -204,7 +204,7 @@
           "vmSize": "[parameters('droneVMSize')]"
         },
         "osProfile": {
-          "computername": "[concat(variables('droneVMName'),[padLeft(copyindex(),2,'0')]",
+          "computername": "[concat(variables('droneVMName'),[padLeft(copyindex(),2,'0')])]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
