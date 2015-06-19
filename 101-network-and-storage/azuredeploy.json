@@ -86,6 +86,8 @@
       "addressPrefix":"[concat('10.', parameters('clientID'), '.0.0/16')]",
       "subnet2Name": "backend",
       "subnet2Prefix" : "[concat('10.', parameters('clientID'), '.2.0/24')]",
+      "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+      "subnet2Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet2Name'))]",
       "subnet3Name": "user",
       "subnet3Prefix" : "[concat('10.', parameters('clientID'), '.3.0/24')]",
       "subnet4Name": "frontend",
@@ -179,7 +181,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses',concat('dronePIP', copyindex()))]"
               },
               "subnet": {
-                "id": "[variables('subnet2Name')]"
+                "id": "[variables('subnet2Ref')]"
               }
             }
           }
