@@ -219,7 +219,6 @@
           },
           "osDisk": {
             "name": "[concat(variables('droneVMName'),copyindex(),'-osDisk')]",
-            "osType": "Windows",
             "caching": "ReadWrite",
             "createOption": "FromImage",
             "vhd": {
