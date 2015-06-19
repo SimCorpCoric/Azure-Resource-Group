@@ -166,7 +166,7 @@
         "count": "[parameters('numberOfDrones')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
         "[concat('Microsoft.Network/publicIPAddresses/', 'dronePIP', copyindex())]"
       ],
       "properties": {
