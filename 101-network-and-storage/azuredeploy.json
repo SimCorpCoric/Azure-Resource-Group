@@ -190,7 +190,7 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(variables('droneVMName'),[padLeft(copyindex(),2,'0')])]",
+      "name": "[concat(variables('droneVMName'),copyindex())]",
       "location": "[parameters('location')]",
       "copy": {
         "name": "droneVMLoop",
@@ -204,7 +204,7 @@
           "vmSize": "[parameters('droneVMSize')]"
         },
         "osProfile": {
-          "computername": "[concat(variables('droneVMName'),[padLeft(copyindex(),2,'0')])]",
+          "computername": "[concat(variables('droneVMName'),copyindex())]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -216,11 +216,11 @@
             "version":"latest"
           },
           "osDisk": {
-            "name": "[concat(variables('droneVMName'),[padLeft(copyindex(),2,'0')],'-osDisk',copyindex())]",
+            "name": "[concat(variables('droneVMName'),copyindex(),'-osDisk',copyindex())]",
             "osType": "Windows",
             "caching": "ReadWrite",
             "vhd": {
-              "uri": "[concat(variables('droneVhdContainer'),variables('droneVMName'),[padLeft(copyindex(),2,'0')],'-osDisk',copyindex(),'.vhd')]"
+              "uri": "[concat(variables('droneVhdContainer'),variables('droneVMName'),copyindex(),'-osDisk',copyindex(),'.vhd')]"
             }
           }
         },
