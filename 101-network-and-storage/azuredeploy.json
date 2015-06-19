@@ -218,9 +218,10 @@
             "version":"latest"
           },
           "osDisk": {
-            "name": "[concat(variables('droneVMName'),copyindex(),'-osDisk',copyindex())]",
+            "name": "[concat(variables('droneVMName'),copyindex(),'-osDisk')]",
             "osType": "Windows",
             "caching": "ReadWrite",
+            "createOption": "FromImage",
             "vhd": {
               "uri": "[concat(variables('droneVhdContainer'),variables('droneVMName'),copyindex(),'-osDisk','.vhd')]"
             }
@@ -229,7 +230,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('nic', copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('droneNic', copyindex()))]"
             }
           ]
         }
