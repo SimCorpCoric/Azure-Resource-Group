@@ -220,7 +220,7 @@
             "osType": "Windows",
             "caching": "ReadWrite",
             "vhd": {
-              "uri": "[concat(variables('droneVhdContainer'),variables('droneVMName'),copyindex(),'-osDisk',copyindex(),'.vhd')]"
+              "uri": "[concat(variables('droneVhdContainer'),variables('droneVMName'),copyindex(),'-osDisk','.vhd')]"
             }
           }
         },
