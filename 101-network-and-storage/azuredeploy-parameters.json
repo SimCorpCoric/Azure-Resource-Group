@@ -6,12 +6,21 @@
         "value": "cor"
     },
     "ClientID": {
-        "value": "cor"
+        "value": ""
     },
-    "addressPrefix": {
-        "value": "10.0.0.0/16"
+    "adminUsername": {
+        "value": "userName"
     },
-    "subnetPrefix": {
-        "value": "10.0.0.0/24"
+    "adminPassword": {
+        "value": "password"
+    },
+    "numberOfDrones": {
+        "value": "1"
+    },
+    "windowsOSVersion":{
+        "value": "2012-R2-Datacenter"
+    },
+    "droneVMSize":{
+        "value": "Basic_A0"
     }
 }
