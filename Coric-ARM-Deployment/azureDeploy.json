@@ -1,48 +1,187 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "North Europe",
+      "allowedValues": [ "East US", "West US", "North Europe", "West Europe", "East Asia", "South East Asia" ],
+      "metadata": {
+        "description": "Location to deploy to"
+      }
     },
+    "prefix": {
+      "type": "string",
+      "defaultValue": "cor",
+      "metadata": {
+        "description": "Characters used for the prefix of each Azure object."
+      }
+    },
+    "clientID": {
+      "type": "int",
+      "metadata": {
+        "description": "Unique ClientID for the system."
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Domain admin username"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
+    },
+    "windowsOSVersion": {
+      "type": "string",
+      "defaultValue": "2012-R2-Datacenter",
+      "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "Windows-Server-Technical-Preview"
+      ],
+      "metadata": {
+        "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_A0",
+      "allowedValues": [
+        "Standard_A0",
+        "Standard_A1",
+        "Standard_A2"
+      ],
+      "metadata": {
+        "description": "Size of the VM"
+      }
+    },
+    "domainControllerCount": {
+      "type": "int",
+      "defaultValue": 2,
+      "metadata": {
+        "description": "Number of Domain Controller VMs to deploy"
+      }
+    },
+
     "storageAccountName": {
       "type": "string",
       "metadata": {
-        "Description": "The name of the new storage account to create"
+        "description": "Name of storage account"
       }
     },
+
     "storageAccountType": {
-      "type": "string",
       "allowedValues": [
         "Standard_LRS",
         "Standard_GRS",
         "Standard_RAGRS",
         "Premium_LRS"
       ],
+      "defaultValue": "Standard_LRS",
       "metadata": {
         "Description": "The type of the Storage Account created"
       },
-      "defaultValue": "Standard_LRS"
+      "type": "string"
     },
-    "storageAccountExistingRG" : {
-      "type" : "string"
+
+    "resourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Resource Group of the Existing VM."
+      },
+      "defaultValue": ""
+    },
+    "existingIPRGName": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "publicIPNewOrExisting": {
+      "type": "string",
+      "defaultValue": "new",
+      "allowedValues": [
+        "new",
+        "existing"
+      ],
+      "metadata": {
+        "Description": "Indicates whether the public IP is new or existing"
+      }
+    },
+    "baseUrl": {
+      "type": "string",
+      "metadata": {
+        "artifactsBaseUrl": ""
+      },
+      "defaultValue": "https://raw.githubusercontent.com/AndyHerb/Azure-Resource-Group/master/Coric-ARM-Deployment"
     }
   },
+
+  "variables": {
+    "addressPrefix": "10.0.0.0/16",
+    "concatonatedString": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+    "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
+    "storageAccountName": "[concat('sa', variables('concatonatedString'))]",
+    "storageAccountSetupURL": "[concat(parameters('baseUrl'),'/storageAccount-','storageaccount-new.json')]",
+    "vmStorageAccountContainerName": "vhds",
+    "vnetName": "[concat('vn', variables('concatonatedString'))]",
+    "vnetSetupURL": "[concat(parameters('baseUrl'),'/storageAccount-','virtualnetwork.json')]"
+  },
+
   "resources": [
     {
-			"type": "Microsoft.Storage/storageAccounts",
-			"name": "[parameters('storageAccountName')]",
-			"apiVersion": "2015-05-01-preview",
-			"location": "[parameters('location')]",
-			"properties": {
-				"accountType": "[parameters('storageAccountType')]"
+			"name": "storageAcountSetup",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion" : "2015-01-01",
+			"properties" : {
+				"mode": "Incremental",
+				"templateLink" : {
+					"uri" : "[variables('storageAccountSetupURL')]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters" : {
+					"location": {
+						"value": "[parameters('location')]"
+					},
+					"storageAccountType": {
+						"value": "[parameters('storageAccountType')]"
+					},
+					"storageAccountName" : {
+						"value": "[parameters('storageAccountName')]"
+					},
+					"storageAccountExistingRG": {
+						"value": "[parameters('resourceGroup')]"
+					}
+				}
 			}
-		}
-  ],
-  "outputs": {
-    "storageAccountId": {
-      "value": "[resourceId('Microsoft.Storage/StorageAccounts',parameters('storageAccountName'))]",
-      "type": "string"
+		},
+
+    {
+      "name": "virtualNetworkSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('storageAccountSetupURL')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "clientID": {
+            "value": "[parameters('clientID')]"
+          },
+          "vnetName": {
+            "value": "[variables('vnetName')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }
+        }
+      }
     }
-  }
+
+  ]
 }

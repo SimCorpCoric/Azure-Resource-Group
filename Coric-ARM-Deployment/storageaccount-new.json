@@ -1,44 +1,53 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
+
   "parameters": {
     "location": {
+      "metadata": {
+        "Description": "Location to deploy to"
+      },
+      "type": "string"
+    },
+    "resourceGroup": {
+      "metadata": {
+        "Description": "The name of an existing Resource Group into which the Storage Account will be placed"
+      },
       "type": "string"
     },
     "storageAccountName": {
-      "type": "string",
       "metadata": {
-        "Description": "The name of the new storage account to create"
-      }
+        "Description": "The name of the new Storage Account to create"
+      },
+      "type": "string"
     },
     "storageAccountType": {
-      "type": "string",
       "allowedValues": [
         "Standard_LRS",
         "Standard_GRS",
         "Standard_RAGRS",
         "Premium_LRS"
       ],
+      "defaultValue": "Standard_LRS",
       "metadata": {
         "Description": "The type of the Storage Account created"
       },
-      "defaultValue": "Standard_LRS"
-    },
-    "storageAccountExistingRG" : {
-      "type" : "string"
+      "type": "string"
     }
   },
+
   "resources": [
     {
-			"type": "Microsoft.Storage/storageAccounts",
-			"name": "[parameters('storageAccountName')]",
-			"apiVersion": "2015-05-01-preview",
-			"location": "[parameters('location')]",
-			"properties": {
-				"accountType": "[parameters('storageAccountType')]"
-			}
-		}
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[parameters('storageAccountName')]",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "[parameters('storageAccountType')]"
+      }
+    }
   ],
+
   "outputs": {
     "storageAccountId": {
       "value": "[resourceId('Microsoft.Storage/StorageAccounts',parameters('storageAccountName'))]",
