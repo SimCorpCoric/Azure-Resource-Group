@@ -1,6 +1,6 @@
 # Deploy a Virtual Network and Storage Account
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAndyHerb%2FAzure-Resource-Group%2Fmaster%2FCoric-Arm-Deployment%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAndyHerb%2FAzure-Resource-Group%2Fmaster%2FCoric-ARM-Deployment%2FazureDeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 

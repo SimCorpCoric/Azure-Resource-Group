@@ -67,14 +67,6 @@
         "description": "Number of Domain Controller VMs to deploy"
       }
     },
-
-    "storageAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of storage account"
-      }
-    },
-
     "storageAccountType": {
       "allowedValues": [
         "Standard_LRS",
@@ -87,48 +79,20 @@
         "Description": "The type of the Storage Account created"
       },
       "type": "string"
-    },
-
-    "resourceGroup": {
-      "type": "string",
-      "metadata": {
-        "description": "Resource Group of the Existing VM."
-      },
-      "defaultValue": ""
-    },
-    "existingIPRGName": {
-      "type": "string",
-      "defaultValue": ""
-    },
-    "publicIPNewOrExisting": {
-      "type": "string",
-      "defaultValue": "new",
-      "allowedValues": [
-        "new",
-        "existing"
-      ],
-      "metadata": {
-        "Description": "Indicates whether the public IP is new or existing"
-      }
-    },
-    "baseUrl": {
-      "type": "string",
-      "metadata": {
-        "artifactsBaseUrl": ""
-      },
-      "defaultValue": "https://raw.githubusercontent.com/AndyHerb/Azure-Resource-Group/master/Coric-ARM-Deployment"
     }
   },
 
   "variables": {
     "addressPrefix": "10.0.0.0/16",
+    "baseurl": "https://raw.githubusercontent.com/AndyHerb/Azure-Resource-Group/master/Coric-ARM-Deployment",
     "concatonatedString": "[concat(parameters('prefix'), variables('paddedClientID'))]",
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
+    "resourceGroup": "[concat('rg',variables('concatonatedString'))]",
     "storageAccountName": "[concat('sa', variables('concatonatedString'))]",
-    "storageAccountSetupURL": "[concat(parameters('baseUrl'),'/storageAccount-','storageaccount-new.json')]",
+    "storageAccountSetupURL": "[concat(variables('baseUrl'),'/storageAccount-','storageaccount-new.json')]",
     "vmStorageAccountContainerName": "vhds",
     "vnetName": "[concat('vn', variables('concatonatedString'))]",
-    "vnetSetupURL": "[concat(parameters('baseUrl'),'/storageAccount-','virtualnetwork.json')]"
+    "vnetSetupURL": "[concat(variables('baseUrl'),'/storageAccount-','virtualnetwork.json')]"
   },
 
   "resources": [
@@ -150,10 +114,10 @@
 						"value": "[parameters('storageAccountType')]"
 					},
 					"storageAccountName" : {
-						"value": "[parameters('storageAccountName')]"
+						"value": "[variables('storageAccountName')]"
 					},
-					"storageAccountExistingRG": {
-						"value": "[parameters('resourceGroup')]"
+					"resourceGroup": {
+						"value": "[variables('resourceGroup')]"
 					}
 				}
 			}
