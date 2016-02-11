@@ -20,9 +20,6 @@
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion" : "[parameters('globals').apiVersionDeployments]",
       "properties": {
-        "globals": {
-          "value": "[parameters('globals')]"
-        },
         "mode": "Incremental",
         "templateLink": {
           "uri": "[parameters('globals').storageAccountTemplateLink]",
