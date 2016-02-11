@@ -4,7 +4,7 @@
 
   "parameters": {
     "apiVersion": {
-      "type": "object",
+      "type": "string",
       "metadata": {
         "Description": "Global complex object passed to nested templates"
       }
