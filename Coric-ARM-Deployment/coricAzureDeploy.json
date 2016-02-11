@@ -68,7 +68,7 @@
       "apiVersionDeployments": "2015-01-01",
       "apiVersionNetwork": "2015-06-15",
       "apiVersionStorage": "2015-06-15",
-      "baseName": "[parameters('baseName')",
+      "baseName": "[variables('baseName')]",
       "clientID": "[parameters('clientID')]",
       "keyVaultSetupURL": "[uri(deployment().properties.templateLink.uri, 'nested/keyVault.json')]",
       "networkSettings": {
