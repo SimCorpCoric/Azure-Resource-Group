@@ -23,12 +23,6 @@
         "description": "Domain admin username"
       }
     },
-    "adminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Domain admin password"
-      }
-    },
     "secondIPOctet": {
       "type": "int",
       "defaultValue": 12,
