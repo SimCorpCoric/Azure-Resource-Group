@@ -92,7 +92,7 @@
 
   "resources": [
     {
-      "name": "virtualNetworkSetup",
+      "name": "sharedResourcesSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('globals').apiVersionDeployments]",
       "properties": {
