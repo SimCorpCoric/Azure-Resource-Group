@@ -28,9 +28,9 @@
         },
         "subnets": [
           {
-            "name": "[parameters('globals').networkSettings.subnet2.name]",
+            "name": "backend",
             "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.subnet2.addressPrefix]"
+              "addressPrefix": "10.12.56.0/24"
             }
           }
         ]
