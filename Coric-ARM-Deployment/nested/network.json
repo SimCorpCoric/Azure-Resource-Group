@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "globals": {
+      "type": "object",
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      }
+    }
+  },
+
+  "variables": {
+  },
+
+  "resources": [
+    {
+      "apiVersion": "[parameters('globals').apiVersionNetwork]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('globals').networkSettings.name]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('globals').networkSettings.addressPrefix]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('globals').networkSettings.subnet2.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet2.addressPrefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet3.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet3.addressPrefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet4.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet4.addressPrefix]"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

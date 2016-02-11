@@ -16,9 +16,9 @@
 
   "resources": [
     {
-			"name": "adminStorage",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion" : "[parameters('globals').apiVersionDeployments]",
+      "name": "adminStorage",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -29,17 +29,28 @@
           "globals": {
             "value": "[parameters('globals')]"
           },
-          "Type": {
-            "value": "[parameters('globals').storageType]"
-          },
           "Name": {
             "value": "[concat('sa', parameters('globals').baseName, 'admin')]"
-          },
-          "resourceGroup": {
-            "value": "rgAdmin"
           }
         }
       }
-		}
+    },
+    {
+      "name": "networkSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').networkTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          }
+        }
+      }
+    }
   ]
 }

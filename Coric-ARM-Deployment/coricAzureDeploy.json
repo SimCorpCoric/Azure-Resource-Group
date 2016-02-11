@@ -65,19 +65,39 @@
     "globals": {
       "adminUsername": "[parameters('adminUsername')]",
       "apiVersionDeployments": "2015-01-01",
-      "apiVersionStorage": "2015-06-15",
       "apiVersionNetwork": "2015-06-15",
+      "apiVersionStorage": "2015-06-15",
       "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
       "clientID": "[parameters('clientID')]",
       "keyVaultSetupURL": "[uri(deployment().properties.templateLink.uri, 'nested/keyVault.json')]",
+      "networkSettings": {
+        "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
+        "subnet1": {
+          "name": "gateway",
+          "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 0)) ,'.0/24')]"
+        },
+        "subnet2": {
+          "name": "backend",
+          "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.0/24')]"
+        },
+        "subnet3": {
+          "name": "user",
+          "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 2)) ,'.0/24')]"
+        },
+        "subnet4": {
+          "name": "frontend",
+          "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 3)) ,'.0/24')]"
+        },
+        "name": "[concat('vn', variables('globals').baseName)]"
+      },
+      "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
       "secondIPOctet": "[parameters('secondIPOctet')]",
+      "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
+      "storageType": "Standard_RAGRS",
       "subnet1": {
         "name": "gateway",
         "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'),4), 0)) ,'.0/24')]"
       },
-      "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
-      "storageType": "Standard_RAGRS",
-      "vnetTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
       "vmTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]"
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
