@@ -23,7 +23,7 @@
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[parameters('globals').networkSettings.addressPrefix]"
+              "[parameters('globals').networkSettings.addressPrefix]"
           ]
         },
         "subnets": [
@@ -31,18 +31,6 @@
             "name": "[parameters('globals').networkSettings.subnet2.name]",
             "properties": {
               "addressPrefix": "[parameters('globals').networkSettings.subnet2.addressPrefix]"
-            }
-          },
-          {
-            "name": "[parameters('globals').networkSettings.subnet3.name]",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.subnet3.addressPrefix]"
-            }
-          },
-          {
-            "name": "[parameters('globals').networkSettings.subnet4.name]",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.subnet4.addressPrefix]"
             }
           }
         ]
