@@ -20,8 +20,8 @@
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion" : "[parameters('globals').apiVersionDeployments]",
       "properties": {
-        "apiVersion": {
-          "value": "[parameters('globals').apiVersionStorage]"
+        "globals": {
+          "value": "[parameters('globals')]"
         },
         "mode": "Incremental",
         "templateLink": {

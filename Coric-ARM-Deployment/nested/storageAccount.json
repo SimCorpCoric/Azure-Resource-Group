@@ -3,8 +3,8 @@
   "contentVersion": "1.0.0.0",
 
   "parameters": {
-    "apiVersion": {
-      "type": "string",
+    "globals": {
+      "type": "object",
       "metadata": {
         "Description": "Global complex object passed to nested templates"
       }
@@ -46,7 +46,7 @@
 
   "resources": [
     {
-      "apiVersion": "[parameters('apiVersion')]",
+      "apiVersion": "[parameters('globals').apiVersionStorage]",
       "location": "[resourceGroup().location]",
       "name": "[parameters('name')]",
       "properties": {
