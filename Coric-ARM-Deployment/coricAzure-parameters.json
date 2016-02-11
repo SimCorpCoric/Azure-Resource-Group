@@ -1,0 +1,14 @@
+{
+  "prefix": {
+    "value": "cor"
+  },
+  "ClientID": {
+    "value": 14
+  },
+  "adminUsername": {
+    "value": "AdminUser"
+  },
+  "secondIPOctet": {
+    "value": 12
+  }
+}

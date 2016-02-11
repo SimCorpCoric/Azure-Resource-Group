@@ -1,0 +1,112 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "prefix": {
+      "type": "string",
+      "defaultValue": "cor",
+      "metadata": {
+        "description": "Characters used for the prefix of each Azure object."
+      }
+    },
+    "clientID": {
+      "defaultValue": "1",
+      "metadata": {
+        "description": "Unique ClientID for the system."
+      },
+      "type": "int"
+    },
+    "adminUsername": {
+      "type": "string",
+      "defaultValue": "AdminUser",
+      "metadata": {
+        "description": "Domain admin username"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
+    },
+    "secondIPOctet": {
+      "type": "int",
+      "defaultValue": 12,
+      "minValue": 12,
+      "maxValue": 12,
+      "allowedValues": [ 12 ],
+      "metadata": {
+        "description": "The second IP octet used to denote the local network address space.  This is a value reserved and provided by SimCorp Group IT to esure VPN connectivity into the SimCorp offices."
+      }
+    },
+    "windowsOSVersion": {
+      "type": "string",
+      "defaultValue": "2012-R2-Datacenter",
+      "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "Windows-Server-Technical-Preview"
+      ],
+      "metadata": {
+        "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+      }
+    },
+    "storageAccountType": {
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ],
+      "defaultValue": "Standard_RAGRS",
+      "metadata": {
+        "Description": "The type of the Storage Account created"
+      },
+      "type": "string"
+    }
+  },
+
+  "variables": {
+    "globals": {
+      "adminUsername": "[parameters('adminUsername')]",
+      "apiVersionDeployments": "2015-01-01",
+      "apiVersionStorage": "2015-06-15",
+      "apiVersionNetwork": "2015-06-15",
+      "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+      "clientID": "[parameters('clientID')]",
+      "keyVaultSetupURL": "[uri(deployment().properties.templateLink.uri, 'nested/keyVault.json')]",
+      "secondIPOctet": "[parameters('secondIPOctet')]",
+      "subnet1": {
+        "name": "gateway",
+        "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'),4), 0)) ,'.0/24')]"
+      },
+      "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
+      "storageType": "Standard_RAGRS",
+      "vnetTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
+      "vmTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]"
+    },
+    "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
+    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResources.json')]"
+  },
+
+  "resources": [
+    {
+      "name": "virtualNetworkSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('globals').apiVersionDeployments]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('sharedResourcesTemplateURL')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[variables('globals')]"
+          }
+        }
+      }
+    }
+  ]
+}

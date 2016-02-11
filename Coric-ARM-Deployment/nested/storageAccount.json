@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "globals": {
+      "type": "object",
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      }
+    },
+    "type": {
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ],
+      "defaultValue": "Standard_RAGRS",
+      "type": "string",
+      "metadata": {
+        "Description": "The storage account type"
+      }
+    },
+
+    "name": {
+      "type": "string",
+      "minLength": 7,
+      "metadata": {
+        "Description": "The name of the storage account"
+      }
+    },
+
+    "resourceGroup": {
+      "type": "string",
+      "metadata": {
+        "Description": "The Resource Group to place the storage account into"
+      }
+    }
+  },
+
+  "variables": {
+    "resourceGroup": "[concat('/subscriptions/', subscription().subscriptionId,'/resourcegroups/', parameters('resourceGroup'))]",
+    "vmStorageAccountContainerName": "vhds"
+  },
+
+  "resources": [
+    {
+      "apiVersion": "[parameters('globals').apiVersionStorage]",
+      "location": "[resourceGroup().location]",
+      "name": "[parameters('name')]",
+      "properties": {
+        "accountType": "[parameters('type')]"
+      },
+      "type": "Microsoft.Storage/storageAccounts"
+    }
+  ],
+
+  "outputs": {
+    "storageAccountId": {
+      "value": "[resourceId('Microsoft.Storage/StorageAccounts',parameters('name'))]",
+      "type": "string"
+    }
+  }
+}
