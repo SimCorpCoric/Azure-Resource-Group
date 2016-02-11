@@ -19,24 +19,27 @@
 			"name": "adminStorage",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion" : "[parameters('globals').apiVersionDeployments]",
-			"properties" : {
-				"mode": "Incremental",
-				"templateLink" : {
-					"uri" : "[parameters('globals').storageAccountTemplateLink]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters" : {
-					"Type": {
-						"value": "[parameters('globals').storageType]"
-					},
-					"Name" : {
-						"value": "[concat('sa', parameters('globals').baseName, 'admin')]"
-					},
-					"resourceGroup": {
-						"value": "rgAdmin"
-					}
-				}
-			}
+      "properties": {
+        "apiVersion": {
+          "value": "[parameters('globals').apiVersionStorage]"
+        },
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').storageAccountTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "Type": {
+            "value": "[parameters('globals').storageType]"
+          },
+          "Name": {
+            "value": "[concat('sa', parameters('globals').baseName, 'admin')]"
+          },
+          "resourceGroup": {
+            "value": "rgAdmin"
+          }
+        }
+      }
 		}
   ]
 }
