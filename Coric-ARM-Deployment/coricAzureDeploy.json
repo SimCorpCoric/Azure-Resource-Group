@@ -62,12 +62,13 @@
   },
 
   "variables": {
+    "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
     "globals": {
       "adminUsername": "[parameters('adminUsername')]",
       "apiVersionDeployments": "2015-01-01",
       "apiVersionNetwork": "2015-06-15",
       "apiVersionStorage": "2015-06-15",
-      "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+      "baseName": "[parameters('baseName')",
       "clientID": "[parameters('clientID')]",
       "keyVaultSetupURL": "[uri(deployment().properties.templateLink.uri, 'nested/keyVault.json')]",
       "networkSettings": {
@@ -88,7 +89,7 @@
           "name": "frontend",
           "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 3)) ,'.0/24')]"
         },
-        "name": "[concat('vn', variables('globals').baseName)]"
+        "name": "[concat('vn', variables('baseName'))]"
       },
       "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
       "secondIPOctet": "[parameters('secondIPOctet')]",
