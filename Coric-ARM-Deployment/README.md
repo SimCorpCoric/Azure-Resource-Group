@@ -4,10 +4,6 @@
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2F101-backup-protect-iaasvm%2Fazuredeploy.json" target="_blank">
-    <img src="http://armviz.io/visualizebutton.png"/>
-</a>
-
 <a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FAndyHerb%2FAzure-Resource-Group%2Fmaster%2FCoric-ARM-Deployment%2FcoricAzureDeploy.json" target="_blank">
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
