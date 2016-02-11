@@ -79,15 +79,15 @@
         },
         "subnet2": {
           "name": "backend",
-          "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.0/24')]"
+          "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.0/24')]"
         },
         "subnet3": {
           "name": "user",
-          "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 2)) ,'.0/24')]"
+          "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 2)) ,'.0/24')]"
         },
         "subnet4": {
           "name": "frontend",
-          "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 3)) ,'.0/24')]"
+          "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 3)) ,'.0/24')]"
         },
         "name": "[concat('vn', variables('baseName'))]"
       },
