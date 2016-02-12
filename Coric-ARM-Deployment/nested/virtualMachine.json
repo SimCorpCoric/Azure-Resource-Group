@@ -20,6 +20,7 @@
   "variables": {
     "nicName": "[concat('nic', parameters('machineSettings').basename)]",
     "vmName": "[parameters('machineSettings').basename]",
+    "vmNamePortal": "concat('vm', [parameters('machineSettings').basename)]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('machineSettings').subnet)]"
   },
@@ -52,7 +53,7 @@
     {
       "apiVersion": "[parameters('globals').apiVersionVirtualMachine]",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0'))]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "vmLoop",
@@ -66,7 +67,7 @@
           "vmSize": "[parameters('machineSettings').size]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0'))]",
+          "computerName": "[concat(variables('vmName'), padLeft(copyIndex(1), 2, '0'))]",
           "adminUsername": "[parameters('machineSettings').adminUsername]",
           "adminPassword": "[parameters('machineSettings').adminPassword]"
         },
@@ -80,7 +81,7 @@
           "osDisk": {
             "name": "osdisk",
             "vhd": {
-              "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0')),'-OS.vhd')]"
+              "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')),'-OS.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -91,7 +92,7 @@
               "diskSizeGB": "[parameters('machineSettings').sizeOfDataDiskInGB]",
               "lun": 0,
               "vhd": {
-                "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0')),'-Data1.vhd')]"
+                "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')),'-Data1.vhd')]"
               },
               "createOption": "Empty"
             }
@@ -115,11 +116,15 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0'),'/AntiMalwareExt')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/AntiMalwareExt')]",
       "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
       "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
       "dependsOn": [
-        "[concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0'))]"
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
       ],
       "properties": {
         "publisher": "Microsoft.Azure.Security",
