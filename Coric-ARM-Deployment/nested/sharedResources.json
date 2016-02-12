@@ -19,7 +19,7 @@
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 2,
       "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
-      "size": "Standard A0",
+      "size": "Standard_A0",
       "sizeOfDataDiskInGB": 1000,
       "storageAccount": "[parameters('globals').storageAccountAdmin]",
       "subnet": "[parameters('globals').networkSettings.subnet2.name]"
