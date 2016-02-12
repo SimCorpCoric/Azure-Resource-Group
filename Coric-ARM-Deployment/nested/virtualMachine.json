@@ -31,7 +31,6 @@
       "apiVersion": "[parameters('globals').apiVersionNIC]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('nicName'), padLeft(copyIndex(), 2, '0'))]",
-      ",": null,
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "nicLoop",
