@@ -16,7 +16,7 @@
       "basename": "[concat(parameters('globals').baseName, '-dc')]",
       "adminUsername": "[parameters('globals').adminUsername]",
       "adminPassword": "[parameters('globals').adminPassword]",
-      "privateIPAllocationMethod": "Static",
+      "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 2,
       "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
       "size": "Standard A0",
