@@ -18,7 +18,7 @@
   },
 
   "variables": {
-    "nicName": "[concat('nic', parameters('machineSettings').basename])",
+    "nicName": "[concat('nic', parameters('machineSettings').basename)]",
     "vmName": "[parameters('machineSettings').basename]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('machineSettings').subnet)]"
@@ -28,7 +28,7 @@
     {
       "apiVersion": "[parameters('globals').apiVersionNIC]",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('nicName'), padLeft(copyIndex(), 2, '0'))]",
+      "name": "[concat(variables('nicName'), padLeft(copyIndex(1), 2, '0'))]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "nicLoop",
@@ -52,21 +52,21 @@
     {
       "apiVersion": "[parameters('globals').apiVersionVirtualMachine]",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('machineSettings').basename, padLeft(copyIndex(), 2, '0'))]",
+      "name": "[concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0'))]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "vmLoop",
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), padLeft(copyIndex(), 2, '0'))]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), padLeft(copyIndex(1), 2, '0'))]"
       ],
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('machineSettings').size]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('machineSettings').basename, padLeft(copyIndex(), 2, '0'))]",
+          "computerName": "[concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0'))]",
           "adminUsername": "[parameters('machineSettings').adminUsername]",
           "adminPassword": "[parameters('machineSettings').adminPassword]"
         },
@@ -80,7 +80,7 @@
           "osDisk": {
             "name": "osdisk",
             "vhd": {
-              "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(parameters('machineSettings').basename, padLeft(copyIndex(), 2, '0')),'-OS.vhd')]"
+              "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0')),'-OS.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -91,7 +91,7 @@
               "diskSizeGB": "[parameters('machineSettings').sizeOfDataDiskInGB]",
               "lun": 0,
               "vhd": {
-                "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(parameters('machineSettings').basename, padLeft(copyIndex(), 2, '0')),'-Data1.vhd')]"
+                "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0')),'-Data1.vhd')]"
               },
               "createOption": "Empty"
             }
