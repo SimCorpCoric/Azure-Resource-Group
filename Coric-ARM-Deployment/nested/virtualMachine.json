@@ -100,7 +100,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[variables('vnetID')]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(1), 2, '0')))]"
             }
           ]
         },
