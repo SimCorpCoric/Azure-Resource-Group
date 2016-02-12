@@ -111,6 +111,37 @@
           }
         }
       }
+    },
+
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0'),'/AntiMalwareExt')]",
+      "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat(parameters('machineSettings').basename, padLeft(copyIndex(1), 2, '0'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Azure.Security",
+        "type": "IaaSAntimalware",
+        "typeHandlerVersion": "1.1",
+        "settings": {
+          "AntimalwareEnabled": "true",
+          "Exclusions": {
+            "Paths": "",
+            "Extensions": "",
+            "Processes": "taskmgr.exe"
+          },
+          "RealtimeProtectionEnabled": "true",
+          "ScheduledScanSettings": {
+            "isEnabled": "true",
+            "scanType": "Full",
+            "day": "1",
+            "time": "150"
+          }
+        },
+        "protectedSettings": null
+      }
     }
   ]
 }
