@@ -107,11 +107,11 @@
       "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
       "storageType": "Standard_RAGRS",
       "vmTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
-      "vhdContainerName": "vhds"
+      "vhdContainerName": "vhds",
+      "windowsOSVersion": "[parameters('windowsOSVersion')]"
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
     "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResources.json')]",
-    "windowsOSVersion": "[parameters('windowsOSVersion')]"
   },
 
   "resources": [
