@@ -70,13 +70,14 @@
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
     "globals": {
-      "adminUsername": "[parameters('adminUsername')]",
       "adminPassword": "[parameters('adminPassword')]",
+      "adminUsername": "[parameters('adminUsername')]",
       "apiVersionDeployments": "2015-01-01",
       "apiVersionNetwork": "2015-06-15",
       "apiVersionNIC": "2015-06-15",
       "apiVersionStorage": "2015-06-15",
       "apiVersionVirtualMachine": "2015-06-15",
+      "apiVersionVMExtensions": "2015-06-15",
       "baseName": "[variables('baseName')]",
       "clientID": "[parameters('clientID')]",
       "keyVaultSetupURL": "[uri(deployment().properties.templateLink.uri, 'nested/keyVault.json')]",
@@ -106,8 +107,8 @@
       "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
       "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
       "storageType": "Standard_RAGRS",
-      "vmTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
       "vhdContainerName": "vhds",
+      "vmTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
       "windowsOSVersion": "[parameters('windowsOSVersion')]"
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
