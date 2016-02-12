@@ -12,6 +12,18 @@
   },
 
   "variables": {
+    "domainControllers": {
+      "basename": "[concat(parameters('globals').baseName, '-dc')]",
+      "adminUsername": "[parameters('globals').adminUsername]",
+      "adminPassword": "[parameters('globals').adminPassword]",
+      "privateIPAllocationMethod": "Static",
+      "numberOfVMs": 2,
+      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
+      "size": "Standard A0",
+      "sizeOfDataDiskInGB": 1000,
+      "storageAccount": "[parameters('globals').storageAccountAdmin]",
+      "subnet": "[parameters('globals').networkSettings.subnet2.name]"
+    }
   },
 
   "resources": [
@@ -30,11 +42,33 @@
             "value": "[parameters('globals')]"
           },
           "Name": {
-            "value": "[concat('sa', parameters('globals').baseName, 'admin')]"
+            "value": "[parameters('globals').storageAccountAdmin]"
           }
         }
       }
     },
+
+    {
+      "name": "diagnosticsStorage",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').storageAccountTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "Name": {
+            "value": "[parameters('globals').storageAccountDiagnostics]"
+          }
+        }
+      }
+    },
+
     {
       "name": "networkSetup",
       "type": "Microsoft.Resources/deployments",
@@ -48,6 +82,26 @@
         "parameters": {
           "globals": {
             "value": "[parameters('globals')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "domainControllersSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').vmTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('domainControllers')]"
           }
         }
       }

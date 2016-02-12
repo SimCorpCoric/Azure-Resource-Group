@@ -1,0 +1,119 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "globals": {
+      "type": "object",
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      }
+    },
+    "machineSettings": {
+      "metadata": {
+        "Description": "Machine settings object"
+      },
+      "type": "object"
+    }
+  },
+
+  "variables": {
+    "nicName": "[concat('nic', parameters('machineSettings').basename])",
+    "vmName": "[parameters('machineSettings').basename]",
+    "vhdContainer": "[concat('http://',variables('storageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/')]",
+    "vmStorageAccountContainerName": "vhds",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('machineSettings').subnet)]"
+  },
+
+  "resources": [
+    {
+      "apiVersion": "[parameters('globals').apiVersionNIC]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('nicName'), padLeft(copyIndex(), 2, '0'))]",
+      ",": null,
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "[parameters('machineSettings').privateIPAllocationMethod]",
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+
+    {
+      "apiVersion": "[parameters('globals').apiVersionVirtualMachine]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(parameters('machineSettings').basename, padLeft(copyIndex(), 2, '0'))]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), padLeft(copyIndex(), 2, '0'))]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('machineSettings').size]"
+        },
+        "osProfile": {
+          "computerName": "[concat(parameters('machineSettings').basename, padLeft(copyIndex(), 2, '0'))]",
+          "adminUsername": "[parameters('machineSettings').adminUsername]",
+          "adminPassword": "[parameters('machineSettings').adminPassword]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "[parameters('machineSettings').windowsOSVersion]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(parameters('machineSettings').basename, padLeft(copyIndex(), 2, '0')),'-OS.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "name": "datadisk1",
+              "diskSizeGB": "[parameters('machineSettings').sizeOfDataDiskInGB]",
+              "lun": 0,
+              "vhd": {
+                "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(parameters('machineSettings').basename, padLeft(copyIndex(), 2, '0')),'-Data1.vhd')]"
+              },
+              "createOption": "Empty"
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[variables('vnetID')]"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": "true",
+            "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
+          }
+        }
+      }
+    }
+  ]
+}
