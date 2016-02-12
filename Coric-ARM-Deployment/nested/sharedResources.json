@@ -23,6 +23,18 @@
       "sizeOfDataDiskInGB": 1000,
       "storageAccount": "[parameters('globals').storageAccountAdmin]",
       "subnet": "[parameters('globals').networkSettings.subnet2.name]"
+    },
+    "rdsGateway": {
+      "basename": "[concat(parameters('globals').baseName, '-rdg')]",
+      "adminUsername": "[parameters('globals').adminUsername]",
+      "adminPassword": "[parameters('globals').adminPassword]",
+      "privateIPAllocationMethod": "Dynamic",
+      "numberOfVMs": 1,
+      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
+      "size": "Standard_A0",
+      "sizeOfDataDiskInGB": null,
+      "storageAccount": "[parameters('globals').storageAccountAdmin]",
+      "subnet": "[parameters('globals').networkSettings.subnet4.name]"
     }
   },
 
@@ -86,6 +98,7 @@
         }
       }
     },
+
     {
       "name": "domainControllersSetup",
       "type": "Microsoft.Resources/deployments",
@@ -93,7 +106,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').vmTemplateLink]",
+          "uri": "[parameters('globals').vmDataDiskTemplateLink]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -102,6 +115,27 @@
           },
           "machineSettings": {
             "value": "[variables('domainControllers')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "rdsGatewaySetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').vmNoDataDiskTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('rdsGateway')]"
           }
         }
       }

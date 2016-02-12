@@ -75,6 +75,7 @@
       "apiVersionDeployments": "2015-01-01",
       "apiVersionNetwork": "2015-06-15",
       "apiVersionNIC": "2015-06-15",
+      "apiVersionPIP": "2015-03-01-preview",
       "apiVersionStorage": "2015-06-15",
       "apiVersionVirtualMachine": "2015-06-15",
       "apiVersionVMExtensions": "2015-06-15",
@@ -108,7 +109,8 @@
       "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
       "storageType": "Standard_RAGRS",
       "vhdContainerName": "vhds",
-      "vmTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
+      "vmDataDiskTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDisk.json')]",
+      "vmNoDataDiskTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineNoDataDisk.json')]",
       "windowsOSVersion": "[parameters('windowsOSVersion')]"
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",

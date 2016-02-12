@@ -23,7 +23,7 @@
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-              "[parameters('globals').networkSettings.addressPrefix]"
+            "[parameters('globals').networkSettings.addressPrefix]"
           ]
         },
         "subnets": [
