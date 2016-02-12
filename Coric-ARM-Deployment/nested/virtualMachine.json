@@ -20,8 +20,6 @@
   "variables": {
     "nicName": "[concat('nic', parameters('machineSettings').basename])",
     "vmName": "[parameters('machineSettings').basename]",
-    "vhdContainer": "[concat('http://',variables('storageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/')]",
-    "vmStorageAccountContainerName": "vhds",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('machineSettings').subnet)]"
   },
