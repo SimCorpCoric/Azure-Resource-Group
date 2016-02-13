@@ -133,6 +133,7 @@
         "droneCount": "[parameters('droneCount')]",
         "desktopCount": "[parameters('desktopCount')]"
       },
+      "environmentTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
       "keyVaultSetupURL": "[uri(deployment().properties.templateLink.uri, 'nested/keyVault.json')]",
       "networkSettings": {
         "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
@@ -198,7 +199,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('sharedResourcesTemplateURL')]",
+          "uri": "[variables('environmentTemplateLink')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
