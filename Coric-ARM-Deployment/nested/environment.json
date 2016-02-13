@@ -12,35 +12,59 @@
   },
 
   "variables": {
-    "domainControllers": {
-      "basename": "[concat(parameters('globals').baseName, '-dc')]",
-      "adminUsername": "[parameters('globals').adminUsername]",
-      "adminPassword": "[parameters('globals').adminPassword]",
-      "privateIPAllocationMethod": "Dynamic",
-      "numberOfVMs": 2,
-      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
-      "size": "Standard_A0",
-      "sizeOfDataDiskInGB": 1000,
-      "storageAccount": "[parameters('globals').storageAccountAdmin]",
-      "subnet": "[parameters('globals').networkSettings.subnet2.name]"
-    },
-    "rdsGateway": {
-      "basename": "[concat(parameters('globals').baseName, '-rdg')]",
+    "acronym": "[toLower(parameters('globals').environment.acronym)]",
+    "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.name))]",
+    "sql": {
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
       "adminUsername": "[parameters('globals').adminUsername]",
       "adminPassword": "[parameters('globals').adminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 1,
       "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
       "size": "Standard_A0",
-      "sizeOfDataDiskInGB": null,
-      "storageAccount": "[parameters('globals').storageAccountAdmin]",
-      "subnet": "[parameters('globals').networkSettings.subnet4.name]"
+      "sizeOfDataDiskInGB": 1000,
+      "storageAccount": "[variables('storageAccountName')]",
+      "subnet": "[parameters('globals').networkSettings.subnet2.name]"
+    },
+    "warehouse": {
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
+      "adminUsername": "[parameters('globals').adminUsername]",
+      "adminPassword": "[parameters('globals').adminPassword]",
+      "privateIPAllocationMethod": "Dynamic",
+      "numberOfVMs": 1,
+      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
+      "size": "Standard_A0",
+      "sizeOfDataDiskInGB": 1000,
+      "storageAccount": "[variables('storageAccountName')]",
+      "subnet": "[parameters('globals').networkSettings.subnet2.name]"
+    },
+    "drone": {
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
+      "adminUsername": "[parameters('globals').adminUsername]",
+      "adminPassword": "[parameters('globals').adminPassword]",
+      "privateIPAllocationMethod": "Dynamic",
+      "numberOfVMs": "[parameters('globals').environment.droneCount]",
+      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
+      "size": "Standard_A0",
+      "storageAccount": "[variables('storageAccountName')]",
+      "subnet": "[parameters('globals').networkSettings.subnet2.name]"
+    },
+    "desktop": {
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
+      "adminUsername": "[parameters('globals').adminUsername]",
+      "adminPassword": "[parameters('globals').adminPassword]",
+      "privateIPAllocationMethod": "Dynamic",
+      "numberOfVMs": "[parameters('globals').environment.desktopCount]",
+      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
+      "size": "Standard_A0",
+      "storageAccount": "[variables('storageAccountName')]",
+      "subnet": "[parameters('globals').networkSettings.subnet3.name]"
     }
   },
 
   "resources": [
     {
-      "name": "adminStorage",
+      "name": "environmentStorage",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "properties": {
@@ -61,52 +85,11 @@
     },
 
     {
-      "name": "diagnosticsStorage",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').storageAccountTemplateLink]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "Name": {
-            "value": "[parameters('globals').storageAccountDiagnostics]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "networkSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').networkTemplateLink]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "domainControllersSetup",
+      "name": "sqlSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "dependsOn": [
-        "networkSetup",
-        "diagnosticsStorage",
-        "adminStorage"
+        "environmentStorage"
       ],
       "properties": {
         "mode": "Incremental",
@@ -119,18 +102,42 @@
             "value": "[parameters('globals')]"
           },
           "machineSettings": {
-            "value": "[variables('domainControllers')]"
+            "value": "[variables('sql')]"
           }
         }
       }
     },
 
     {
-      "name": "rdsGatewaySetup",
+      "name": "warehouseSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "dependsOn": [
-        "domainControllersSetup"
+        "environmentStorage"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').vmDataDiskTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('warehouse')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "droneSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "dependsOn": [
+        "environmentStorage"
       ],
       "properties": {
         "mode": "Incremental",
@@ -143,7 +150,31 @@
             "value": "[parameters('globals')]"
           },
           "machineSettings": {
-            "value": "[variables('rdsGateway')]"
+            "value": "[variables('drone')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "desktopSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "dependsOn": [
+        "environmentStorage"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').vmNoDataDiskTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('desktop')]"
           }
         }
       }

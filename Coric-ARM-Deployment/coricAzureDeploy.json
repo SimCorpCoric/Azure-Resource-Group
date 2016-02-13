@@ -64,6 +64,48 @@
         "Description": "The type of the Storage Account created"
       },
       "type": "string"
+    },
+
+    "environmentName": {
+      "metadata": {
+        "Description": "Name of the environment being built"
+      },
+      "allowedValues": [
+        "Production",
+        "UAT",
+        "Dev",
+        "Web"
+      ],
+      "type": "string"
+    },
+
+    "environmentAcronym": {
+      "metadata": {
+        "Description": "Acronym for the environment being built"
+      },
+      "allowedValues": [
+        "P",
+        "U",
+        "D",
+        "W"
+      ],
+      "type": "string"
+    },
+
+    "droneCount": {
+      "type": "int",
+      "minValue": 1,
+      "metadata": {
+        "Description": "The number of Drones to build for this environment"
+      }
+    },
+
+    "desktopCount": {
+      "type": "int",
+      "minValue": 1,
+      "metadata": {
+        "Description": "The number of Desktops to build for this environment"
+      }
     }
   },
 
@@ -81,6 +123,12 @@
       "apiVersionVMExtensions": "2015-06-15",
       "baseName": "[variables('baseName')]",
       "clientID": "[parameters('clientID')]",
+      "environment": {
+        "name": "[parameters('environmentName')]",
+        "acronym": "[parameters('environmentAcronym')]",
+        "droneCount": "[parameters('droneCount')]",
+        "desktopCount": "[parameters('desktopCount')]"
+      },
       "keyVaultSetupURL": "[uri(deployment().properties.templateLink.uri, 'nested/keyVault.json')]",
       "networkSettings": {
         "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
@@ -122,6 +170,27 @@
       "name": "sharedResourcesSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('globals').apiVersionDeployments]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('sharedResourcesTemplateURL')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[variables('globals')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "environmentSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('globals').apiVersionDeployments]",
+      "dependsOn": [
+        "sharedResourceSetup"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
