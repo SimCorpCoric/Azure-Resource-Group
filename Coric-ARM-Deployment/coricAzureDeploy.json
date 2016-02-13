@@ -115,6 +115,7 @@
 
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+    "environmentTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
     "globals": {
       "adminPassword": "[parameters('adminPassword')]",
       "adminUsername": "[parameters('adminUsername')]",
@@ -133,8 +134,7 @@
         "droneCount": "[parameters('droneCount')]",
         "desktopCount": "[parameters('desktopCount')]"
       },
-      "environmentTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
-      "keyVaultSetupURL": "[uri(deployment().properties.templateLink.uri, 'nested/keyVault.json')]",
+      "keyVaultTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/keyVault.json')]",
       "networkSettings": {
         "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
         "subnet1": {
@@ -167,7 +167,7 @@
       "windowsOSVersion": "[parameters('windowsOSVersion')]"
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
-    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResources.json')]",
+    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResources.json')]"
   },
 
   "resources": [
