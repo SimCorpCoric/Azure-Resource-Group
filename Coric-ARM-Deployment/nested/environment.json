@@ -78,7 +78,7 @@
             "value": "[parameters('globals')]"
           },
           "Name": {
-            "value": "[parameters('globals').storageAccountAdmin]"
+            "value": "[variables('storageAccountName')]"
           }
         }
       }
