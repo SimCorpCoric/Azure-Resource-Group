@@ -104,9 +104,9 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "dependsOn": [
-        "networkSetup",
-        "diagnosticsStorage",
-        "adminStorage"
+        "[concat('Microsoft.Resources/deployments/', 'networkSetup')]",
+        "[concat('Microsoft.Resources/deployments/', 'diagnosticsStorage')]",
+        "[concat('Microsoft.Resources/deployments/', 'adminStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -130,7 +130,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "dependsOn": [
-        "domainControllersSetup"
+        "[concat('Microsoft.Resources/deployments/', 'domainControllersSetup')]"
       ],
       "properties": {
         "mode": "Incremental",

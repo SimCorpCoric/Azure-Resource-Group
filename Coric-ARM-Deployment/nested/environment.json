@@ -89,7 +89,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "dependsOn": [
-        "environmentStorage"
+        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -113,7 +113,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "dependsOn": [
-        "environmentStorage"
+        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -137,7 +137,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "dependsOn": [
-        "environmentStorage"
+        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -161,7 +161,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "dependsOn": [
-        "environmentStorage"
+        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
