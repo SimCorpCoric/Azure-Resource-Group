@@ -164,7 +164,7 @@
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "BGInfo",
-        "typeHandlerVersion": "2.*",
+        "typeHandlerVersion": "2.1",
         "settings": {
           "state": "Enable"
         }
