@@ -160,6 +160,10 @@
 
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+    "environmentShortNameDevelopment": "Dev",
+    "environmentShortNameProduction": "Prod",
+    "environmentShortNameUAT": "UAT",
+    "environmentShortNameWeb": "Web",
     "environmentTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
     "globals": {
       "adminPassword": "[parameters('adminPassword')]",
@@ -181,10 +185,6 @@
         "droneCount": "[parameters('droneCount')]",
         "desktopCount": "[parameters('desktopCount')]"
       },
-      "environmentShortNameProduction": "Prod",
-      "environmentShortNameUAT": "UAT",
-      "environmentShortNameDevelopment": "Dev",
-      "environmentShortNameWeb": "Web",
       "keyVaultTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/keyVault.json')]",
       "networkSettings": {
         "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
