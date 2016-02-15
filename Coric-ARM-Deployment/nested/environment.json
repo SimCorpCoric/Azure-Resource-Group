@@ -13,8 +13,8 @@
 
   "variables": {
     "acronym": "[toLower(parameters('globals').environment.acronym)]",
-    "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.name))]",
-    "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.name), 'premium')]",
+    "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname))]",
+    "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
     "storageAccountNamePremiumType": "Premium_LRS",
     "sql": {
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
