@@ -64,7 +64,7 @@
       ],
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[parameters('machineSettings').size]"
+          "vmSize": "[parameters('machineSettings').imageReference.size]"
         },
         "osProfile": {
           "computerName": "[concat(variables('vmName'), padLeft(copyIndex(1), 2, '0'))]",
@@ -73,10 +73,10 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "MicrosoftWindowsServer",
-            "offer": "WindowsServer",
-            "sku": "[parameters('machineSettings').windowsOSVersion]",
-            "version": "latest"
+            "publisher": "[parameters('machineSettings').imageReference.publisher]",
+            "offer": "[parameters('machineSettings').imageReference.offer]",
+            "sku": "[parameters('machineSettings').imageReference.sqk]",
+            "version": "[parameters('machineSettings').imageReference.version]"
           },
           "osDisk": {
             "name": "osdisk",
@@ -169,6 +169,6 @@
           "state": "Enable"
         }
       }
-      }
+    }
   ]
 }

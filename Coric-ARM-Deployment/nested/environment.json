@@ -14,16 +14,17 @@
   "variables": {
     "acronym": "[toLower(parameters('globals').environment.acronym)]",
     "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.name))]",
+    "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.name), 'premium')]",
+    "storageAccountNamePremiumType": "Premium_LRS",
     "sql": {
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
       "adminUsername": "[parameters('globals').adminUsername]",
       "adminPassword": "[parameters('globals').adminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 1,
-      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
-      "size": "Standard_A0",
+      "imageReference": "[parameters('globals').sqlVM]",
       "sizeOfDataDiskInGB": 1000,
-      "storageAccount": "[variables('storageAccountName')]",
+      "storageAccount": "[variables('storageAccountNamePremium')]",
       "subnet": "[parameters('globals').networkSettings.subnet2.name]"
     },
     "warehouse": {
@@ -32,8 +33,7 @@
       "adminPassword": "[parameters('globals').adminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 1,
-      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
-      "size": "Standard_A0",
+      "imageReference": "[parameters('globals').windowsVM]",
       "sizeOfDataDiskInGB": 1000,
       "storageAccount": "[variables('storageAccountName')]",
       "subnet": "[parameters('globals').networkSettings.subnet2.name]"
@@ -44,8 +44,7 @@
       "adminPassword": "[parameters('globals').adminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": "[parameters('globals').environment.droneCount]",
-      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
-      "size": "Standard_A0",
+      "imageReference": "[parameters('globals').windowsVM]",
       "storageAccount": "[variables('storageAccountName')]",
       "subnet": "[parameters('globals').networkSettings.subnet2.name]"
     },
@@ -55,8 +54,7 @@
       "adminPassword": "[parameters('globals').adminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": "[parameters('globals').environment.desktopCount]",
-      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
-      "size": "Standard_A0",
+      "imageReference": "[parameters('globals').windowsVM]",
       "storageAccount": "[variables('storageAccountName')]",
       "subnet": "[parameters('globals').networkSettings.subnet3.name]"
     }
@@ -79,6 +77,33 @@
           },
           "Name": {
             "value": "[variables('storageAccountName')]"
+          },
+          "accountType": {
+            "value": "[parameters('globals').storageType]" 
+          }
+        }
+      }
+    },
+
+    {
+      "name": "environmentStoragePremium",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').storageAccountTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "Name": {
+            "value": "[variables('storageAccountNamePremium')]"
+          },
+          "accountType": {
+            "value": "[variables('storageAccountNamePremiumType')]"
           }
         }
       }
@@ -89,7 +114,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
+        "[concat('Microsoft.Resources/deployments/', 'environmentStoragePremium')]"
       ],
       "properties": {
         "mode": "Incremental",

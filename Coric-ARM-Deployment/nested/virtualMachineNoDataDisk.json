@@ -64,7 +64,7 @@
       ],
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[parameters('machineSettings').size]"
+          "vmSize": "[parameters('machineSettings').imageReference.size]"
         },
         "osProfile": {
           "computerName": "[concat(variables('vmName'), padLeft(copyIndex(1), 2, '0'))]",
@@ -73,10 +73,10 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "MicrosoftWindowsServer",
-            "offer": "WindowsServer",
-            "sku": "[parameters('machineSettings').windowsOSVersion]",
-            "version": "latest"
+            "publisher": "[parameters('machineSettings').imageReference.publisher]",
+            "offer": "[parameters('machineSettings').imageReference.offer]",
+            "sku": "[parameters('machineSettings').imageReference.sqk]",
+            "version": "[parameters('machineSettings').imageReference.version]"
           },
           "osDisk": {
             "name": "osdisk",
@@ -118,7 +118,7 @@
       "properties": {
         "publisher": "Microsoft.Azure.Security",
         "type": "IaaSAntimalware",
-        "typeHandlerVersion": "1.1",
+        "typeHandlerVersion": "1.3",
         "settings": {
           "AntimalwareEnabled": "true",
           "Exclusions": {
@@ -135,6 +135,27 @@
           }
         },
         "protectedSettings": null
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/bgInfoExt')]",
+      "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
+      "dependsOn": [
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "BGInfo",
+        "typeHandlerVersion": "2.1",
+        "settings": {
+          "state": "Enable"
+        }
       }
     }
   ]

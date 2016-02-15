@@ -2,6 +2,7 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+
     "prefix": {
       "type": "string",
       "defaultValue": "cor",
@@ -9,6 +10,7 @@
         "description": "Characters used for the prefix of each Azure object."
       }
     },
+
     "clientID": {
       "defaultValue": "14",
       "metadata": {
@@ -16,19 +18,21 @@
       },
       "type": "int"
     },
-    "adminUsername": {
-      "type": "string",
-      "defaultValue": "AdminUser",
+
+    "storageAccountType": {
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ],
+      "defaultValue": "Standard_RAGRS",
       "metadata": {
-        "description": "Domain admin username"
-      }
+        "Description": "The type of the Storage Account created"
+      },
+      "type": "string"
     },
-    "adminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Domain admin password"
-      }
-    },
+
     "secondIPOctet": {
       "type": "int",
       "defaultValue": 12,
@@ -39,6 +43,7 @@
         "description": "The second IP octet used to denote the local network address space.  This is a value reserved and provided by SimCorp Group IT to esure VPN connectivity into the SimCorp offices."
       }
     },
+
     "windowsOSVersion": {
       "type": "string",
       "defaultValue": "2012-R2-Datacenter",
@@ -52,18 +57,20 @@
         "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
       }
     },
-    "storageAccountType": {
-      "allowedValues": [
-        "Standard_LRS",
-        "Standard_GRS",
-        "Standard_RAGRS",
-        "Premium_LRS"
-      ],
-      "defaultValue": "Standard_RAGRS",
+
+    "adminUsername": {
+      "type": "string",
+      "defaultValue": "AdminUser",
       "metadata": {
-        "Description": "The type of the Storage Account created"
-      },
-      "type": "string"
+        "description": "Domain admin username"
+      }
+    },
+
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
     },
 
     "environmentName": {
@@ -94,6 +101,32 @@
       "type": "string"
     },
 
+    "sqlVersion": {
+      "type": "string",
+      "allowedValues": [
+        "SQL2012SP2",
+        "SQL2014SP1"
+      ],
+      "defaultValue": "SQL2012SP2",
+      "metadata": {
+        "Description": "Version of SQL Server Enterprise to use.  Use following PowerShell cmdlet to see available options for the deployment region: Get-AzureRmVMImageOffer -PublisherName 'MicrosoftSQLServer"
+      }
+    },
+
+    "sqlVMSize": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_DS1",
+        "Standard_DS2",
+        "Standard_DS11",
+        "Standard_DS12"
+      ],
+      "defaultValue": "Standard_DS1",
+      "metadata": {
+        "Description": "VM size for SQL Server Enterprise."
+      }
+    },
+
     "droneCount": {
       "type": "int",
       "minValue": 1,
@@ -110,6 +143,18 @@
       "metadata": {
         "Description": "The number of Desktops to build for this environment"
       }
+    },
+
+    "windowsVMSize": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_D1",
+        "Standard_D2"
+      ],
+      "defaultValue": "Standard_D1",
+      "metadata": {
+        "Description": "VM size for Windows Servers."
+      }
     }
   },
 
@@ -122,6 +167,7 @@
       "apiVersionDeployments": "2015-01-01",
       "apiVersionNetwork": "2015-06-15",
       "apiVersionNIC": "2015-06-15",
+      "apiVersionNSG": "2015-06-15",
       "apiVersionPIP": "2015-03-01-preview",
       "apiVersionStorage": "2015-06-15",
       "apiVersionVirtualMachine": "2015-06-15",
@@ -157,6 +203,13 @@
       },
       "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
       "secondIPOctet": "[parameters('secondIPOctet')]",
+      "sqlVM": {
+        "publisher": "MicrosoftSQLServer",
+        "offer": "[variables(parameters('sqlVersion'))]",
+        "sku": "Enterprise",
+        "version": "latest",
+        "size": "[parameters('sqlVMSize')]"
+      },
       "storageAccountAdmin": "[concat('sa', variables('baseName'), 'admin')]",
       "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
       "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
@@ -164,10 +217,18 @@
       "vhdContainerName": "vhds",
       "vmDataDiskTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDisk.json')]",
       "vmNoDataDiskTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineNoDataDisk.json')]",
-      "windowsOSVersion": "[parameters('windowsOSVersion')]"
+      "windowsVM": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "[parameters('windowsOSVersion')]",
+        "version": "latest",
+        "size": "[parameters('windowsVMSize')]"
+      }
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
-    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResources.json')]"
+    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResources.json')]",
+    "sql2012SP2": "SQL2012SP2-WS2012R2",
+    "sql2014SP1": "SQL2014SP1-WS2012R2"
   },
 
   "resources": [
