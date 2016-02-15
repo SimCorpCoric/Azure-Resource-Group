@@ -75,7 +75,7 @@
           "imageReference": {
             "publisher": "[parameters('machineSettings').imageReference.publisher]",
             "offer": "[parameters('machineSettings').imageReference.offer]",
-            "sku": "[parameters('machineSettings').imageReference.sqk]",
+            "sku": "[parameters('machineSettings').imageReference.sku]",
             "version": "[parameters('machineSettings').imageReference.version]"
           },
           "osDisk": {
