@@ -18,20 +18,19 @@
       "adminPassword": "[parameters('globals').adminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 2,
-      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
-      "size": "Standard_A0",
+      "imageReference": "[parameters('globals').windowsVM]",
       "sizeOfDataDiskInGB": 1000,
       "storageAccount": "[parameters('globals').storageAccountAdmin]",
       "subnet": "[parameters('globals').networkSettings.subnet2.name]"
     },
+
     "rdsGateway": {
       "basename": "[concat(parameters('globals').baseName, '-rdg')]",
       "adminUsername": "[parameters('globals').adminUsername]",
       "adminPassword": "[parameters('globals').adminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 1,
-      "windowsOSVersion": "[parameters('globals').windowsOSVersion]",
-      "size": "Standard_A0",
+      "imageReference": "[parameters('globals').windowsVM]",
       "sizeOfDataDiskInGB": null,
       "storageAccount": "[parameters('globals').storageAccountAdmin]",
       "subnet": "[parameters('globals').networkSettings.subnet4.name]"
