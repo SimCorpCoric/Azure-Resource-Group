@@ -128,6 +128,69 @@
           }
         }
       }
+    },
+
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/BitLocker')]",
+      "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
+      "dependsOn": [
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
+      ],
+      "properties": {
+        "type": "AzureDiskEncryption",
+        "typeHandlerVersion": "1.0",
+        "publisher": "Microsoft.Azure.Security",
+        "settings": {
+          "AADClientID": "[parameters('globals').diskEncryption.aadClientID]",
+          "AADClientCertThumbprint": "[parameters('globals').diskEncryption.aadClientCertThumbprint]",
+          "KeyVaultURL": "[variables('keyVaultURL')]",
+          "KeyEncryptionKeyURL": "[parameters('globals').diskEncryption.keyVaultSecretUrl]",
+          "KeyEncryptionAlgorithm": "RSA-OAEP",
+          "VolumeType": "All",
+          "EncryptionOperation": "EnableEncryption",
+          "SequenceVersion": "1"
+        }
+      }
+    },
+
+    {
+      "apiVersion": "[parameters('globals').apiVersionVirtualMachine]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
+      "dependsOn": [
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/BitLocker')]"
+      ],
+      "properties": {
+        "storageProfile": {
+          "osDisk": {
+            "encryptionSettings": {
+              "diskEncryptionKey": {
+                "sourceVault": {
+                  "id": "[variables('keyVaultResourceID')]"
+                },
+                "secretUrl": "[parameters('globals').diskEncryption.keyVaultSecretUrl]"
+              },
+              "keyEncryptionKey": {
+                "sourceVault": {
+                  "id": "[variables('keyVaultResourceID')]"
+                },
+                "keyUrl": "[parameters('globals').diskEncryption.keyVaultSecretUrl]"
+              }
+            }
+          }
+        }
+      }
     }
 
   ]

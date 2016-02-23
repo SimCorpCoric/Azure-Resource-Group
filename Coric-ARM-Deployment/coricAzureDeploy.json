@@ -176,7 +176,22 @@
       "metadata": {
         "description": "Url of the certificate in the Key Vault"
       }
+    },
+
+    "aadClientID": {
+      "type": "string",
+      "metadata": {
+        "description": "Client ID of AAD app which has permissions to KeyVault"
+      }
+    },
+
+    "aadClientCertThumbprint": {
+      "type": "string",
+      "metadata": {
+        "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
+      }
     }
+
   },
 
   "variables": {
@@ -200,13 +215,11 @@
       "baseName": "[variables('baseName')]",
       "clientID": "[parameters('clientID')]",
       "diskEncryption": {
-        "aadClientID": "",
-        "aadClientSecret": "",
-        "keyEncryptionKeyURL": "",
+        "aadClientID": "[parameters('aadClientID')]",
+        "aadClientCertThumbprint": "[parameters('aadClientCertThumbprint')]",
         "keyVaultName": "[parameters('keyVaultName')]",
         "keyVaultResourceGroup": "[parameters('keyVaultResourceGroup')]",
-        "keyVaultSecretUrl": "[parameters('secretUrlWithVersion')]",
-        "keyVaultURL": ""
+        "keyVaultSecretUrl": "[parameters('secretUrlWithVersion')]"
       },
       "environment": {
         "name": "[parameters('environmentName')]",
