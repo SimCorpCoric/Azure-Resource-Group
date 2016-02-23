@@ -9,6 +9,7 @@
         "Description": "Global complex object passed to nested templates"
       }
     },
+
     "machineSettings": {
       "metadata": {
         "Description": "Machine settings object"
@@ -22,7 +23,9 @@
     "vmName": "[parameters('machineSettings').basename]",
     "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
-    "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('machineSettings').subnet)]"
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('machineSettings').subnet)]",
+    "keyVaultURL": "[concat('https://', parameters('globals').encryption.keyVaultName, '.vault.azure.net/')]",
+    "keyVaultResourceID": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]"
   },
 
   "resources": [
@@ -69,7 +72,20 @@
         "osProfile": {
           "computerName": "[concat(variables('vmName'), padLeft(copyIndex(1), 2, '0'))]",
           "adminUsername": "[parameters('machineSettings').adminUsername]",
-          "adminPassword": "[parameters('machineSettings').adminPassword]"
+          "adminPassword": "[parameters('machineSettings').adminPassword]",
+          "secrets": [
+            {
+              "sourceVault": {
+                "id": "[variables('keyVaultResourceID')]"
+              },
+              "vaultCertificates": [
+                {
+                  "certificateUrl": "[parameters('globals').diskEncryption.keyVaultSecretUrl]",
+                  "certificateStore": "My"
+                }
+              ]
+            }
+          ]
         },
         "storageProfile": {
           "imageReference": {
@@ -79,7 +95,7 @@
             "version": "[parameters('machineSettings').imageReference.version]"
           },
           "osDisk": {
-            "name": "osdisk",
+            "name": "[concat(variables('vmName'), padLeft(copyIndex(1), 2, '0'), '-osdisk')]",
             "vhd": {
               "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')),'-OS.vhd')]"
             },
@@ -88,7 +104,7 @@
           },
           "dataDisks": [
             {
-              "name": "datadisk1",
+              "name": "[concat(variables('vmName'), padLeft(copyIndex(1), 2, '0'), '-datadisk-1')]",
               "diskSizeGB": "[parameters('machineSettings').sizeOfDataDiskInGB]",
               "lun": 0,
               "vhd": {
@@ -112,63 +128,7 @@
           }
         }
       }
-    },
-
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/AntiMalwareExt')]",
-      "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "vmLoop",
-        "count": "[parameters('machineSettings').numberOfVMs]"
-      },
-      "dependsOn": [
-        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Azure.Security",
-        "type": "IaaSAntimalware",
-        "typeHandlerVersion": "1.3",
-        "settings": {
-          "AntimalwareEnabled": "true",
-          "Exclusions": {
-            "Paths": "",
-            "Extensions": "",
-            "Processes": "taskmgr.exe"
-          },
-          "RealtimeProtectionEnabled": "true",
-          "ScheduledScanSettings": {
-            "isEnabled": "true",
-            "scanType": "Full",
-            "day": "1",
-            "time": "150"
-          }
-        },
-        "protectedSettings": null
-      }
-    },
-
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/bgInfoExt')]",
-      "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "vmLoop",
-        "count": "[parameters('machineSettings').numberOfVMs]"
-      },
-      "dependsOn": [
-        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "BGInfo",
-        "typeHandlerVersion": "2.1",
-        "settings": {
-          "state": "Enable"
-        }
-      }
     }
+
   ]
 }

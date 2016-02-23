@@ -171,38 +171,10 @@
       }
     },
 
-    "keyVaultResourceID": {
-      "type": "string",
-      "metadata": {
-        "description": "ResourceID of the KeyVault to place the volume encryption key"
-      }
-    },
-
-    "keyVaultURL": {
-      "type": "string",
-      "metadata": {
-        "description": "URL of the KeyVault to place the volume encryption key"
-      }
-    },
-
     "secretUrlWithVersion": {
       "type": "string",
       "metadata": {
         "description": "Url of the certificate in the Key Vault"
-      }
-    },
-
-    "aadClientID": {
-      "type": "string",
-      "metadata": {
-        "description": "Client ID of AAD app which has permissions to KeyVault"
-      }
-    },
-
-    "aadClientCertThumbprint": {
-      "type": "string",
-      "metadata": {
-        "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
       }
     }
   },
