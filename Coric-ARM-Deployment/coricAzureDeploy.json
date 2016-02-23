@@ -204,7 +204,7 @@
         "aadClientSecret": "",
         "keyEncryptionKeyURL": "",
         "keyVaultName": "[parameters('keyVaultName')]",
-        "keyVaultResourceGroup": [ "parameters('keyVaultResourceGroup')" ],
+        "keyVaultResourceGroup": "[parameters('keyVaultResourceGroup')]",
         "keyVaultSecretUrl": "[parameters('secretUrlWithVersion')]",
         "keyVaultURL": ""
       },
