@@ -19,7 +19,7 @@
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 2,
       "imageReference": "[parameters('globals').windowsVM]",
-      "sizeOfDataDiskInGB": 1000,
+      "sizeOfDataDiskInGB": 1023,
       "storageAccount": "[parameters('globals').storageAccountAdmin]",
       "subnet": "[parameters('globals').networkSettings.subnet2.name]"
     },

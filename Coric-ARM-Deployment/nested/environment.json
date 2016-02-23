@@ -23,7 +23,7 @@
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 1,
       "imageReference": "[parameters('globals').sqlVM]",
-      "sizeOfDataDiskInGB": 1000,
+      "sizeOfDataDiskInGB": 1023,
       "storageAccount": "[variables('storageAccountNamePremium')]",
       "subnet": "[parameters('globals').networkSettings.subnet2.name]"
     },
@@ -34,7 +34,7 @@
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 1,
       "imageReference": "[parameters('globals').windowsVM]",
-      "sizeOfDataDiskInGB": 1000,
+      "sizeOfDataDiskInGB": 1023,
       "storageAccount": "[variables('storageAccountName')]",
       "subnet": "[parameters('globals').networkSettings.subnet2.name]"
     },
