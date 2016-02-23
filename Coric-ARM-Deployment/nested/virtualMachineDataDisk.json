@@ -161,7 +161,7 @@
 
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/DiskEncryption')]",
+      "name": "DiskEncryption",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "copy": {
         "name": "vmLoop",
@@ -178,7 +178,7 @@
         },
         "parameters": {
           "vmName": {
-            "value": "concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))"
+            "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
           },
           "keyVaultResourceID": {
             "value": "[variables('keyVaultResourceID')]"
