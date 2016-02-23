@@ -24,7 +24,8 @@
     "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('machineSettings').subnet)]",
-    "keyVaultURL": "[concat('https://', parameters('globals').diskEncryption.keyVaultName, '.vault.azure.net/')]"
+    "keyVaultURL": "[concat('https://', parameters('globals').diskEncryption.keyVaultName, '.vault.azure.net/')]",
+    "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]"
   },
 
   "resources": [
@@ -75,7 +76,7 @@
           "secrets": [
             {
               "sourceVault": {
-                "id": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]"
+                "id": "[variables('keyVaultResourceId')]"
               },
               "vaultCertificates": [
                 {
