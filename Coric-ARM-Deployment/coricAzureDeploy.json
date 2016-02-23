@@ -219,7 +219,8 @@
         "aadClientCertThumbprint": "[parameters('aadClientCertThumbprint')]",
         "keyVaultName": "[parameters('keyVaultName')]",
         "keyVaultResourceGroup": "[parameters('keyVaultResourceGroup')]",
-        "keyVaultSecretUrl": "[parameters('secretUrlWithVersion')]"
+        "keyVaultSecretUrl": "[parameters('secretUrlWithVersion')]",
+        "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDiskEncryption.json')]"
       },
       "environment": {
         "name": "[parameters('environmentName')]",

@@ -160,34 +160,30 @@
     },
 
     {
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]",
-      "apiVersion": "[parameters('globals').apiVersionVirtualMachine]",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "vmLoop",
-        "count": "[parameters('machineSettings').numberOfVMs]"
-      },
+      "name": "diskEncryptionUpdate",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'BitLocker')]"
       ],
       "properties": {
-        "storageProfile": {
-          "osDisk": {
-            "encryptionSettings": {
-              "diskEncryptionKey": {
-                "sourceVault": {
-                  "id": "[variables('keyVaultResourceID')]"
-                },
-                "secretUrl": "[parameters('globals').diskEncryption.keyVaultSecretUrl]"
-              },
-              "keyEncryptionKey": {
-                "sourceVault": {
-                  "id": "[variables('keyVaultResourceID')]"
-                },
-                "keyUrl": "[parameters('globals').diskEncryption.keyVaultSecretUrl]"
-              }
-            }
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').diskEncryption.vmEncryptionTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "vmName": {
+            "value": "concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))"
+          },
+          "keyVaultResourceID": {
+            "value": "[variables('keyVaultResourceID')]"
+          },
+          "keyVaultSecretUrl": {
+            "value": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'BitLocker')).instanceView.statuses[0].message]"
+          },
+          "keyEncryptionKeyURL": {
+            "value": "[parameters('globals').diskEncryption.keyVaultSecretUrl]"
           }
         }
       }
