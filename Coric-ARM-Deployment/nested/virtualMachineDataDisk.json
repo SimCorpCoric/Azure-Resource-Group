@@ -132,7 +132,7 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/BitLocker')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/BitLocker')]",
       "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
       "location": "[resourceGroup().location]",
       "copy": {
@@ -161,7 +161,7 @@
 
     {
       "type": "Microsoft.Resources/deployments",
-      "name": [ "concat(variables('vmNamePortal')", "padLeft(copyIndex(1)", 2, "0')", "/diskEncryption')" ],
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/DiskEncryption')]",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "copy": {
         "name": "vmLoop",
