@@ -161,7 +161,7 @@
 
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/DiskEncryption')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '-DiskEncryption')]",
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
       "copy": {
         "name": "vmLoop",
