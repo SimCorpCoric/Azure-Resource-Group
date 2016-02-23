@@ -160,9 +160,13 @@
     },
 
     {
-      "name": "diskEncryptionUpdate",
       "type": "Microsoft.Resources/deployments",
+      "name": [ "concat(variables('vmNamePortal')", "padLeft(copyIndex(1)", 2, "0')", "/diskEncryption')" ],
       "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'BitLocker')]"
       ],
