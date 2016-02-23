@@ -171,28 +171,36 @@
       }
     },
 
-    "secretUrlWithVersion": {
+    "keyVaultCertificateURL": {
       "type": "string",
       "metadata": {
-        "description": "Url of the certificate in the Key Vault"
+        "description": "Url of the certificate in the Key Vault.  E.g: https://mytestvault.vault.azure.net:443/secrets/myaadappcertificate/<version>"
       }
     },
 
-    "aadClientID": {
+    "keyVaultKEKURL": {
       "type": "string",
       "metadata": {
-        "description": "Client ID of AAD app which has permissions to KeyVault"
+        "description": "Url of the Key Encryption Key in the Key Vault.  E.g: https://mytestvault.vault.azure.net/keys/mykek/<version>"
       }
     },
 
-    "aadClientCertThumbprint": {
-      "type": "string",
-      "metadata": {
-        "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
-      }
-    }
 
-  },
+      "aadClientID": {
+        "type": "string",
+        "metadata": {
+          "description": "Client ID of AAD app which has permissions to KeyVault"
+        }
+      },
+
+      "aadClientCertThumbprint": {
+        "type": "string",
+        "metadata": {
+          "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
+        }
+      }
+
+    },
 
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
@@ -217,9 +225,10 @@
       "diskEncryption": {
         "aadClientID": "[parameters('aadClientID')]",
         "aadClientCertThumbprint": "[parameters('aadClientCertThumbprint')]",
+        "keyVaultKEKURL": "[parameters('keyVaultKEKURL')]",
         "keyVaultName": "[parameters('keyVaultName')]",
         "keyVaultResourceGroup": "[parameters('keyVaultResourceGroup')]",
-        "keyVaultSecretUrl": "[parameters('secretUrlWithVersion')]",
+        "keyVaultCertificateURL": "[parameters('keyVaultCertificateURL')]",
         "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDiskEncryption.json')]"
       },
       "environment": {

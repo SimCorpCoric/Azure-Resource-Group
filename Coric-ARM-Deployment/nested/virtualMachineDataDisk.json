@@ -80,7 +80,7 @@
               },
               "vaultCertificates": [
                 {
-                  "certificateUrl": "[parameters('globals').diskEncryption.keyVaultSecretUrl]",
+                  "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
                   "certificateStore": "My"
                 }
               ]
@@ -150,7 +150,7 @@
           "AADClientID": "[parameters('globals').diskEncryption.aadClientID]",
           "AADClientCertThumbprint": "[parameters('globals').diskEncryption.aadClientCertThumbprint]",
           "KeyVaultURL": "[variables('keyVaultURL')]",
-          "KeyEncryptionKeyURL": "[parameters('globals').diskEncryption.keyVaultSecretUrl]",
+          "KeyEncryptionKeyURL": "[parameters('globals').diskEncryption.keyVaultKEKURL]",
           "KeyEncryptionAlgorithm": "RSA-OAEP",
           "VolumeType": "All",
           "EncryptionOperation": "EnableEncryption",
@@ -187,7 +187,7 @@
             "value": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'BitLocker')).instanceView.statuses[0].message]"
           },
           "keyEncryptionKeyURL": {
-            "value": "[parameters('globals').diskEncryption.keyVaultSecretUrl]"
+            "value": "[parameters('globals').diskEncryption.keyVaultKEKURL]"
           }
         }
       }
