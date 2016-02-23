@@ -155,6 +155,55 @@
       "metadata": {
         "Description": "VM size for Windows Servers."
       }
+    },
+
+    "keyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of Key Vault which contains the encryption certificate"
+      }
+    },
+
+    "keyVaultResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Resource Group of Key Vault which contains the encryption certificate"
+      }
+    },
+
+    "keyVaultResourceID": {
+      "type": "string",
+      "metadata": {
+        "description": "ResourceID of the KeyVault to place the volume encryption key"
+      }
+    },
+
+    "keyVaultURL": {
+      "type": "string",
+      "metadata": {
+        "description": "URL of the KeyVault to place the volume encryption key"
+      }
+    },
+
+    "secretUrlWithVersion": {
+      "type": "string",
+      "metadata": {
+        "description": "Url of the certificate in the Key Vault"
+      }
+    },
+
+    "aadClientID": {
+      "type": "string",
+      "metadata": {
+        "description": "Client ID of AAD app which has permissions to KeyVault"
+      }
+    },
+
+    "aadClientCertThumbprint": {
+      "type": "string",
+      "metadata": {
+        "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
+      }
     }
   },
 
@@ -178,6 +227,15 @@
       "apiVersionVMExtensions": "2015-06-15",
       "baseName": "[variables('baseName')]",
       "clientID": "[parameters('clientID')]",
+      "diskEncryption": {
+        "aadClientID": "",
+        "aadClientSecret": "",
+        "keyEncryptionKeyURL": "",
+        "keyVaultName": "[parameters('keyVaultName')]",
+        "keyVaultResourceGroup": [ "parameters('keyVaultResourceGroup')" ],
+        "keyVaultSecretUrl": "[parameters('secretUrlWithVersion')]",
+        "keyVaultURL": ""
+      },
       "environment": {
         "name": "[parameters('environmentName')]",
         "shortname": "[variables(concat('environmentShortName', parameters('environmentName')))]",
@@ -185,7 +243,6 @@
         "droneCount": "[parameters('droneCount')]",
         "desktopCount": "[parameters('desktopCount')]"
       },
-      "keyVaultTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/keyVault.json')]",
       "networkSettings": {
         "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
         "subnet1": {
