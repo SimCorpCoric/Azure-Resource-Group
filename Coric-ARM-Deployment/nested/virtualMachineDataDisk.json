@@ -132,9 +132,13 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmName'),'/DataDiskInitialize')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/DataDiskInitialize')]",
       "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
       "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
       "dependsOn": [
         "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
       ],
