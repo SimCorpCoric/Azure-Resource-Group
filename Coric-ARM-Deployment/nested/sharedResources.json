@@ -41,7 +41,7 @@
     {
       "name": "adminStorage",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -62,7 +62,7 @@
     {
       "name": "diagnosticsStorage",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -83,7 +83,7 @@
     {
       "name": "networkSetup",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -101,7 +101,7 @@
     {
       "name": "domainControllersSetup",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'networkSetup')]",
         "[concat('Microsoft.Resources/deployments/', 'diagnosticsStorage')]",
@@ -110,7 +110,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').vmDataDiskTemplateLink]",
+          "uri": "[parameters('globals').vmType.dataDiskEncrypted]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -127,14 +127,14 @@
     {
       "name": "rdsGatewaySetup",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'domainControllersSetup')]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').vmNoDataDiskTemplateLink]",
+          "uri": "[parameters('globals').vmType.noDataDiskEncrypted]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

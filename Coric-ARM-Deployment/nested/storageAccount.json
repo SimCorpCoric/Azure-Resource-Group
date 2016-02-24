@@ -38,7 +38,7 @@
 
   "resources": [
     {
-      "apiVersion": "[parameters('globals').apiVersionStorage]",
+      "apiVersion": "[parameters('globals').apiVersion.storage]",
       "location": "[resourceGroup().location]",
       "name": "[parameters('name')]",
       "properties": {

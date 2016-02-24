@@ -212,14 +212,16 @@
     "globals": {
       "adminPassword": "[parameters('adminPassword')]",
       "adminUsername": "[parameters('adminUsername')]",
-      "apiVersionDeployments": "2015-01-01",
-      "apiVersionNetwork": "2015-06-15",
-      "apiVersionNIC": "2015-06-15",
-      "apiVersionNSG": "2015-06-15",
-      "apiVersionPIP": "2015-03-01-preview",
-      "apiVersionStorage": "2015-06-15",
-      "apiVersionVirtualMachine": "2015-06-15",
-      "apiVersionVMExtensions": "2015-06-15",
+      "apiVersion": {
+        "deployment": "2015-01-01",
+        "network": "2015-06-15",
+        "nic": "2015-06-15",
+        "nsg": "2015-06-15",
+        "pip": "2015-03-01-preview",
+        "storage": "2015-06-15",
+        "virtualMachine": "2015-06-15",
+        "extension": "2015-06-15"
+      },
       "baseName": "[variables('baseName')]",
       "clientID": "[parameters('clientID')]",
       "customScript": {
@@ -235,7 +237,7 @@
         "keyVaultName": "[parameters('keyVaultName')]",
         "keyVaultResourceGroup": "[parameters('keyVaultResourceGroup')]",
         "keyVaultCertificateURL": "[parameters('keyVaultCertificateURL')]",
-        "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDiskEncryption.json')]"
+        "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]"
       },
       "environment": {
         "name": "[parameters('environmentName')]",
@@ -278,8 +280,12 @@
       "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
       "storageType": "Standard_RAGRS",
       "vhdContainerName": "vhds",
-      "vmDataDiskTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDisk.json')]",
-      "vmNoDataDiskTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineNoDataDisk.json')]",
+      "vmType": {
+        "dataDiskEncrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDiskEncryption.json')]",
+        "dataDiskUnencrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDiskNoEncryption.json')]",
+        "noDataDiskEncrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineNoDataDiskEncryption.json')]",
+        "noDataDiskUnEncrypted": ""
+      },
       "windowsVM": {
         "publisher": "MicrosoftWindowsServer",
         "offer": "WindowsServer",
@@ -298,7 +304,7 @@
     {
       "name": "sharedResourcesSetup",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('globals').apiVersionDeployments]",
+      "apiVersion": "[variables('globals').apiVersion.deployment]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -316,7 +322,7 @@
     {
       "name": "environmentSetup",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('globals').apiVersionDeployments]",
+      "apiVersion": "[variables('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'sharedResourcesSetup')]"
       ],

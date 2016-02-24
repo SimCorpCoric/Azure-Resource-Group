@@ -64,7 +64,7 @@
     {
       "name": "environmentStorage",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -88,7 +88,7 @@
     {
       "name": "environmentStoragePremium",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -112,14 +112,14 @@
     {
       "name": "sqlSetup",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'environmentStoragePremium')]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').vmDataDiskTemplateLink]",
+          "uri": "[parameters('globals').vmType.dataDiskUnencrypted]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -136,14 +136,14 @@
     {
       "name": "warehouseSetup",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').vmDataDiskTemplateLink]",
+          "uri": "[parameters('globals').vmType.dataDiskEncrypted]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -160,14 +160,14 @@
     {
       "name": "droneSetup",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').vmNoDataDiskTemplateLink]",
+          "uri": "[parameters('globals').vmType.noDataDiskEncrypted]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -184,14 +184,14 @@
     {
       "name": "desktopSetup",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').vmNoDataDiskTemplateLink]",
+          "uri": "[parameters('globals').vmType.noDataDiskEncrypted]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

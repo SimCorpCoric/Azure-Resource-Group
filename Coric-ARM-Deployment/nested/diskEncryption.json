@@ -2,6 +2,12 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "globals": {
+      "type": "object",
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      }
+    },
     "vmName": {
       "type": "string",
       "metadata": {
@@ -30,7 +36,7 @@
   },
   "resources": [
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('vmName')]",
       "location": "[resourceGroup().location]",

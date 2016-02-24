@@ -30,7 +30,7 @@
 
   "resources": [
     {
-      "apiVersion": "[parameters('globals').apiVersionNIC]",
+      "apiVersion": "[parameters('globals').apiVersion.nic]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('nicName'), padLeft(copyIndex(1), 2, '0'))]",
       "location": "[resourceGroup().location]",
@@ -54,7 +54,7 @@
     },
 
     {
-      "apiVersion": "[parameters('globals').apiVersionVirtualMachine]",
+      "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]",
       "location": "[resourceGroup().location]",
@@ -133,7 +133,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/DiskInitialize')]",
-      "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "vmLoop",
@@ -158,7 +158,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/BitLocker')]",
-      "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "vmLoop",
@@ -187,7 +187,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '-DiskEncryption')]",
-      "apiVersion": "[parameters('globals').apiVersionDeployments]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "copy": {
         "name": "vmLoop",
         "count": "[parameters('machineSettings').numberOfVMs]"
@@ -202,6 +202,9 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
           "vmName": {
             "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
           },
@@ -216,7 +219,62 @@
           }
         }
       }
-    }
+    },
 
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/AntiMalwareExt')]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
+      "dependsOn": [
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '-DiskEncryption')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Azure.Security",
+        "type": "IaaSAntimalware",
+        "typeHandlerVersion": "1.3",
+        "settings": {
+          "AntimalwareEnabled": "true",
+          "Exclusions": {
+            "Paths": "",
+            "Extensions": "",
+            "Processes": "taskmgr.exe"
+          },
+          "RealtimeProtectionEnabled": "true",
+          "ScheduledScanSettings": {
+            "isEnabled": "true",
+            "scanType": "Full",
+            "day": "1",
+            "time": "150"
+          }
+        },
+        "protectedSettings": null
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/bgInfoExt')]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'AntiMalwareExt')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "BGInfo",
+        "typeHandlerVersion": "2.1",
+        "settings": {
+          "state": "Enable"
+        }
+      }
+    }
   ]
 }

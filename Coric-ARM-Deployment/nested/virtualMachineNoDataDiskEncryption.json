@@ -22,12 +22,14 @@
     "vmName": "[parameters('machineSettings').basename]",
     "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
-    "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('machineSettings').subnet)]"
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('machineSettings').subnet)]",
+    "keyVaultURL": "[concat('https://', parameters('globals').diskEncryption.keyVaultName, '.vault.azure.net/')]",
+    "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]"
   },
 
   "resources": [
     {
-      "apiVersion": "[parameters('globals').apiVersionNIC]",
+      "apiVersion": "[parameters('globals').apiVersion.nic]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('nicName'), padLeft(copyIndex(1), 2, '0'))]",
       "location": "[resourceGroup().location]",
@@ -51,7 +53,7 @@
     },
 
     {
-      "apiVersion": "[parameters('globals').apiVersionVirtualMachine]",
+      "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]",
       "location": "[resourceGroup().location]",
@@ -69,7 +71,20 @@
         "osProfile": {
           "computerName": "[concat(variables('vmName'), padLeft(copyIndex(1), 2, '0'))]",
           "adminUsername": "[parameters('machineSettings').adminUsername]",
-          "adminPassword": "[parameters('machineSettings').adminPassword]"
+          "adminPassword": "[parameters('machineSettings').adminPassword]",
+          "secrets": [
+            {
+              "sourceVault": {
+                "id": "[variables('keyVaultResourceId')]"
+              },
+              "vaultCertificates": [
+                {
+                  "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
+                  "certificateStore": "My"
+                }
+              ]
+            }
+          ]
         },
         "storageProfile": {
           "imageReference": {
@@ -79,7 +94,7 @@
             "version": "[parameters('machineSettings').imageReference.version]"
           },
           "osDisk": {
-            "name": "osdisk",
+            "name": "[concat(variables('vmName'), padLeft(copyIndex(1), 2, '0'), '-osdisk')]",
             "vhd": {
               "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')),'-OS.vhd')]"
             },
@@ -105,8 +120,74 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/BitLocker')]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
+      "dependsOn": [
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
+      ],
+      "properties": {
+        "type": "AzureDiskEncryption",
+        "typeHandlerVersion": "1.0",
+        "publisher": "Microsoft.Azure.Security",
+        "settings": {
+          "AADClientID": "[parameters('globals').diskEncryption.aadClientID]",
+          "AADClientCertThumbprint": "[parameters('globals').diskEncryption.aadClientCertThumbprint]",
+          "KeyVaultURL": "[variables('keyVaultURL')]",
+          "KeyEncryptionKeyURL": "[parameters('globals').diskEncryption.keyVaultKEKURL]",
+          "KeyEncryptionAlgorithm": "RSA-OAEP",
+          "VolumeType": "All",
+          "EncryptionOperation": "EnableEncryption",
+          "SequenceVersion": "1"
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '-DiskEncryption')]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'BitLocker')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').diskEncryption.vmEncryptionTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "vmName": {
+            "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
+          },
+          "keyVaultResourceID": {
+            "value": "[variables('keyVaultResourceID')]"
+          },
+          "keyVaultSecretUrl": {
+            "value": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'BitLocker')).instanceView.statuses[0].message]"
+          },
+          "keyEncryptionKeyURL": {
+            "value": "[parameters('globals').diskEncryption.keyVaultKEKURL]"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/AntiMalwareExt')]",
-      "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "vmLoop",
@@ -140,7 +221,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/bgInfoExt')]",
-      "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "vmLoop",

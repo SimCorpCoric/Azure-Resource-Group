@@ -16,7 +16,7 @@
 
   "resources": [
     {
-      "apiVersion": "[parameters('globals').apiVersionNetwork]",
+      "apiVersion": "[parameters('globals').apiVersion.network]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('globals').networkSettings.name]",
       "location": "[resourceGroup().location]",
