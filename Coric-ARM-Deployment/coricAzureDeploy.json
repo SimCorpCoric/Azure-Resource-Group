@@ -204,6 +204,10 @@
 
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+    "DataDiskInitialize": {
+      "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file DataDiskInitialize.ps1",
+      "scriptURL": "[uri(deployment().properties.templateLink.uri, 'customScript/DataDiskInitialize.ps1')]"
+    },
     "environmentShortNameDevelopment": "Dev",
     "environmentShortNameProduction": "Prod",
     "environmentShortNameUAT": "UAT",

@@ -132,6 +132,27 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmName'),'/DataDiskInitialize')]",
+      "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
+      ],
+      "properties": {
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.4",
+        "publisher": "Microsoft.Compute",
+        "settings": {
+          "fileUris": [
+            "[parameters('globals').DataDiskInitialize.scriptURL]"
+          ],
+          "commandToExecute": "[parameters('globals').DataDiskInitialize.commandToExecute]"
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/BitLocker')]",
       "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
       "location": "[resourceGroup().location]",
@@ -140,7 +161,7 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'DataDiskInitialize')]"
       ],
       "properties": {
         "type": "AzureDiskEncryption",
