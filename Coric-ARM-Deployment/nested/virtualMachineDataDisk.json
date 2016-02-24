@@ -132,7 +132,7 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/DataDiskInitialize')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/DiskInitialize')]",
       "apiVersion": "[parameters('globals').apiVersionVMExtensions]",
       "location": "[resourceGroup().location]",
       "copy": {
@@ -148,9 +148,9 @@
         "publisher": "Microsoft.Compute",
         "settings": {
           "fileUris": [
-            "[parameters('globals').DataDiskInitialize.scriptURL]"
+            "[parameters('globals').customScript.diskInitialize.scriptURL]"
           ],
-          "commandToExecute": "[parameters('globals').DataDiskInitialize.commandToExecute]"
+          "commandToExecute": "[parameters('globals').customScript.diskInitialize.commandToExecute]"
         }
       }
     },
@@ -165,7 +165,7 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'DataDiskInitialize')]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'DiskInitialize')]"
       ],
       "properties": {
         "type": "AzureDiskEncryption",
