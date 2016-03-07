@@ -18,8 +18,8 @@
     "storageAccountNamePremiumType": "Premium_LRS",
     "sql": {
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
-      "adminUsername": "[parameters('globals').adminUsername]",
-      "adminPassword": "[parameters('globals').adminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "adminPassword": "[parameters('globals').localAdminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 1,
       "imageReference": "[parameters('globals').sqlVM]",
@@ -29,8 +29,8 @@
     },
     "warehouse": {
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
-      "adminUsername": "[parameters('globals').adminUsername]",
-      "adminPassword": "[parameters('globals').adminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "adminPassword": "[parameters('globals').localAdminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 1,
       "imageReference": "[parameters('globals').windowsVM]",
@@ -40,8 +40,8 @@
     },
     "drone": {
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
-      "adminUsername": "[parameters('globals').adminUsername]",
-      "adminPassword": "[parameters('globals').adminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "adminPassword": "[parameters('globals').localAdminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": "[parameters('globals').environment.droneCount]",
       "imageReference": "[parameters('globals').windowsVM]",
@@ -50,8 +50,8 @@
     },
     "desktop": {
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
-      "adminUsername": "[parameters('globals').adminUsername]",
-      "adminPassword": "[parameters('globals').adminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "adminPassword": "[parameters('globals').localAdminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": "[parameters('globals').environment.desktopCount]",
       "imageReference": "[parameters('globals').windowsVM]",

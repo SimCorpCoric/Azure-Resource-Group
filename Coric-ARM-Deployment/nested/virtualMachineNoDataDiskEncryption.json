@@ -9,6 +9,7 @@
         "Description": "Global complex object passed to nested templates"
       }
     },
+
     "machineSettings": {
       "metadata": {
         "Description": "Machine settings object"
@@ -194,7 +195,7 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '-DiskEncryption')]"
       ],
       "properties": {
         "publisher": "Microsoft.Azure.Security",
@@ -228,7 +229,7 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'AntiMalwareExt')]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",

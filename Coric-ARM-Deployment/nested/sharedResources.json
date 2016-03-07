@@ -14,8 +14,8 @@
   "variables": {
     "domainControllers": {
       "basename": "[concat(parameters('globals').baseName, '-dc')]",
-      "adminUsername": "[parameters('globals').adminUsername]",
-      "adminPassword": "[parameters('globals').adminPassword]",
+      "adminUsername": "[parameters('globals').domainAdminUsername]",
+      "adminPassword": "[parameters('globals').domainAdminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 2,
       "imageReference": "[parameters('globals').windowsVM]",
@@ -26,8 +26,8 @@
 
     "rdsGateway": {
       "basename": "[concat(parameters('globals').baseName, '-rdg')]",
-      "adminUsername": "[parameters('globals').adminUsername]",
-      "adminPassword": "[parameters('globals').adminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "adminPassword": "[parameters('globals').localAdminPassword]",
       "privateIPAllocationMethod": "Dynamic",
       "numberOfVMs": 1,
       "imageReference": "[parameters('globals').windowsVM]",

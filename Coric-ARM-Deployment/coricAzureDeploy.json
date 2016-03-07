@@ -58,18 +58,33 @@
       }
     },
 
-    "adminUsername": {
+    "domainAdminUsername": {
       "type": "string",
-      "defaultValue": "AdminUser",
+      "defaultValue": "DomainAdmin",
       "metadata": {
         "description": "Domain admin username"
       }
     },
 
-    "adminPassword": {
+    "domainAdminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "Domain admin password"
+      }
+    },
+
+    "localAdminUsername": {
+      "type": "string",
+      "defaultValue": "LocalAdmin",
+      "metadata": {
+        "description": "Local admin username"
+      }
+    },
+
+    "localAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Local admin password"
       }
     },
 
@@ -186,21 +201,21 @@
     },
 
 
-      "aadClientID": {
-        "type": "string",
-        "metadata": {
-          "description": "Client ID of AAD app which has permissions to KeyVault"
-        }
-      },
-
-      "aadClientCertThumbprint": {
-        "type": "string",
-        "metadata": {
-          "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
-        }
+    "aadClientID": {
+      "type": "string",
+      "metadata": {
+        "description": "Client ID of AAD app which has permissions to KeyVault"
       }
-
     },
+
+    "aadClientCertThumbprint": {
+      "type": "string",
+      "metadata": {
+        "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
+      }
+    }
+
+  },
 
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
@@ -210,8 +225,6 @@
     "environmentShortNameWeb": "Web",
     "environmentTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
     "globals": {
-      "adminPassword": "[parameters('adminPassword')]",
-      "adminUsername": "[parameters('adminUsername')]",
       "apiVersion": {
         "deployment": "2015-01-01",
         "network": "2015-06-15",
@@ -239,6 +252,8 @@
         "keyVaultCertificateURL": "[parameters('keyVaultCertificateURL')]",
         "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]"
       },
+      "domainAdminPassword": "[parameters('domainAdminPassword')]",
+      "domainAdminUsername": "[parameters('domainAdminUsername')]",
       "environment": {
         "name": "[parameters('environmentName')]",
         "shortname": "[variables(concat('environmentShortName', parameters('environmentName')))]",
@@ -246,6 +261,8 @@
         "droneCount": "[parameters('droneCount')]",
         "desktopCount": "[parameters('desktopCount')]"
       },
+      "localAdminUsername": "[parameters('localAdminUsername')]",
+      "localAdminPassword": "[parameters('localAdminPassword')]",
       "networkSettings": {
         "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
         "subnet1": {
