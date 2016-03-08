@@ -155,7 +155,7 @@
     },
 
     {
-      "name": "domainControllersSetup",
+      "name": "primaryDCSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
@@ -181,7 +181,7 @@
     },
 
     {
-      "name": "domainControllersSetup",
+      "name": "backupDCSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
