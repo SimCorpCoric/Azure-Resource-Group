@@ -13,50 +13,99 @@
 
   "variables": {
     "acronym": "[toLower(parameters('globals').environment.acronym)]",
+    "desktop": {
+      "adminPassword": "[parameters('globals').localAdminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
+      "dnsServers": "[variables('globals').networkSettings.dnsServers",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "numberOfVMs": "[parameters('globals').environment.desktopCount]",
+      "ipconfigurations": {
+        "value": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet3.name)]"
+              }
+            }
+          }
+        ]
+      },
+      "storageAccount": "[variables('storageAccountName')]"
+    },
+    "drone": {
+      "adminPassword": "[parameters('globals').localAdminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
+      "dnsServers": "[variables('globals').networkSettings.dnsServers",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipconfigurations": {
+        "value": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+              }
+            }
+          }
+        ]
+      },
+      "numberOfVMs": "[parameters('globals').environment.droneCount]",
+      "storageAccount": "[variables('storageAccountName')]"
+    },
+    "sql": {
+      "adminPassword": "[parameters('globals').localAdminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
+      "dnsServers": "[variables('globals').networkSettings.dnsServers",
+      "imageReference": "[parameters('globals').sqlVM]",
+      "ipconfigurations": {
+        "value": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+              }
+            }
+          }
+        ]
+      },
+      "numberOfVMs": 1,
+      "sizeOfDataDiskInGB": 1023,
+      "storageAccount": "[variables('storageAccountNamePremium')]"
+    },
     "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname))]",
     "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
     "storageAccountNamePremiumType": "Premium_LRS",
-    "sql": {
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "adminPassword": "[parameters('globals').localAdminPassword]",
-      "privateIPAllocationMethod": "Dynamic",
-      "numberOfVMs": 1,
-      "imageReference": "[parameters('globals').sqlVM]",
-      "sizeOfDataDiskInGB": 1023,
-      "storageAccount": "[variables('storageAccountNamePremium')]",
-      "subnet": "[parameters('globals').networkSettings.subnet2.name]"
-    },
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
     "warehouse": {
+      "adminPassword": "[parameters('globals').localAdminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "adminPassword": "[parameters('globals').localAdminPassword]",
-      "privateIPAllocationMethod": "Dynamic",
+      "dnsServers": "[variables('globals').networkSettings.dnsServers",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipconfigurations": {
+        "value": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+              }
+            }
+          }
+        ]
+      },
       "numberOfVMs": 1,
-      "imageReference": "[parameters('globals').windowsVM]",
       "sizeOfDataDiskInGB": 1023,
-      "storageAccount": "[variables('storageAccountName')]",
-      "subnet": "[parameters('globals').networkSettings.subnet2.name]"
-    },
-    "drone": {
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "adminPassword": "[parameters('globals').localAdminPassword]",
-      "privateIPAllocationMethod": "Dynamic",
-      "numberOfVMs": "[parameters('globals').environment.droneCount]",
-      "imageReference": "[parameters('globals').windowsVM]",
-      "storageAccount": "[variables('storageAccountName')]",
-      "subnet": "[parameters('globals').networkSettings.subnet2.name]"
-    },
-    "desktop": {
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "adminPassword": "[parameters('globals').localAdminPassword]",
-      "privateIPAllocationMethod": "Dynamic",
-      "numberOfVMs": "[parameters('globals').environment.desktopCount]",
-      "imageReference": "[parameters('globals').windowsVM]",
-      "storageAccount": "[variables('storageAccountName')]",
-      "subnet": "[parameters('globals').networkSettings.subnet3.name]"
+      "storageAccount": "[variables('storageAccountName')]"
     }
   },
 

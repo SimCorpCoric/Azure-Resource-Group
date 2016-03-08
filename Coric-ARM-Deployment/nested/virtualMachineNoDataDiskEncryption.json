@@ -15,6 +15,15 @@
         "Description": "Machine settings object"
       },
       "type": "object"
+    },
+
+    "copyIndexOffset": {
+      "metadata": {
+        "Description": "Number to start copy index from"
+      },
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1
     }
   },
 
@@ -22,8 +31,6 @@
     "nicName": "[concat('nic', parameters('machineSettings').basename)]",
     "vmName": "[parameters('machineSettings').basename]",
     "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
-    "subnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('machineSettings').subnet)]",
     "keyVaultURL": "[concat('https://', parameters('globals').diskEncryption.keyVaultName, '.vault.azure.net/')]",
     "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]"
   },
@@ -32,45 +39,38 @@
     {
       "apiVersion": "[parameters('globals').apiVersion.nic]",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('nicName'), padLeft(copyIndex(1), 2, '0'))]",
+      "name": "[concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "nicLoop",
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig",
-            "properties": {
-              "privateIPAllocationMethod": "[parameters('machineSettings').privateIPAllocationMethod]",
-              "subnet": {
-                "id": "[variables('subnetRef')]"
-              }
-            }
-          }
-        ]
+        "ipConfigurations": "[parameters('machineSettings').ipConfigurations]",
+        "dnsSettings": {
+          "dnsServers": "[parameters('machineSettings').dnsServers]"
+        }
       }
     },
 
     {
       "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "vmLoop",
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), padLeft(copyIndex(1), 2, '0'))]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
       ],
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('machineSettings').imageReference.size]"
         },
         "osProfile": {
-          "computerName": "[concat(variables('vmName'), padLeft(copyIndex(1), 2, '0'))]",
+          "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
           "adminUsername": "[parameters('machineSettings').adminUsername]",
           "adminPassword": "[parameters('machineSettings').adminPassword]",
           "secrets": [
@@ -95,9 +95,9 @@
             "version": "[parameters('machineSettings').imageReference.version]"
           },
           "osDisk": {
-            "name": "[concat(variables('vmName'), padLeft(copyIndex(1), 2, '0'), '-osdisk')]",
+            "name": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-osdisk')]",
             "vhd": {
-              "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')),'-OS.vhd')]"
+              "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -106,7 +106,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(1), 2, '0')))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')))]"
             }
           ]
         },
@@ -121,7 +121,7 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '/BitLocker')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '/BitLocker')]",
       "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
       "copy": {
@@ -129,7 +129,7 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
       ],
       "properties": {
         "type": "AzureDiskEncryption",
@@ -150,14 +150,14 @@
 
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '-DiskEncryption')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-DiskEncryption')]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "copy": {
         "name": "vmLoop",
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'BitLocker')]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')), 'BitLocker')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -170,13 +170,13 @@
             "value": "[parameters('globals')]"
           },
           "vmName": {
-            "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'))]"
+            "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
           },
           "keyVaultResourceID": {
             "value": "[variables('keyVaultResourceID')]"
           },
           "keyVaultSecretUrl": {
-            "value": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'BitLocker')).instanceView.statuses[0].message]"
+            "value": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')), 'BitLocker')).instanceView.statuses[0].message]"
           },
           "keyEncryptionKeyURL": {
             "value": "[parameters('globals').diskEncryption.keyVaultKEKURL]"
@@ -187,7 +187,7 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/AntiMalwareExt')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'),'/AntiMalwareExt')]",
       "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
       "copy": {
@@ -195,7 +195,7 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'), '-DiskEncryption')]"
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-DiskEncryption')]"
       ],
       "properties": {
         "publisher": "Microsoft.Azure.Security",
@@ -221,7 +221,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0'),'/bgInfoExt')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'),'/bgInfoExt')]",
       "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
       "copy": {
@@ -229,7 +229,7 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(1), 2, '0')), 'AntiMalwareExt')]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')), 'AntiMalwareExt')]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",

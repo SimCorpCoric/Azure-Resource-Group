@@ -12,28 +12,84 @@
   },
 
   "variables": {
-    "domainControllers": {
-      "basename": "[concat(parameters('globals').baseName, '-dc')]",
-      "adminUsername": "[parameters('globals').domainAdminUsername]",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+    "primaryDomainController": {
       "adminPassword": "[parameters('globals').domainAdminPassword]",
-      "privateIPAllocationMethod": "Dynamic",
-      "numberOfVMs": 2,
+      "adminUsername": "[parameters('globals').domainAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-dc')]",
+      "dnsServers": [
+        "127.0.0.1",
+        "[parameters('globals').networkSettings.dc02IPAddress]"
+      ],
       "imageReference": "[parameters('globals').windowsVM]",
+      "ipconfigurations": {
+        "value": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[parameters('globals').networkSettings.dc01IPAddress]",
+              "subnet": {
+                "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+              }
+            }
+          }
+        ]
+      },
+      "numberOfVMs": 1,
       "sizeOfDataDiskInGB": 1023,
-      "storageAccount": "[parameters('globals').storageAccountAdmin]",
-      "subnet": "[parameters('globals').networkSettings.subnet2.name]"
+      "storageAccount": "[parameters('globals').storageAccountAdmin]"
+    },
+
+    "backupDomainController": {
+      "adminPassword": "[parameters('globals').domainAdminPassword]",
+      "adminUsername": "[parameters('globals').domainAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-dc')]",
+      "dnsServers": [
+        "127.0.0.1",
+        "[parameters('globals').networkSettings.dc01IPAddress]"
+      ],
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipconfigurations": {
+        "value": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[parameters('globals').networkSettings.dc02IPAddress]",
+              "subnet": {
+                "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+              }
+            }
+          }
+        ]
+      },
+      "numberOfVMs": 1,
+      "sizeOfDataDiskInGB": 1023,
+      "storageAccount": "[parameters('globals').storageAccountAdmin]"
     },
 
     "rdsGateway": {
-      "basename": "[concat(parameters('globals').baseName, '-rdg')]",
-      "adminUsername": "[parameters('globals').localAdminUsername]",
       "adminPassword": "[parameters('globals').localAdminPassword]",
-      "privateIPAllocationMethod": "Dynamic",
-      "numberOfVMs": 1,
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-rdg')]",
+      "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "imageReference": "[parameters('globals').windowsVM]",
-      "sizeOfDataDiskInGB": null,
-      "storageAccount": "[parameters('globals').storageAccountAdmin]",
-      "subnet": "[parameters('globals').networkSettings.subnet4.name]"
+      "ipconfigurations": {
+        "value": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet4.name)]"
+              }
+            }
+          }
+        ]
+      },
+      "numberOfVMs": 1,
+      "storageAccount": "[parameters('globals').storageAccountAdmin]"
     }
   },
 
@@ -118,7 +174,36 @@
             "value": "[parameters('globals')]"
           },
           "machineSettings": {
-            "value": "[variables('domainControllers')]"
+            "value": "[variables('primaryDomainController')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "domainControllersSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'networkSetup')]",
+        "[concat('Microsoft.Resources/deployments/', 'diagnosticsStorage')]",
+        "[concat('Microsoft.Resources/deployments/', 'adminStorage')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').vmType.dataDiskEncrypted]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('backupDomainController')]"
+          },
+          "copyIndexOffset": {
+            "value": 2
           }
         }
       }

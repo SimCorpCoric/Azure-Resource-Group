@@ -265,6 +265,12 @@
       "localAdminPassword": "[parameters('localAdminPassword')]",
       "networkSettings": {
         "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
+        "dc01IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.4')]",
+        "dc02IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.5')]",
+        "dnsServers": [
+          "[variables('globals').networkSettings.dc01IPAddress]",
+          "[variables('globals').networkSettings.dc02IPAddress]"
+        ],
         "subnet1": {
           "name": "gateway",
           "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 0)) ,'.0/24')]"
