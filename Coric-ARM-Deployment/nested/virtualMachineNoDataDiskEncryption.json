@@ -47,7 +47,6 @@
       },
       "properties": {
         "ipConfigurations": "[parameters('machineSettings').ipConfigurations]"
-        }
       }
     },
 
