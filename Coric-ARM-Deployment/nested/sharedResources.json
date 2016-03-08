@@ -214,7 +214,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'domainControllersSetup')]"
+        "[concat('Microsoft.Resources/deployments/', 'primaryDCSetup')]"
       ],
       "properties": {
         "mode": "Incremental",
