@@ -20,19 +20,17 @@
       "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "imageReference": "[parameters('globals').windowsVM]",
       "numberOfVMs": "[parameters('globals').environment.desktopCount]",
-      "ipconfigurations": {
-        "value": [
-          {
-            "name": "ipconfig",
-            "properties": {
-              "privateIPAllocationMethod": "Dynamic",
-              "subnet": {
-                "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet3.name)]"
-              }
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet3.name)]"
             }
           }
-        ]
-      },
+        }
+      ],
       "storageAccount": "[variables('storageAccountName')]"
     },
     "drone": {
@@ -41,19 +39,17 @@
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
       "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "imageReference": "[parameters('globals').windowsVM]",
-      "ipconfigurations": {
-        "value": [
-          {
-            "name": "ipconfig",
-            "properties": {
-              "privateIPAllocationMethod": "Dynamic",
-              "subnet": {
-                "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
-              }
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
             }
           }
-        ]
-      },
+        }
+      ],
       "numberOfVMs": "[parameters('globals').environment.droneCount]",
       "storageAccount": "[variables('storageAccountName')]"
     },
@@ -63,19 +59,17 @@
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
       "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "imageReference": "[parameters('globals').sqlVM]",
-      "ipconfigurations": {
-        "value": [
-          {
-            "name": "ipconfig",
-            "properties": {
-              "privateIPAllocationMethod": "Dynamic",
-              "subnet": {
-                "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
-              }
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
             }
           }
-        ]
-      },
+        }
+      ],
       "numberOfVMs": 1,
       "sizeOfDataDiskInGB": 1023,
       "storageAccount": "[variables('storageAccountNamePremium')]"
@@ -90,19 +84,17 @@
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
       "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "imageReference": "[parameters('globals').windowsVM]",
-      "ipconfigurations": {
-        "value": [
-          {
-            "name": "ipconfig",
-            "properties": {
-              "privateIPAllocationMethod": "Dynamic",
-              "subnet": {
-                "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
-              }
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
             }
           }
-        ]
-      },
+        }
+      ],
       "numberOfVMs": 1,
       "sizeOfDataDiskInGB": 1023,
       "storageAccount": "[variables('storageAccountName')]"
