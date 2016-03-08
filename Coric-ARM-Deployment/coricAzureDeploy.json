@@ -219,8 +219,8 @@
 
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
-    "dc01IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.4')]",
-    "dc02IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.5')]",
+    "dc01IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.4')]",
+    "dc02IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.5')]",
     "environmentShortNameDevelopment": "Dev",
     "environmentShortNameProduction": "Prod",
     "environmentShortNameUAT": "UAT",
