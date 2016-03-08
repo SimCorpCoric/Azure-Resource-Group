@@ -209,7 +209,9 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'primaryDCSetup')]"
+        "[concat('Microsoft.Resources/deployments/', 'networkSetup')]",
+        "[concat('Microsoft.Resources/deployments/', 'diagnosticsStorage')]",
+        "[concat('Microsoft.Resources/deployments/', 'adminStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
