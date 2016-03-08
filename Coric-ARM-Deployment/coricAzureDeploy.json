@@ -219,6 +219,8 @@
 
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+    "dc01IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.4')]",
+    "dc02IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.5')]",
     "environmentShortNameDevelopment": "Dev",
     "environmentShortNameProduction": "Prod",
     "environmentShortNameUAT": "UAT",
@@ -265,11 +267,11 @@
       "localAdminPassword": "[parameters('localAdminPassword')]",
       "networkSettings": {
         "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
-        "dc01IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.4')]",
-        "dc02IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.5')]",
+        "dc01IPAddress": "[variables('dc01IPAddress')]",
+        "dc02IPAddress": "[variables('dc02IPAddress')]",
         "dnsServers": [
-          "[variables('globals').networkSettings.dc01IPAddress]",
-          "[variables('globals').networkSettings.dc02IPAddress]"
+          "[variables('dc01IPAddress')]",
+          "[variables('dc02IPAddress')]"
         ],
         "subnet1": {
           "name": "gateway",
