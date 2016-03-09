@@ -176,11 +176,11 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "CreateADForest",
+      "name": "[concat(parameters('globals').baseName, '-dc01', '/CreateADForest')]",
       "apiVersion": "[parameters('globals').apiVersion.dsc]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', reference('primaryDCSetup').outputs.vmName.value)]"
+        "primaryDCSetup"
       ],
       "properties": {
         "publisher": "Microsoft.Powershell",
