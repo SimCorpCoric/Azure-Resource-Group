@@ -212,9 +212,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'networkSetup')]",
-        "[concat('Microsoft.Resources/deployments/', 'diagnosticsStorage')]",
-        "[concat('Microsoft.Resources/deployments/', 'adminStorage')]"
+        "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')"
       ],
       "properties": {
         "mode": "Incremental",
@@ -241,9 +239,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'networkSetup')]",
-        "[concat('Microsoft.Resources/deployments/', 'diagnosticsStorage')]",
-        "[concat('Microsoft.Resources/deployments/', 'adminStorage')]"
+        "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')"
       ],
       "properties": {
         "mode": "Incremental",
