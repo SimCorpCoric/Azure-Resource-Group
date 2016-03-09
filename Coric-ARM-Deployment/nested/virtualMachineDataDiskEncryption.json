@@ -273,5 +273,12 @@
         }
       }
     }
-  ]
+  ],
+
+  "outputs": {
+    "vmName": {
+      "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+      "type": "string"
+    }
+  }
 }

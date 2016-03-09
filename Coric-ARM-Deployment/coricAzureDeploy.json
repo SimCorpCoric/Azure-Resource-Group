@@ -221,14 +221,18 @@
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
     "dc01IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.4')]",
     "dc02IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.5')]",
+    "domainName": "[concat(variables('baseName'),'.Hosted')]",
     "environmentShortNameDevelopment": "Dev",
     "environmentShortNameProduction": "Prod",
     "environmentShortNameUAT": "UAT",
     "environmentShortNameWeb": "Web",
     "environmentTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
     "globals": {
+      "adConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+      "adModulesURL": "[uri(deployment().properties.templateLink.uri, 'DSC/CreateADPDC.ps1.zip')]",
       "apiVersion": {
         "deployment": "2015-01-01",
+        "dsc": "2015-06-15",
         "network": "2015-06-15",
         "nic": "2015-06-15",
         "nsg": "2015-06-15",

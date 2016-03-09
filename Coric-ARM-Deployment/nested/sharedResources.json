@@ -176,6 +176,38 @@
     },
 
     {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')",
+      "apiVersion": "[parameters('globals').apiVersion.dsc]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "primaryDCSetup"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.14",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "ModulesUrl": "[parameters('globals').adModulesURL]",
+          "ConfigurationFunction": "[parameters('globals').adConfigurationFunction]",
+          "Properties": {
+            "DomainName": "[parameters('globals').domainName]",
+            "AdminCreds": {
+              "UserName": "[parameters('globals').domainAdminUsername]",
+              "Password": "PrivateSettingsRef:AdminPassword"
+            }
+          }
+        },
+        "protectedSettings": {
+          "Items": {
+            "AdminPassword": "[parameters('globals').domainAdminPassword]"
+          }
+        }
+      }
+    },
+
+    {
       "name": "backupDCSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
