@@ -177,7 +177,7 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')",
+      "name": "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')]",
       "apiVersion": "[parameters('globals').apiVersion.dsc]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
@@ -212,7 +212,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')"
+        "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -239,7 +239,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')"
+        "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')]"
       ],
       "properties": {
         "mode": "Incremental",
