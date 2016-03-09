@@ -221,7 +221,6 @@
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
     "dc01IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.4')]",
     "dc02IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.5')]",
-    "domainName": "[concat(variables('baseName'),'.Hosted')]",
     "environmentShortNameDevelopment": "Dev",
     "environmentShortNameProduction": "Prod",
     "environmentShortNameUAT": "UAT",
@@ -260,6 +259,7 @@
       },
       "domainAdminPassword": "[parameters('domainAdminPassword')]",
       "domainAdminUsername": "[parameters('domainAdminUsername')]",
+      "domainName": "[concat(variables('baseName'),'.Hosted')]",
       "environment": {
         "name": "[parameters('environmentName')]",
         "shortname": "[variables(concat('environmentShortName', parameters('environmentName')))]",
