@@ -60,7 +60,6 @@
           }
         }
       ],
-
       "numberOfVMs": 1,
       "sizeOfDataDiskInGB": 1023,
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
@@ -177,11 +176,11 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')]",
+      "name": "CreateADForest",
       "apiVersion": "[parameters('globals').apiVersion.dsc]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "primaryDCSetup"
+        "[concat('Microsoft.Compute/virtualMachines/', reference('primaryDCSetup').outputs.vmName.value)]"
       ],
       "properties": {
         "publisher": "Microsoft.Powershell",
@@ -212,7 +211,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')]"
+        "CreateADForest"
       ],
       "properties": {
         "mode": "Incremental",
@@ -239,7 +238,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat(reference('primaryDCSetup').outputs.vmName.value, '/CreateADForest')]"
+        "CreateADForest"
       ],
       "properties": {
         "mode": "Incremental",
