@@ -176,7 +176,7 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('globals').baseName, '-dc01', '/CreateADForest')]",
+      "name": "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateADForest')]",
       "apiVersion": "[parameters('globals').apiVersion.dsc]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
