@@ -232,7 +232,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), 'CreateOUStructureAdmin')]"
+        "CreateADForest",
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), 'CustomScript')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -259,7 +260,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), 'CreateOUStructureAdmin')]"
+        "CreateADForest",
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), 'CustomScript')]"
       ],
       "properties": {
         "mode": "Incremental",

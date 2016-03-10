@@ -129,7 +129,7 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '/DiskInitialize')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '/CustomScript')]",
       "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
       "copy": {
@@ -162,7 +162,7 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')), 'DiskInitialize')]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')), 'CustomScript')]"
       ],
       "properties": {
         "type": "AzureDiskEncryption",
