@@ -177,7 +177,7 @@
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'environmentStoragePremium')]",
-        "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateOUStructure', parameters('globals').environment.acronym)]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01', 'CreateOUStructure', parameters('globals').environment.acronym))]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -202,7 +202,7 @@
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]",
-        "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateOUStructure', parameters('globals').environment.acronym)]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01', 'CreateOUStructure', parameters('globals').environment.acronym))]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -227,7 +227,7 @@
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]",
-        "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateOUStructure', parameters('globals').environment.acronym)]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01', 'CreateOUStructure', parameters('globals').environment.acronym))]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -252,7 +252,7 @@
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]",
-        "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateOUStructure', parameters('globals').environment.acronym)]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01', 'CreateOUStructure', parameters('globals').environment.acronym))]"
       ],
       "properties": {
         "mode": "Incremental",
