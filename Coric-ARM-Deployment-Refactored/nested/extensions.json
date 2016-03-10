@@ -1,0 +1,124 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "globals": {
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      },
+      "type": "object"
+    },
+
+    "vmName": {
+      "metadata": {
+        "Description": "The VM's name as shown in the portal - NOT the server's BIOS/hostname"
+      },
+      "type": "string"
+    },
+
+    "encryptionTemplateLink": {
+      "metadata": {
+        "Description": "URI to disk encryption template or blank template (when no encryption is required)"
+      },
+      "type": "string"
+    }
+  },
+
+  "variables": {
+
+  },
+
+  "resources": [
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmName'), '/CustomScript')]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.4",
+        "publisher": "Microsoft.Compute",
+        "settings": {
+          "fileUris": [
+            "[parameters('globals').customScript.diskInitialize.scriptURL]"
+          ],
+          "commandToExecute": "[parameters('globals').customScript.diskInitialize.commandToExecute]"
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmName'),'/AntiMalwareExt')]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'CustomScript')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Azure.Security",
+        "type": "IaaSAntimalware",
+        "typeHandlerVersion": "1.3",
+        "settings": {
+          "AntimalwareEnabled": "true",
+          "Exclusions": {
+            "Paths": "",
+            "Extensions": "",
+            "Processes": "taskmgr.exe"
+          },
+          "RealtimeProtectionEnabled": "true",
+          "ScheduledScanSettings": {
+            "isEnabled": "true",
+            "scanType": "Full",
+            "day": "1",
+            "time": "150"
+          }
+        },
+        "protectedSettings": null
+      }
+    },
+
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmName'),'/bgInfoExt')]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'AntiMalwareExt')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "BGInfo",
+        "typeHandlerVersion": "2.1",
+        "settings": {
+          "state": "Enable"
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "[concat(parameters('vmName'), '-Encryption')]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'bgInfoExt')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('encryptionTemplateLink')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "vmName": {
+            "value": "[parameters('vmName')]"
+          }
+        }
+      }
+    }
+  ]
+}

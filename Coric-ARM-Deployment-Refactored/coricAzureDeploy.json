@@ -1,0 +1,385 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+
+    "prefix": {
+      "type": "string",
+      "defaultValue": "cor",
+      "metadata": {
+        "description": "Characters used for the prefix of each Azure object."
+      }
+    },
+
+    "clientID": {
+      "defaultValue": "14",
+      "metadata": {
+        "description": "Unique ClientID for the system."
+      },
+      "type": "int"
+    },
+
+    "storageAccountType": {
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ],
+      "defaultValue": "Standard_RAGRS",
+      "metadata": {
+        "Description": "The type of the Storage Account created"
+      },
+      "type": "string"
+    },
+
+    "secondIPOctet": {
+      "type": "int",
+      "defaultValue": 12,
+      "minValue": 12,
+      "maxValue": 12,
+      "allowedValues": [ 12 ],
+      "metadata": {
+        "description": "The second IP octet used to denote the local network address space.  This is a value reserved and provided by SimCorp Group IT to esure VPN connectivity into the SimCorp offices."
+      }
+    },
+
+    "windowsOSVersion": {
+      "type": "string",
+      "defaultValue": "2012-R2-Datacenter",
+      "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "Windows-Server-Technical-Preview"
+      ],
+      "metadata": {
+        "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+      }
+    },
+
+    "domainAdminUsername": {
+      "type": "string",
+      "defaultValue": "DomainAdmin",
+      "metadata": {
+        "description": "Domain admin username"
+      }
+    },
+
+    "domainAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
+    },
+
+    "localAdminUsername": {
+      "type": "string",
+      "defaultValue": "LocalAdmin",
+      "metadata": {
+        "description": "Local admin username"
+      }
+    },
+
+    "localAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Local admin password"
+      }
+    },
+
+    "environmentName": {
+      "metadata": {
+        "Description": "Name of the environment being built"
+      },
+      "allowedValues": [
+        "Production",
+        "UAT",
+        "Development",
+        "Web"
+      ],
+      "defaultValue": "Production",
+      "type": "string"
+    },
+
+    "environmentAcronym": {
+      "metadata": {
+        "Description": "Acronym for the environment being built"
+      },
+      "allowedValues": [
+        "P",
+        "U",
+        "D",
+        "W"
+      ],
+      "defaultValue": "P",
+      "type": "string"
+    },
+
+    "sqlVersion": {
+      "type": "string",
+      "allowedValues": [
+        "SQL2012SP2",
+        "SQL2014SP1"
+      ],
+      "defaultValue": "SQL2012SP2",
+      "metadata": {
+        "Description": "Version of SQL Server Enterprise to use.  Use following PowerShell cmdlet to see available options for the deployment region: Get-AzureRmVMImageOffer -PublisherName 'MicrosoftSQLServer"
+      }
+    },
+
+    "sqlVMSize": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_DS1",
+        "Standard_DS2",
+        "Standard_DS11",
+        "Standard_DS12"
+      ],
+      "defaultValue": "Standard_DS1",
+      "metadata": {
+        "Description": "VM size for SQL Server Enterprise."
+      }
+    },
+
+    "droneCount": {
+      "type": "int",
+      "minValue": 1,
+      "defaultValue": 1,
+      "metadata": {
+        "Description": "The number of Drones to build for this environment"
+      }
+    },
+
+    "desktopCount": {
+      "type": "int",
+      "minValue": 1,
+      "defaultValue": 1,
+      "metadata": {
+        "Description": "The number of Desktops to build for this environment"
+      }
+    },
+
+    "windowsVMSize": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_D1",
+        "Standard_D2"
+      ],
+      "defaultValue": "Standard_D1",
+      "metadata": {
+        "Description": "VM size for Windows Servers."
+      }
+    },
+
+    "keyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of Key Vault which contains the encryption certificate"
+      }
+    },
+
+    "keyVaultResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Resource Group of Key Vault which contains the encryption certificate"
+      }
+    },
+
+    "keyVaultCertificateURL": {
+      "type": "string",
+      "metadata": {
+        "description": "Url of the certificate in the Key Vault.  E.g: https://mytestvault.vault.azure.net:443/secrets/myaadappcertificate/<version>"
+      }
+    },
+
+    "keyVaultKEKURL": {
+      "type": "string",
+      "metadata": {
+        "description": "Url of the Key Encryption Key in the Key Vault.  E.g: https://mytestvault.vault.azure.net/keys/mykek/<version>"
+      }
+    },
+
+
+    "aadClientID": {
+      "type": "string",
+      "metadata": {
+        "description": "Client ID of AAD app which has permissions to KeyVault"
+      }
+    },
+
+    "aadClientCertThumbprint": {
+      "type": "string",
+      "metadata": {
+        "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
+      }
+    }
+
+  },
+
+  "variables": {
+    "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+    "dc01IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.4')]",
+    "dc02IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.5')]",
+    "domainSuffix": "Hosted",
+    "environment": {
+      "name": "[parameters('environmentName')]",
+      "shortname": "[variables(concat('environmentShortName', parameters('environmentName')))]",
+      "acronym": "[parameters('environmentAcronym')]",
+      "droneCount": "[parameters('droneCount')]",
+      "desktopCount": "[parameters('desktopCount')]"
+    },
+    "environmentShortNameDevelopment": "Dev",
+    "environmentShortNameProduction": "Prod",
+    "environmentShortNameUAT": "UAT",
+    "environmentShortNameWeb": "Web",
+    "environmentTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
+    "globals": {
+      "apiVersion": {
+        "deployment": "2015-01-01",
+        "dsc": "2015-06-15",
+        "extension": "2015-06-15",
+        "network": "2015-06-15",
+        "nic": "2015-06-15",
+        "nsg": "2015-06-15",
+        "pip": "2015-03-01-preview",
+        "storage": "2015-06-15",
+        "virtualMachine": "2015-06-15"
+      },
+      "baseName": "[variables('baseName')]",
+      "clientID": "[parameters('clientID')]",
+      "customScript": {
+        "createCoricOUStructure": {
+          "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file CreateCoricOUStructure.ps1 -DomainLDAPName DC=', variables('baseName'), 'DC=', variables('domainSuffix'))]",
+          "scriptURL": "[uri(deployment().properties.templateLink.uri, 'customScript/CreateCoricOUStructure.ps1')]"
+        }
+      },
+      "diskEncryption": {
+        "aadClientID": "[parameters('aadClientID')]",
+        "aadClientCertThumbprint": "[parameters('aadClientCertThumbprint')]",
+        "keyVaultKEKURL": "[parameters('keyVaultKEKURL')]",
+        "keyVaultName": "[parameters('keyVaultName')]",
+        "keyVaultResourceGroup": "[parameters('keyVaultResourceGroup')]",
+        "keyVaultCertificateURL": "[parameters('keyVaultCertificateURL')]",
+        "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]"
+      },
+      "domainAdminPassword": "[parameters('domainAdminPassword')]",
+      "domainAdminUsername": "[parameters('domainAdminUsername')]",
+      "domainName": "[concat(variables('baseName'), '.', variables('domainSuffix'))]",
+      "dsc": {
+        "adConfiguration": {
+          "function": "CreateADPDC.ps1\\CreateADPDC",
+          "url": "[uri(deployment().properties.templateLink.uri, 'DSC/CreateADPDC.ps1.zip')]"
+        },
+        "diskInitialize": { },
+        "function": "DiskInitialize.ps1\\DiskInitialize",
+        "url": "[uri(deployment().properties.templateLink.uri, 'DSC/DiskInitialize.ps1.zip')]"
+      }
+    },
+    "localAdminPassword": "[parameters('localAdminPassword')]",
+    "localAdminUsername": "[parameters('localAdminUsername')]",
+    "networkSettings": {
+      "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
+      "dc01IPAddress": "[variables('dc01IPAddress')]",
+      "dc02IPAddress": "[variables('dc02IPAddress')]",
+      "dnsServers": [
+        "[variables('dc01IPAddress')]",
+        "[variables('dc02IPAddress')]"
+      ],
+      "subnet1": {
+        "name": "gateway",
+        "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 0)) ,'.0/24')]"
+      },
+      "subnet2": {
+        "name": "backend",
+        "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.0/24')]"
+      },
+      "subnet3": {
+        "name": "user",
+        "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 2)) ,'.0/24')]"
+      },
+      "subnet4": {
+        "name": "frontend",
+        "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 3)) ,'.0/24')]"
+      },
+      "name": "[concat('vn', variables('baseName'))]"
+    },
+    "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
+    "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
+    "secondIPOctet": "[parameters('secondIPOctet')]",
+    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResources.json')]",
+    "sql2012SP2": "SQL2012SP2-WS2012R2",
+    "sql2014SP1": "SQL2014SP1-WS2012R2",
+    "sqlVM": {
+      "publisher": "MicrosoftSQLServer",
+      "offer": "[variables(parameters('sqlVersion'))]",
+      "sku": "Enterprise",
+      "version": "latest",
+      "size": "[parameters('sqlVMSize')]"
+    },
+    "storageAccountAdmin": "[concat('sa', variables('baseName'), 'admin')]",
+    "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
+    "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
+    "storageType": "Standard_RAGRS",
+    "templateLinkDataDisk": "[uri(deployment().properties.templateLink.uri, 'nested/dataDisk.json')]",
+    "templateLinkDiskEncryption": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]",
+    "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
+    "templateLinkNull": "[uri(deployment().properties.templateLink.uri, 'nested/null.json')]",
+    "vhdContainerName": "vhds",
+    "vmType": {
+      "dataDiskEncrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDiskEncryption.json')]",
+      "dataDiskUnencrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDiskNoEncryption.json')]",
+      "noDataDiskEncrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineNoDataDiskEncryption.json')]",
+      "noDataDiskUnEncrypted": ""
+    },
+    "windowsVM": {
+      "publisher": "MicrosoftWindowsServer",
+      "offer": "WindowsServer",
+      "sku": "[parameters('windowsOSVersion')]",
+      "version": "latest",
+      "size": "[parameters('windowsVMSize')]"
+    }
+  }
+  },
+
+  "resources": [
+    {
+      "name": "sharedResourcesSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('sharedResourcesTemplateURL')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[variables('globals')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "environmentSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'sharedResourcesSetup')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('environmentTemplateLink')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[variables('globals')]"
+          }
+        }
+      }
+    }
+  ]
+}

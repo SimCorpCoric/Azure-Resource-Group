@@ -1,0 +1,281 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "globals": {
+      "type": "object",
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      }
+    }
+  },
+
+  "variables": {
+    "acronym": "[toLower(parameters('globals').environment.acronym)]",
+    "desktop": {
+      "adminPassword": "[parameters('globals').localAdminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkNull]",
+      "dnsServers": "[variables('globals').networkSettings.dnsServers",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "numberOfVMs": "[parameters('globals').environment.desktopCount]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet3.name)]"
+            }
+          }
+        }
+      ],
+      "storageAccount": "[variables('storageAccountName')]"
+    },
+    "drone": {
+      "adminPassword": "[parameters('globals').localAdminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
+      "dnsServers": "[variables('globals').networkSettings.dnsServers",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkNull]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+            }
+          }
+        }
+      ],
+      "numberOfVMs": "[parameters('globals').environment.droneCount]",
+      "storageAccount": "[variables('storageAccountName')]"
+    },
+    "sql": {
+      "adminPassword": "[parameters('globals').localAdminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
+      "dnsServers": "[variables('globals').networkSettings.dnsServers",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkNull]",
+      "imageReference": "[parameters('globals').sqlVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+            }
+          }
+        }
+      ],
+      "numberOfVMs": 1,
+      "sizeOfDataDiskInGB": 1023,
+      "storageAccount": "[variables('storageAccountNamePremium')]"
+    },
+    "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname))]",
+    "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
+    "storageAccountNamePremiumType": "Premium_LRS",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+    "warehouse": {
+      "adminPassword": "[parameters('globals').localAdminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
+      "dnsServers": "[variables('globals').networkSettings.dnsServers",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+            }
+          }
+        }
+      ],
+      "numberOfVMs": 1,
+      "sizeOfDataDiskInGB": 1023,
+      "storageAccount": "[variables('storageAccountName')]"
+    }
+  },
+
+  "resources": [
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateOUStructure', parameters('globals').environment.acronym)]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "CreateADForest"
+      ],
+      "properties": {
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.4",
+        "publisher": "Microsoft.Compute",
+        "settings": {
+          "fileUris": [
+            "[parameters('globals').customScript.createCoricOUStructure.scriptURL]"
+          ],
+          "commandToExecute": "[concat(parameters('globals').customScript.createCoricOUStructure.commandToExecute, ' -EnvironmentAcronym ', parameters('globals').environment.acronym)]"
+        }
+      }
+    },
+
+    {
+      "name": "environmentStorage",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').storageAccountTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "Name": {
+            "value": "[variables('storageAccountName')]"
+          },
+          "accountType": {
+            "value": "[parameters('globals').storageType]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "environmentStoragePremium",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').storageAccountTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "Name": {
+            "value": "[variables('storageAccountNamePremium')]"
+          },
+          "accountType": {
+            "value": "[variables('storageAccountNamePremiumType')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "sqlSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'environmentStoragePremium')]",
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), concat('CreateOUStructure', parameters('globals').environment.acronym))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').vmType.dataDiskUnencrypted]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('sql')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "warehouseSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]",
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), concat('CreateOUStructure', parameters('globals').environment.acronym))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').vmType.dataDiskEncrypted]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('warehouse')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "droneSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]",
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), concat('CreateOUStructure', parameters('globals').environment.acronym))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').vmType.noDataDiskEncrypted]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('drone')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "desktopSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]",
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), concat('CreateOUStructure', parameters('globals').environment.acronym))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').vmType.noDataDiskEncrypted]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('desktop')]"
+          }
+        }
+      }
+    }
+  ]
+}
