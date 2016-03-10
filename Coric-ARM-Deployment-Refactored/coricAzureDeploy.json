@@ -222,13 +222,6 @@
     "dc01IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.4')]",
     "dc02IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.5')]",
     "domainSuffix": "Hosted",
-    "environment": {
-      "name": "[parameters('environmentName')]",
-      "shortname": "[variables(concat('environmentShortName', parameters('environmentName')))]",
-      "acronym": "[parameters('environmentAcronym')]",
-      "droneCount": "[parameters('droneCount')]",
-      "desktopCount": "[parameters('desktopCount')]"
-    },
     "environmentShortNameDevelopment": "Dev",
     "environmentShortNameProduction": "Prod",
     "environmentShortNameUAT": "UAT",
@@ -274,71 +267,78 @@
         "diskInitialize": { },
         "function": "DiskInitialize.ps1\\DiskInitialize",
         "url": "[uri(deployment().properties.templateLink.uri, 'DSC/DiskInitialize.ps1.zip')]"
+      },
+      "environment": {
+        "name": "[parameters('environmentName')]",
+        "shortname": "[variables(concat('environmentShortName', parameters('environmentName')))]",
+        "acronym": "[parameters('environmentAcronym')]",
+        "droneCount": "[parameters('droneCount')]",
+        "desktopCount": "[parameters('desktopCount')]"
+      },
+      "localAdminPassword": "[parameters('localAdminPassword')]",
+      "localAdminUsername": "[parameters('localAdminUsername')]",
+      "networkSettings": {
+        "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
+        "dc01IPAddress": "[variables('dc01IPAddress')]",
+        "dc02IPAddress": "[variables('dc02IPAddress')]",
+        "dnsServers": [
+          "[variables('dc01IPAddress')]",
+          "[variables('dc02IPAddress')]"
+        ],
+        "subnet1": {
+          "name": "gateway",
+          "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 0)) ,'.0/24')]"
+        },
+        "subnet2": {
+          "name": "backend",
+          "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.0/24')]"
+        },
+        "subnet3": {
+          "name": "user",
+          "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 2)) ,'.0/24')]"
+        },
+        "subnet4": {
+          "name": "frontend",
+          "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 3)) ,'.0/24')]"
+        },
+        "name": "[concat('vn', variables('baseName'))]"
+      },
+      "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
+      "secondIPOctet": "[parameters('secondIPOctet')]",
+      "sqlVM": {
+        "publisher": "MicrosoftSQLServer",
+        "offer": "[variables(parameters('sqlVersion'))]",
+        "sku": "Enterprise",
+        "version": "latest",
+        "size": "[parameters('sqlVMSize')]"
+      },
+      "storageAccountAdmin": "[concat('sa', variables('baseName'), 'admin')]",
+      "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
+      "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
+      "storageType": "Standard_RAGRS",
+      "templateLinkDataDisk": "[uri(deployment().properties.templateLink.uri, 'nested/dataDisk.json')]",
+      "templateLinkDiskEncryption": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]",
+      "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
+      "templateLinkNull": "[uri(deployment().properties.templateLink.uri, 'nested/null.json')]",
+      "vhdContainerName": "vhds",
+      "vmType": {
+        "dataDiskEncrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDiskEncryption.json')]",
+        "dataDiskUnencrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDiskNoEncryption.json')]",
+        "noDataDiskEncrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineNoDataDiskEncryption.json')]",
+        "noDataDiskUnEncrypted": ""
+      },
+      "windowsVM": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "[parameters('windowsOSVersion')]",
+        "version": "latest",
+        "size": "[parameters('windowsVMSize')]"
       }
     },
-    "localAdminPassword": "[parameters('localAdminPassword')]",
-    "localAdminUsername": "[parameters('localAdminUsername')]",
-    "networkSettings": {
-      "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(mul(parameters('clientID'), 4)) ,'.0/22')]",
-      "dc01IPAddress": "[variables('dc01IPAddress')]",
-      "dc02IPAddress": "[variables('dc02IPAddress')]",
-      "dnsServers": [
-        "[variables('dc01IPAddress')]",
-        "[variables('dc02IPAddress')]"
-      ],
-      "subnet1": {
-        "name": "gateway",
-        "prefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 0)) ,'.0/24')]"
-      },
-      "subnet2": {
-        "name": "backend",
-        "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.0/24')]"
-      },
-      "subnet3": {
-        "name": "user",
-        "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 2)) ,'.0/24')]"
-      },
-      "subnet4": {
-        "name": "frontend",
-        "addressPrefix": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 3)) ,'.0/24')]"
-      },
-      "name": "[concat('vn', variables('baseName'))]"
-    },
-    "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
-    "secondIPOctet": "[parameters('secondIPOctet')]",
     "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResources.json')]",
     "sql2012SP2": "SQL2012SP2-WS2012R2",
-    "sql2014SP1": "SQL2014SP1-WS2012R2",
-    "sqlVM": {
-      "publisher": "MicrosoftSQLServer",
-      "offer": "[variables(parameters('sqlVersion'))]",
-      "sku": "Enterprise",
-      "version": "latest",
-      "size": "[parameters('sqlVMSize')]"
-    },
-    "storageAccountAdmin": "[concat('sa', variables('baseName'), 'admin')]",
-    "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
-    "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
-    "storageType": "Standard_RAGRS",
-    "templateLinkDataDisk": "[uri(deployment().properties.templateLink.uri, 'nested/dataDisk.json')]",
-    "templateLinkDiskEncryption": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]",
-    "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
-    "templateLinkNull": "[uri(deployment().properties.templateLink.uri, 'nested/null.json')]",
-    "vhdContainerName": "vhds",
-    "vmType": {
-      "dataDiskEncrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDiskEncryption.json')]",
-      "dataDiskUnencrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDiskNoEncryption.json')]",
-      "noDataDiskEncrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineNoDataDiskEncryption.json')]",
-      "noDataDiskUnEncrypted": ""
-    },
-    "windowsVM": {
-      "publisher": "MicrosoftWindowsServer",
-      "offer": "WindowsServer",
-      "sku": "[parameters('windowsOSVersion')]",
-      "version": "latest",
-      "size": "[parameters('windowsVMSize')]"
-    }
+    "sql2014SP1": "SQL2014SP1-WS2012R2"
   },
 
   "resources": [
