@@ -232,7 +232,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01', 'CreateOUStructureAdmin'))]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), 'CreateOUStructureAdmin')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -259,7 +259,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01', 'CreateOUStructureAdmin'))]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), 'CreateOUStructureAdmin')]"
       ],
       "properties": {
         "mode": "Incremental",
