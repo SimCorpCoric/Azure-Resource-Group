@@ -32,30 +32,9 @@
   "resources": [
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'), '/CustomScript')]",
-      "apiVersion": "[parameters('globals').apiVersion.extension]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "type": "CustomScriptExtension",
-        "typeHandlerVersion": "1.4",
-        "publisher": "Microsoft.Compute",
-        "settings": {
-          "fileUris": [
-            "[parameters('globals').customScript.diskInitialize.scriptURL]"
-          ],
-          "commandToExecute": "[parameters('globals').customScript.diskInitialize.commandToExecute]"
-        }
-      }
-    },
-
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('vmName'),'/AntiMalwareExt')]",
       "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'CustomScript')]"
-      ],
       "properties": {
         "publisher": "Microsoft.Azure.Security",
         "type": "IaaSAntimalware",

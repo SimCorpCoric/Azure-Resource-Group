@@ -76,7 +76,6 @@
       "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkNull]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-      "imageReference": "[parameters('globals').windowsVM]",
       "ipConfigurations": [
         {
           "name": "ipconfig",
@@ -166,7 +165,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').vmType.dataDiskEncrypted]",
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -244,7 +243,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').vmType.dataDiskEncrypted]",
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -272,7 +271,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').vmType.noDataDiskEncrypted]",
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

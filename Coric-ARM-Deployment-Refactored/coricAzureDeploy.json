@@ -264,9 +264,10 @@
           "function": "CreateADPDC.ps1\\CreateADPDC",
           "url": "[uri(deployment().properties.templateLink.uri, 'DSC/CreateADPDC.ps1.zip')]"
         },
-        "diskInitialize": { },
-        "function": "DiskInitialize.ps1\\DiskInitialize",
-        "url": "[uri(deployment().properties.templateLink.uri, 'DSC/DiskInitialize.ps1.zip')]"
+        "diskInitialize": {
+          "function": "DiskInitialize.ps1\\DiskInitialize",
+          "url": "[uri(deployment().properties.templateLink.uri, 'DSC/DiskInitialize.ps1.zip')]"
+        }
       },
       "environment": {
         "name": "[parameters('environmentName')]",
@@ -320,13 +321,8 @@
       "templateLinkDiskEncryption": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]",
       "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
       "templateLinkNull": "[uri(deployment().properties.templateLink.uri, 'nested/null.json')]",
+      "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
       "vhdContainerName": "vhds",
-      "vmType": {
-        "dataDiskEncrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDiskEncryption.json')]",
-        "dataDiskUnencrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineDataDiskNoEncryption.json')]",
-        "noDataDiskEncrypted": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachineNoDataDiskEncryption.json')]",
-        "noDataDiskUnEncrypted": ""
-      },
       "windowsVM": {
         "publisher": "MicrosoftWindowsServer",
         "offer": "WindowsServer",
