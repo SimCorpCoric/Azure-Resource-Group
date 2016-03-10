@@ -208,7 +208,7 @@
 
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateOUStructureAdmin')]",
+      "name": "[concat('vm', parameters('globals').baseName, '-dc01', '/CustomScript')]",
       "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
