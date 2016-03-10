@@ -12,7 +12,6 @@
   },
 
   "variables": {
-    "scriptArgs": "[concat('-platformAdminFirstName ',parameters('platformAdminFirstName'),' -platformAdminLastName ',parameters('platformAdminLastName'),' -platformAdminEmailAddress ',parameters('platformAdminEmailAddress'),' -platformAdminPassword ', parameters('platformAdminPassword'), ' -domaincontrollerserver ', variables('domainControllerNode'), ' -domainUserName ', parameters('adminUsername'), ' -domainPassword ', parameters('adminPassword'))]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
     "primaryDomainController": {
       "adminPassword": "[parameters('globals').domainAdminPassword]",
