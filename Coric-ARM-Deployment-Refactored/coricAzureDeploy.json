@@ -339,7 +339,6 @@
       "version": "latest",
       "size": "[parameters('windowsVMSize')]"
     }
-  }
   },
 
   "resources": [
