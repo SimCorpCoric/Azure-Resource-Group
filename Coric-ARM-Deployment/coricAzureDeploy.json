@@ -221,6 +221,7 @@
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
     "dc01IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.4')]",
     "dc02IPAddress": "[concat('10.', parameters('secondIPOctet'), '.', string(add(mul(parameters('clientID'), 4), 1)) ,'.5')]",
+    "domainSuffix": "Hosted",
     "environmentShortNameDevelopment": "Dev",
     "environmentShortNameProduction": "Prod",
     "environmentShortNameUAT": "UAT",
@@ -243,6 +244,10 @@
       "baseName": "[variables('baseName')]",
       "clientID": "[parameters('clientID')]",
       "customScript": {
+        "createCoricOUStructure": {
+          "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file CreateCoricOUStructure.ps1 -DomainLDAPName DC=', variables('baseName'), 'DC=', variables('domainSuffix'))]",
+          "scriptURL": "[uri(deployment().properties.templateLink.uri, 'customScript/CreateCoricOUStructure.ps1')]"
+        },
         "diskInitialize": {
           "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file DiskInitialize.ps1",
           "scriptURL": "[uri(deployment().properties.templateLink.uri, 'customScript/DiskInitialize.ps1')]"
@@ -259,7 +264,7 @@
       },
       "domainAdminPassword": "[parameters('domainAdminPassword')]",
       "domainAdminUsername": "[parameters('domainAdminUsername')]",
-      "domainName": "[concat(variables('baseName'),'.Hosted')]",
+      "domainName": "[concat(variables('baseName'), '.', variables('domainSuffix'))]",
       "environment": {
         "name": "[parameters('environmentName')]",
         "shortname": "[variables(concat('environmentShortName', parameters('environmentName')))]",

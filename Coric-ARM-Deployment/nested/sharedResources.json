@@ -12,6 +12,7 @@
   },
 
   "variables": {
+    "scriptArgs": "[concat('-platformAdminFirstName ',parameters('platformAdminFirstName'),' -platformAdminLastName ',parameters('platformAdminLastName'),' -platformAdminEmailAddress ',parameters('platformAdminEmailAddress'),' -platformAdminPassword ', parameters('platformAdminPassword'), ' -domaincontrollerserver ', variables('domainControllerNode'), ' -domainUserName ', parameters('adminUsername'), ' -domainPassword ', parameters('adminPassword'))]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
     "primaryDomainController": {
       "adminPassword": "[parameters('globals').domainAdminPassword]",
@@ -207,11 +208,32 @@
     },
 
     {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateCoricOUStructureAdmin')]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "CreateADForest"
+      ],
+      "properties": {
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.4",
+        "publisher": "Microsoft.Compute",
+        "settings": {
+          "fileUris": [
+            "[parameters('globals').customScript.createCoricOUStructure.scriptURL]"
+          ],
+          "commandToExecute": "[parameters('globals').customScript.createCoricOUStructure.commandToExecute]"
+        }
+      }
+    },
+
+    {
       "name": "backupDCSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "CreateADForest"
+        "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateCoricOUStructureAdmin')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -238,7 +260,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "CreateADForest"
+        "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateCoricOUStructureAdmin')]"
       ],
       "properties": {
         "mode": "Incremental",
