@@ -250,9 +250,9 @@
       "baseName": "[variables('baseName')]",
       "clientID": "[parameters('clientID')]",
       "customScript": {
-        "createCoricOUStructure": {
-          "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file CreateCoricOUStructure.ps1 -DomainLDAPName DC=', variables('baseName'), 'DC=', variables('domainSuffix'))]",
-          "scriptURL": "[uri(deployment().properties.templateLink.uri, 'customScript/CreateCoricOUStructure.ps1')]"
+        "diskInitialize": {
+          "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file DiskInitialize.ps1",
+          "scriptURL": "[uri(deployment().properties.templateLink.uri, 'customScript/DiskInitialize.ps1')]"
         }
       },
       "diskEncryption": {

@@ -63,31 +63,20 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('vmName'), '/DiskInitialize')]",
-      "apiVersion": "[parameters('globals').apiVersion.dsc]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+        "[parameters('vmName')]"
       ],
       "properties": {
-        "publisher": "Microsoft.Powershell",
-        "type": "DSC",
-        "typeHandlerVersion": "2.14",
-        "autoUpgradeMinorVersion": true,
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.4",
+        "publisher": "Microsoft.Compute",
         "settings": {
-          "ModulesUrl": "[parameters('globals').dsc.diskInitialize.url]",
-          "ConfigurationFunction": "[parameters('globals').dsc.diskInitialize.function]",
-          "Properties": {
-            "DomainName": "[parameters('globals').domainName]",
-            "AdminCreds": {
-              "UserName": "[parameters('globals').domainAdminUsername]",
-              "Password": "PrivateSettingsRef:AdminPassword"
-            }
-          }
-        },
-        "protectedSettings": {
-          "Items": {
-            "AdminPassword": "[parameters('globals').domainAdminPassword]"
-          }
+          "fileUris": [
+            "[parameters('globals').customScript.diskInitialize.scriptURL]"
+          ],
+          "commandToExecute": "[parameters('globals').customScript.diskInitialize.commandToExecute]"
         }
       }
     }
