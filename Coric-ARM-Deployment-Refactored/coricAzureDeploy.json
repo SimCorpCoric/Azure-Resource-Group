@@ -234,7 +234,6 @@
     "environmentShortNameProduction": "Prod",
     "environmentShortNameUAT": "UAT",
     "environmentShortNameWeb": "Web",
-    "environmentTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
     "globals": {
       "apiVersion": {
         "deployment": "2015-01-01",
@@ -341,7 +340,7 @@
       "templateLinkDiskEncryption": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]",
       "templateLinkDomainJoin": "[uri(deployment().properties.templateLink.uri, 'nested/domainJoin.json')]",
       "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
-      "templateLinkNull": "[uri(deployment().properties.templateLink.uri, 'nested/null.json')]",
+      "templateLinkNull": "[variables('templateLinkNull')]",
       "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
       "vhdContainerName": "vhds",
       "windowsVM": {
@@ -355,7 +354,11 @@
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
     "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, concat('nested/sharedResources', parameters('implementationPhase'), '.json'))]",
     "sql2012SP2": "SQL2012SP2-WS2012R2",
-    "sql2014SP1": "SQL2014SP1-WS2012R2"
+    "sql2014SP1": "SQL2014SP1-WS2012R2",
+    "templateLinkEnvironment": "[variables(concat('templateLinkEnvironemnt', parameters('implementationPhase')))]",
+    "templateLinkEnvironemnt1": "[variables('templateLinkNull')]",
+    "templateLinkEnvironemnt2": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
+    "templateLinkNull": "[uri(deployment().properties.templateLink.uri, 'nested/null.json')]"
   },
 
   "resources": [
@@ -387,7 +390,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('environmentTemplateLink')]",
+          "uri": "[variables('templateLinkEnvironment')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
