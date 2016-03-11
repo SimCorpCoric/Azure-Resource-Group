@@ -353,7 +353,7 @@
       }
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
-    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, concat('nested/sharedResources', parameters('implementationPhase') ,'.json'))]",
+    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, concat('nested/sharedResources', parameters('implementationPhase'), '.json'))]",
     "sql2012SP2": "SQL2012SP2-WS2012R2",
     "sql2014SP1": "SQL2014SP1-WS2012R2"
   },
