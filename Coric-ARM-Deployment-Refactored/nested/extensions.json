@@ -61,7 +61,7 @@
           "vmName": {
             "value": "[parameters('vmName')]"
           },
-          "ouPath" {
+          "ouPath": {
             "value": "[parameters('ouPath')]"
           }
         }
