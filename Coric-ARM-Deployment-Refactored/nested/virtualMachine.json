@@ -173,6 +173,12 @@
           "vmName": {
             "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
           },
+          "domainJoinTemplateLink": {
+            "value": "[parameters('machineSettings').domainJoinTemplateLink]"
+          },
+          "ouPath": {
+            "value": "[parameters('machineSettings').ouPath]"
+          },
           "encryptionTemplateLink": {
             "value": "[parameters('machineSettings').encryptionTemplateLink]"
           }

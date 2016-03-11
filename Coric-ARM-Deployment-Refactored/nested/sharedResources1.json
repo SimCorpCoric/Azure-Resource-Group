@@ -22,6 +22,7 @@
         "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkNull]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
       "ipConfigurations": [
@@ -37,57 +38,8 @@
         }
       ],
       "numberOfVMs": 1,
+      "ouPath": null,
       "sizeOfDataDiskInGB": 1023,
-      "storageAccount": "[parameters('globals').storageAccountAdmin]"
-    },
-
-    "backupDomainController": {
-      "adminPassword": "[parameters('globals').domainAdminPassword]",
-      "adminUsername": "[parameters('globals').domainAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-dc')]",
-      "dnsServers": [
-        "127.0.0.1",
-        "[parameters('globals').networkSettings.dc01IPAddress]"
-      ],
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-      "imageReference": "[parameters('globals').windowsVM]",
-      "ipConfigurations": [
-        {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Static",
-            "privateIPAddress": "[parameters('globals').networkSettings.dc02IPAddress]",
-            "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
-            }
-          }
-        }
-      ],
-      "numberOfVMs": 1,
-      "sizeOfDataDiskInGB": 1023,
-      "storageAccount": "[parameters('globals').storageAccountAdmin]"
-    },
-
-    "rdsGateway": {
-      "adminPassword": "[parameters('globals').localAdminPassword]",
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-rdg')]",
-      "dnsServers": "[variables('globals').networkSettings.dnsServers",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkNull]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-      "ipConfigurations": [
-        {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet4.name)]"
-            }
-          }
-        }
-      ],
-      "numberOfVMs": 1,
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
     }
   },
@@ -228,59 +180,6 @@
             "[parameters('globals').customScript.createCoricOUStructure.scriptURL]"
           ],
           "commandToExecute": "[parameters('globals').customScript.createCoricOUStructure.commandToExecute]"
-        }
-      }
-    },
-
-    {
-      "name": "backupDCSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "CreateADForest",
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), 'CustomScript')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').templateLinkVirtualMachine]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('backupDomainController')]"
-          },
-          "copyIndexOffset": {
-            "value": 2
-          }
-        }
-      }
-    },
-
-    {
-      "name": "rdsGatewaySetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "CreateADForest",
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), 'CustomScript')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').templateLinkVirtualMachine]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('rdsGateway')]"
-          }
         }
       }
     }

@@ -18,9 +18,9 @@
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkNull]",
+      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
       "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "imageReference": "[parameters('globals').windowsVM]",
-      "numberOfVMs": "[parameters('globals').environment.desktopCount]",
       "ipConfigurations": [
         {
           "name": "ipconfig",
@@ -32,14 +32,18 @@
           }
         }
       ],
+      "numberOfVMs": "[parameters('globals').environment.desktopCount]",
+      "ouPath": "[concat(parameters('globals').ou.desktop, parameters('globals').ou.serverRoles)]",
       "storageAccount": "[variables('storageAccountName')]"
     },
+
     "drone": {
       "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
       "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkNull]",
+      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
       "ipConfigurations": [
@@ -54,14 +58,17 @@
         }
       ],
       "numberOfVMs": "[parameters('globals').environment.droneCount]",
+      "ouPath": "[concat(parameters('globals').ou.drone, parameters('globals').ou.serverRoles)]",
       "storageAccount": "[variables('storageAccountName')]"
     },
+
     "sql": {
       "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
       "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkNull]",
       "imageReference": "[parameters('globals').sqlVM]",
       "ipConfigurations": [
@@ -76,19 +83,23 @@
         }
       ],
       "numberOfVMs": 1,
+      "ouPath": "[concat(parameters('globals').ou.sql, parameters('globals').ou.serverRoles)]",
       "sizeOfDataDiskInGB": 1023,
       "storageAccount": "[variables('storageAccountNamePremium')]"
     },
+
     "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname))]",
     "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
     "storageAccountNamePremiumType": "Premium_LRS",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+
     "warehouse": {
       "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
       "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
       "ipConfigurations": [
@@ -103,6 +114,7 @@
         }
       ],
       "numberOfVMs": 1,
+      "ouPath": "[concat(parameters('globals').ou.iis, parameters('globals').ou.serverRoles)]",
       "sizeOfDataDiskInGB": 1023,
       "storageAccount": "[variables('storageAccountName')]"
     }

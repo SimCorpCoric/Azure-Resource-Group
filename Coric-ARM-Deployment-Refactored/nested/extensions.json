@@ -17,6 +17,20 @@
       "type": "string"
     },
 
+    "domainJoinTemplateLink": {
+      "metadata": {
+        "Description": "URI to domain join template or blank template (in the case of DC01)"
+      },
+      "type": "string"
+    },
+
+    "ouPath": {
+      "metadata": {
+        "Description": "Specifies an organizational unit (OU) for the domain account. Enter in LDAP format: OU=Drone; OU=Coric Server Roles"
+      },
+      "type": "string"
+    },
+
     "encryptionTemplateLink": {
       "metadata": {
         "Description": "URI to disk encryption template or blank template (when no encryption is required)"
@@ -31,10 +45,37 @@
 
   "resources": [
     {
+      "type": "Microsoft.Resources/deployments",
+      "name": "[concat(parameters('vmName'), '-DomainJoin')]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('encryptionTemplateLink')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "vmName": {
+            "value": "[parameters('vmName')]"
+          },
+          "ouPath" {
+            "value": "[parameters('ouPath')]"
+          }
+        }
+      }
+    },
+
+    {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('vmName'),'/AntiMalwareExt')]",
       "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat(parameters('vmName'), '-DomainJoin')]"
+      ],
       "properties": {
         "publisher": "Microsoft.Azure.Security",
         "type": "IaaSAntimalware",

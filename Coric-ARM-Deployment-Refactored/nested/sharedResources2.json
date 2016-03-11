@@ -1,0 +1,124 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "globals": {
+      "type": "object",
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      }
+    }
+  },
+
+  "variables": {
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+
+    "backupDomainController": {
+      "adminPassword": "[parameters('globals').domainAdminPassword]",
+      "adminUsername": "[parameters('globals').domainAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-dc')]",
+      "dnsServers": [
+        "127.0.0.1",
+        "[parameters('globals').networkSettings.dc01IPAddress]"
+      ],
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Static",
+            "privateIPAddress": "[parameters('globals').networkSettings.dc02IPAddress]",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+            }
+          }
+        }
+      ],
+      "numberOfVMs": 1,
+      "ouPath": "[parameters('globals').ou.domainControllers]",
+      "sizeOfDataDiskInGB": 1023,
+      "storageAccount": "[parameters('globals').storageAccountAdmin]"
+    },
+
+    "rdsGateway": {
+      "adminPassword": "[parameters('globals').localAdminPassword]",
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-rdg')]",
+      "dnsServers": "[variables('globals').networkSettings.dnsServers",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkNull]",
+      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet4.name)]"
+            }
+          }
+        }
+      ],
+      "numberOfVMs": 1,
+      "ouPath": "[concat(parameters('globals').ou.rdg, parameters('globals').ou.serverRoles)]",
+      "storageAccount": "[parameters('globals').storageAccountAdmin]"
+    }
+  },
+
+  "resources": [
+    {
+      "name": "backupDCSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc01')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('backupDomainController')]"
+          },
+          "copyIndexOffset": {
+            "value": 2
+          }
+        }
+      }
+    },
+
+    {
+      "name": "rdsGatewaySetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc01')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('rdsGateway')]"
+          }
+        }
+      }
+    }
+  ]
+}
