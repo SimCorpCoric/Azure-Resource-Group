@@ -64,7 +64,7 @@
       "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'AntiMalwareExt')]"
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), '/extensions/AntiMalwareExt')]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -81,7 +81,7 @@
       "name": "[concat(parameters('vmName'), '-Encryption')]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'bgInfoExt')]"
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), '/extensions/bgInfoExt')]"
       ],
       "properties": {
         "mode": "Incremental",
