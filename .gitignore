@@ -41,3 +41,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+Coric-ARM-Deployment-Refactored/coricAzureParameters1.json
+Coric-ARM-Deployment-Refactored/coricAzureParameters2.json
+Coric-ARM-Deployment/ARM Template Deployment.ps1
+Coric-ARM-Deployment/coricAzureParameters.json
