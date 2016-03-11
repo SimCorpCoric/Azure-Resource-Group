@@ -17,13 +17,6 @@
       "type": "string"
     },
 
-    "domainJoinTemplateLink": {
-      "metadata": {
-        "Description": "URI to domain join template or blank template (in the case of DC01)"
-      },
-      "type": "string"
-    },
-
     "ouPath": {
       "metadata": {
         "Description": "Specifies an organizational unit (OU) for the domain account. Enter in LDAP format: OU=Drone; OU=Coric Server Roles"
