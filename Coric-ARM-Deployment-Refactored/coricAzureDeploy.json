@@ -58,6 +58,14 @@
       }
     },
 
+    "implementationPhase": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "The implementation build phase.  1 = DC01.  2 = Remainder of admin VMs and environment supplied in 'environmentName'"
+      }
+    },
+
     "domainAdminUsername": {
       "type": "string",
       "defaultValue": "DomainAdmin",
@@ -259,6 +267,7 @@
       "domainAdminPassword": "[parameters('domainAdminPassword')]",
       "domainAdminUsername": "[parameters('domainAdminUsername')]",
       "domainName": "[concat(variables('baseName'), '.', variables('domainSuffix'))]",
+      "domainNameLDAP": "[concat('DC=', variables('baseName'), '; DC=', variables('domainSuffix'))]",
       "dsc": {
         "adConfiguration": {
           "function": "CreateADPDC.ps1\\CreateADPDC",
@@ -305,6 +314,17 @@
         "name": "[concat('vn', variables('baseName'))]"
       },
       "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
+      "ou": {
+        "serverRoles": "OU=Coric Server Roles;",
+        "sql": "OU=SQL;",
+        "drone": "OU=Drone;",
+        "domainControllers": "OU=Domain Controllers;",
+        "desktop": "OU=Desktop;",
+        "iis": "OU=IIS;",
+        "rdg": "OU=RDG;",
+        "ftp": "OU=FTP;",
+        "pushPull": "OU=PushPull;"
+      },
       "secondIPOctet": "[parameters('secondIPOctet')]",
       "sqlVM": {
         "publisher": "MicrosoftSQLServer",
@@ -319,6 +339,7 @@
       "storageType": "Standard_RAGRS",
       "templateLinkDataDisk": "[uri(deployment().properties.templateLink.uri, 'nested/dataDisk.json')]",
       "templateLinkDiskEncryption": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]",
+      "templateLinkDomainJoin": "[uri(deployment().properties.templateLink.uri, 'nested/domainJoin.json')]",
       "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
       "templateLinkNull": "[uri(deployment().properties.templateLink.uri, 'nested/null.json')]",
       "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
@@ -332,7 +353,7 @@
       }
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
-    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResources.json')]",
+    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResources', parameters('implementationPhase') ,'.json')]",
     "sql2012SP2": "SQL2012SP2-WS2012R2",
     "sql2014SP1": "SQL2014SP1-WS2012R2"
   },
