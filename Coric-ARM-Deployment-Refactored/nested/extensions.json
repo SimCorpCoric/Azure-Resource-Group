@@ -51,7 +51,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('encryptionTemplateLink')]",
+          "uri": "[parameters('domainJoinTemplateLink')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

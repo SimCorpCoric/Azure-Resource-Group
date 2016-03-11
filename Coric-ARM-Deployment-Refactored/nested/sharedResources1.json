@@ -38,7 +38,7 @@
         }
       ],
       "numberOfVMs": 1,
-      "ouPath": "Empty",
+      "ouPath": "",
       "sizeOfDataDiskInGB": 1023,
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
     }
