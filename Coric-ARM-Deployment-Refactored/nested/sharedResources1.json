@@ -161,27 +161,7 @@
           }
         }
       }
-    },
-
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat('vm', parameters('globals').baseName, '-dc01', '/CustomScript')]",
-      "apiVersion": "[parameters('globals').apiVersion.extension]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "CreateADForest"
-      ],
-      "properties": {
-        "type": "CustomScriptExtension",
-        "typeHandlerVersion": "1.4",
-        "publisher": "Microsoft.Compute",
-        "settings": {
-          "fileUris": [
-            "[parameters('globals').customScript.createCoricOUStructure.scriptURL]"
-          ],
-          "commandToExecute": "[parameters('globals').customScript.createCoricOUStructure.commandToExecute]"
-        }
-      }
     }
+
   ]
 }
