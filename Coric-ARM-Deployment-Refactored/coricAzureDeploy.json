@@ -385,7 +385,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'sharedResourcesSetup')]"
+        "[concat('sharedResourcesSetup', parameters('implementationPhase'))]"
       ],
       "properties": {
         "mode": "Incremental",
