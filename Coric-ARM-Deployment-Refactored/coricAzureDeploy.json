@@ -363,7 +363,7 @@
 
   "resources": [
     {
-      "name": "sharedResourcesSetup",
+      "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('globals').apiVersion.deployment]",
       "properties": {
