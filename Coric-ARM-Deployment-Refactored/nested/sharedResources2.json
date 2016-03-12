@@ -49,7 +49,7 @@
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-rdg')]",
       "dnsServers": "[variables('globals').networkSettings.dnsServers",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkNull]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "ipConfigurations": [

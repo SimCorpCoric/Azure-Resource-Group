@@ -337,10 +337,12 @@
       "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
       "storageType": "Standard_RAGRS",
       "templateLinkDataDisk": "[uri(deployment().properties.templateLink.uri, 'nested/dataDisk.json')]",
+      "templateLinkDataDiskNull": "[uri(deployment().properties.templateLink.uri, 'nested/dataDiskNull.json')]",
       "templateLinkDiskEncryption": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]",
+      "templateLinkDiskEncryptionNull": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryptionNull.json')]",
       "templateLinkDomainJoin": "[uri(deployment().properties.templateLink.uri, 'nested/domainJoin.json')]",
+      "templateLinkDomainJoinNull": "[uri(deployment().properties.templateLink.uri, 'nested/domainJoinNull.json')]",
       "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
-      "templateLinkNull": "[variables('templateLinkNull')]",
       "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
       "vhdContainerName": "vhds",
       "windowsVM": {
@@ -356,9 +358,8 @@
     "sql2012SP2": "SQL2012SP2-WS2012R2",
     "sql2014SP1": "SQL2014SP1-WS2012R2",
     "templateLinkEnvironment": "[variables(concat('templateLinkEnvironemnt', parameters('implementationPhase')))]",
-    "templateLinkEnvironemnt1": "[variables('templateLinkNull')]",
-    "templateLinkEnvironemnt2": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
-    "templateLinkNull": "[uri(deployment().properties.templateLink.uri, 'nested/null.json')]"
+    "templateLinkEnvironemnt1": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
+    "templateLinkEnvironemnt2": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]"
   },
 
   "resources": [

@@ -22,7 +22,7 @@
         "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-      "domainJoinTemplateLink": "[parameters('globals').templateLinkNull]",
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoinNull]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
       "ipConfigurations": [
