@@ -382,7 +382,7 @@
     },
 
     {
-      "name": "environmentSetup",
+      "name": "[concat('environmentSetup', parameters('implementationPhase'))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('globals').apiVersion.deployment]",
       "dependsOn": [
