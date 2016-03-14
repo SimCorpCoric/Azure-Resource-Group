@@ -66,6 +66,7 @@
       ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.rdg, parameters('globals').ou.serverRoles)]",
+      "sizeOfDataDiskInGB": 0,
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
     }
   },
