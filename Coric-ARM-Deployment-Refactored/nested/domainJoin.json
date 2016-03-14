@@ -40,7 +40,7 @@
     {
       "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
-      "name": "[concat(parameters('vmName'),'-domainJoin')]",
+      "name": "[concat(parameters('vmName'),'/domainJoin')]",
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "JsonADDomainExtension",
