@@ -52,6 +52,7 @@
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+      "imageReference": "[parameters('globals').windowsVM]",
       "ipConfigurations": [
         {
           "name": "ipconfig",
