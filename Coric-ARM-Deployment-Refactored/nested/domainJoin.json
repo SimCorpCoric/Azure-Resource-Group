@@ -41,9 +41,6 @@
   "resources": [
     {
       "apiVersion": "[parameters('globals').apiVersion.extension]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
-      ],
       "location": "[resourceGroup().location]",
       "name": "[concat(parameters('vmName'),'/domainJoin')]",
       "properties": {
