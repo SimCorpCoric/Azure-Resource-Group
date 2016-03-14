@@ -23,7 +23,7 @@
         "[parameters('globals').networkSettings.dc01IPAddress]"
       ],
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
       "ipConfigurations": [
@@ -50,7 +50,7 @@
       "basename": "[concat(parameters('globals').baseName, '-rdg')]",
       "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
-      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "ipConfigurations": [
         {
