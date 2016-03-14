@@ -34,15 +34,14 @@
   },
 
   "variables": {
-    "apostrophe": "'",
-    "backslash": "\\"
+    "apostrophe": "'"
   },
 
   "resources": [
     {
       "apiVersion": "[parameters('globals').apiVersion.extension]",
       "location": "[resourceGroup().location]",
-      "name": "[concat(parameters('vmName'),'/domainJoin')]",
+      "name": "[concat(parameters('vmName'),'-domainJoin')]",
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "JsonADDomainExtension",
@@ -52,7 +51,7 @@
           "Options": "[parameters('domainJoinOptions')]",
           "OUPath": "[concat(variables('apostrophe'), parameters('ouPath'), parameters('globals').domainNameLDAP, variables('apostrophe'))]",
           "Restart": "true",
-          "User": "[concat(parameters('globals').domainName, variables('backslash'), parameters('globals').domainAdminUsername)]"
+          "User": "[concat(parameters('globals').domainName, '\\', parameters('globals').domainAdminUsername)]"
         },
         "protectedsettings": {
           "Password": "[parameters('globals').domainAdminPassword]"
