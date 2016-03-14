@@ -34,7 +34,6 @@
   },
 
   "variables": {
-    "apostrophe": "'"
   },
 
   "resources": [
@@ -49,7 +48,7 @@
         "settings": {
           "Name": "[parameters('globals').domainName]",
           "Options": "[parameters('domainJoinOptions')]",
-          "OUPath": "[concat(variables('apostrophe'), parameters('ouPath'), parameters('globals').domainNameLDAP, variables('apostrophe'))]",
+          "OUPath": "[concat(parameters('ouPath'), parameters('globals').domainNameLDAP)]",
           "Restart": "true",
           "User": "[concat(parameters('globals').domainName, '\\', parameters('globals').domainAdminUsername)]"
         },
