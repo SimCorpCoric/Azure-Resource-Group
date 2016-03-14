@@ -74,9 +74,6 @@
       "name": "backupDCSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[reference(concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc01'))]"
-      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -101,9 +98,6 @@
       "name": "rdsGatewaySetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[reference(concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc01'))]"
-      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
