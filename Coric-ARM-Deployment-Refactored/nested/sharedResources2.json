@@ -75,7 +75,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc01')]"
+        "[reference(concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc01'))]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -102,7 +102,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc01')]"
+        "[reference(concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc01'))]"
       ],
       "properties": {
         "mode": "Incremental",
