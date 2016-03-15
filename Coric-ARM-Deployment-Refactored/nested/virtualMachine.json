@@ -27,12 +27,12 @@
     }
   },
 
-  "variables": {
-    "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
-    "nicName": "[concat('nic', parameters('machineSettings').basename)]",
-    "vmName": "[parameters('machineSettings').basename]",
-    "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
-  },
+    "variables": {
+      "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
+      "nicName": "[concat('nic', parameters('machineSettings').basename)]",
+      "vmName": "[parameters('machineSettings').basename]",
+      "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
+    },
 
   "resources": [
     {
@@ -45,7 +45,10 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "properties": {
-        "ipConfigurations": "[parameters('machineSettings').ipConfigurations]"
+        "ipConfigurations": "[parameters('machineSettings').ipConfigurations]",
+        "dnsSettings": {
+          "dnsServers": "[parameters('machineSettings').dnsServers]"
+        }
       }
     },
 
@@ -117,6 +120,33 @@
 
     {
       "type": "Microsoft.Resources/deployments",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-DomainJoin')]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('machineSettings').domainJoinTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "vmName": {
+            "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+          },
+          "ouPath": {
+            "value": "[parameters('machineSettings').ouPath]"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
       "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-DataDisk')]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "copy": {
@@ -124,7 +154,7 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-DomainJoin')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -173,12 +203,6 @@
           "vmName": {
             "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
           },
-          "domainJoinTemplateLink": {
-            "value": "[parameters('machineSettings').domainJoinTemplateLink]"
-          },
-          "ouPath": {
-            "value": "[parameters('machineSettings').ouPath]"
-          },
           "encryptionTemplateLink": {
             "value": "[parameters('machineSettings').encryptionTemplateLink]"
           }
@@ -187,4 +211,4 @@
     }
 
   ]
-}
+  }
