@@ -18,8 +18,8 @@
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
-      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
-      "dnsServers": "[variables('globals').networkSettings.dnsServers",
+      "dnsServers": "[parameters('globals').networkSettings.dnsServers]",
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "imageReference": "[parameters('globals').windowsVM]",
       "ipConfigurations": [
         {
@@ -41,9 +41,9 @@
       "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
-      "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
-      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
+      "dnsServers": "[parameters('globals').networkSettings.dnsServers]",
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
       "ipConfigurations": [
@@ -66,9 +66,9 @@
       "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
-      "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
+      "dnsServers": "[parameters('globals').networkSettings.dnsServers]",
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryptionNull]",
       "imageReference": "[parameters('globals').sqlVM]",
       "ipConfigurations": [
@@ -97,9 +97,9 @@
       "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
-      "dnsServers": "[variables('globals').networkSettings.dnsServers",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-      "domainJoinTemplateLink": "[parameters('globals').templateDomainJoin]",
+      "dnsServers": "[parameters('globals').networkSettings.dnsServers]",
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
       "ipConfigurations": [
