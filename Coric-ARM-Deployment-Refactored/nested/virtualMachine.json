@@ -122,6 +122,10 @@
       "type": "Microsoft.Resources/deployments",
       "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-DomainJoin')]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
       "dependsOn": [
         "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
       ],
