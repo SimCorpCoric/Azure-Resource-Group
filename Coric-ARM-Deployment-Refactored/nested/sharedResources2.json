@@ -48,7 +48,7 @@
       "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-rdg')]",
-      "dnsServers": "[variables('globals').networkSettings.dnsServers",
+      "dnsServers": "[parameters('globals').networkSettings.dnsServers",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
