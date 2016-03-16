@@ -62,7 +62,7 @@
       "type": "int",
       "defaultValue": 1,
       "metadata": {
-        "description": "The implementation build phase.  1 = DC01.  2 = Remainder of admin VMs and environment supplied in 'environmentName'"
+        "description": "The implementation build phase.  1 = DC01.  2 = Remaining admin VMs.  3 = Environment supplied in 'environmentName'"
       }
     },
 
@@ -359,7 +359,8 @@
     "sql2014SP1": "SQL2014SP1-WS2012R2",
     "templateLinkEnvironment": "[variables(concat('templateLinkEnvironment', parameters('implementationPhase')))]",
     "templateLinkEnvironment1": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
-    "templateLinkEnvironment2": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]"
+    "templateLinkEnvironment2": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
+    "templateLinkEnvironment3": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]"
   },
 
   "resources": [

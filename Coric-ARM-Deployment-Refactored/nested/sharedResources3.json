@@ -8,13 +8,6 @@
       "metadata": {
         "Description": "Global complex object passed to nested templates"
       }
-    },
-
-    "vmName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the Virtual Machine"
-      }
     }
   },
 
