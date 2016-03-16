@@ -198,8 +198,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]",
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), concat('CreateOUStructure', parameters('globals').environment.acronym))]"
+        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -223,8 +222,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]",
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), concat('CreateOUStructure', parameters('globals').environment.acronym))]"
+        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -248,8 +246,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]",
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat('vm', parameters('globals').baseName, '-dc01'), concat('CreateOUStructure', parameters('globals').environment.acronym))]"
+        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
       ],
       "properties": {
         "mode": "Incremental",
