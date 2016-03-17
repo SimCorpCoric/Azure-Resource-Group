@@ -20,6 +20,7 @@
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "dnsServers": "[parameters('globals').networkSettings.dnsServers]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
       "ipConfigurations": [
         {
@@ -34,6 +35,7 @@
       ],
       "numberOfVMs": "[parameters('globals').environment.desktopCount]",
       "ouPath": "[concat(parameters('globals').ou.desktop, parameters('globals').ou.serverRoles)]",
+      "sizeOfDataDiskInGB": 0,
       "storageAccount": "[variables('storageAccountName')]"
     },
 
