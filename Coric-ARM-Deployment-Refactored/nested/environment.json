@@ -61,6 +61,7 @@
       ],
       "numberOfVMs": "[parameters('globals').environment.droneCount]",
       "ouPath": "[concat(parameters('globals').ou.drone, parameters('globals').ou.serverRoles)]",
+      "sizeOfDataDiskInGB": 0,
       "storageAccount": "[variables('storageAccountName')]"
     },
 
