@@ -358,9 +358,9 @@
       "secondIPOctet": "[parameters('secondIPOctet')]",
       "sqlEncryption": {
         "keyVaultURL": "[concat('https://', parameters('sqlKeyVaultName'), '.vault.azure.net/')]",
-        "servicePrincipalName": "parameters('sqlServicePrincipalName')",
-        "servicePrincipalSecret": "parameters('sqlServicePrincipalSecret')",
-        "sqlCredentialName": "parameters('sqlCredentialName')"
+        "servicePrincipalName": "[parameters('sqlServicePrincipalName')]",
+        "servicePrincipalSecret": "[parameters('sqlServicePrincipalSecret')]",
+        "sqlCredentialName": "[parameters('sqlCredentialName')]"
       },
       "sqlVM": {
         "publisher": "MicrosoftSQLServer",
