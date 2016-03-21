@@ -234,13 +234,13 @@
       "defaultValue": "",
       "type": "string",
       "metadata": {
-        "description": "Name of the aadApp used to authenticate against the SQL Key Vault"
+        "description": "ApplicationId of the aadApp used to authenticate against the SQL Key Vault"
       }
     },
 
     "sqlServicePrincipalSecret": {
       "defaultValue": "",
-      "type": "string",
+      "type": "securestring",
       "metadata": {
         "description": "aadApp secret used to authenticate against the SQL Key Vault"
       }
