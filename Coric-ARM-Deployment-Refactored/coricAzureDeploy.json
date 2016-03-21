@@ -197,17 +197,16 @@
     "keyVaultCertificateURL": {
       "type": "string",
       "metadata": {
-        "description": "Url of the certificate in the Key Vault.  E.g: https://mytestvault.vault.azure.net:443/secrets/myaadappcertificate/<version>"
+        "description": "Url of the aadApp access certificate in the Key Vault.  E.g: https://mytestvault.vault.azure.net:443/secrets/myaadappcertificate/<version>"
       }
     },
 
     "keyVaultKEKURL": {
       "type": "string",
       "metadata": {
-        "description": "Url of the Key Encryption Key in the Key Vault.  E.g: https://mytestvault.vault.azure.net/keys/mykek/<version>"
+        "description": "Url of the BitLocker Key Encryption Key in the Key Vault.  E.g: https://mytestvault.vault.azure.net/keys/mykek/<version>"
       }
     },
-
 
     "aadClientID": {
       "type": "string",
@@ -220,6 +219,38 @@
       "type": "string",
       "metadata": {
         "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
+      }
+    },
+
+    "sqlKeyVaultName": {
+      "defaultValue": "",
+      "type": "string",
+      "metadata": {
+        "description": "Name of the SQL Key Vault containing the Asymmetric Key to be used by SQL TDE"
+      }
+    },
+
+    "sqlServicePrincipalName": {
+      "defaultValue": "",
+      "type": "string",
+      "metadata": {
+        "description": "Name of the aadApp used to authenticate against the SQL Key Vault"
+      }
+    },
+
+    "sqlServicePrincipalSecret": {
+      "defaultValue": "",
+      "type": "string",
+      "metadata": {
+        "description": "aadApp secret used to authenticate against the SQL Key Vault"
+      }
+    },
+
+    "sqlCredentialName": {
+      "defaultValue": "",
+      "type": "string",
+      "metadata": {
+        "description": "Name of the SQL user to be created for use with TDE EKM on Key Vault"
       }
     }
 
@@ -325,6 +356,12 @@
         "pushPull": "OU=PushPull;"
       },
       "secondIPOctet": "[parameters('secondIPOctet')]",
+      "sqlEncryption": {
+        "keyVaultURL": "[concat('https://', parameters('sqlKeyVaultName'), '.vault.azure.net/')]",
+        "servicePrincipalName": "parameters('sqlServicePrincipalName')",
+        "servicePrincipalSecret": "parameters('sqlServicePrincipalSecret')",
+        "sqlCredentialName": "parameters('sqlCredentialName')"
+      },
       "sqlVM": {
         "publisher": "MicrosoftSQLServer",
         "offer": "[variables(parameters('sqlVersion'))]",
@@ -343,6 +380,8 @@
       "templateLinkDomainJoin": "[uri(deployment().properties.templateLink.uri, 'nested/domainJoin.json')]",
       "templateLinkDomainJoinNull": "[uri(deployment().properties.templateLink.uri, 'nested/domainJoinNull.json')]",
       "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
+      "templateLinkSQLKeyVault": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVault.json')]",
+      "templateLinkSQLKeyVaultNull": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVaultNull.json')]",
       "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
       "vhdContainerName": "vhds",
       "windowsVM": {

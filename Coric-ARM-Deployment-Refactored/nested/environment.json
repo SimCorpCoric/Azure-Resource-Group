@@ -36,6 +36,7 @@
       "numberOfVMs": "[parameters('globals').environment.desktopCount]",
       "ouPath": "[concat(parameters('globals').ou.desktop, parameters('globals').ou.serverRoles)]",
       "sizeOfDataDiskInGB": 0,
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
     },
 
@@ -62,6 +63,7 @@
       "numberOfVMs": "[parameters('globals').environment.droneCount]",
       "ouPath": "[concat(parameters('globals').ou.drone, parameters('globals').ou.serverRoles)]",
       "sizeOfDataDiskInGB": 0,
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
     },
 
@@ -88,6 +90,7 @@
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.sql, parameters('globals').ou.serverRoles)]",
       "sizeOfDataDiskInGB": 1023,
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVault]",
       "storageAccount": "[variables('storageAccountNamePremium')]"
     },
 
@@ -119,6 +122,7 @@
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.iis, parameters('globals').ou.serverRoles)]",
       "sizeOfDataDiskInGB": 1023,
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
     }
   },

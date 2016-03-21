@@ -48,6 +48,9 @@
     {
       "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
       "type": "Microsoft.Compute/virtualMachines",
+      "dependsOn": [
+        "[concat(parameters('vmName'), '/BitLocker')]"
+      ],
       "name": "[parameters('vmName')]",
       "location": "[resourceGroup().location]",
       "properties": {

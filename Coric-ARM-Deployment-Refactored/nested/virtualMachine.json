@@ -185,7 +185,7 @@
 
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-DomainJoin')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-SQLKeyVault')]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "copy": {
         "name": "vmLoop",
@@ -193,6 +193,34 @@
       },
       "dependsOn": [
         "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-Extensions')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('machineSettings').sqlKeyVaultTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "vmName": {
+            "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-DomainJoin')]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
+      "dependsOn": [
+        "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-SQLKeyVault')]"
       ],
       "properties": {
         "mode": "Incremental",
