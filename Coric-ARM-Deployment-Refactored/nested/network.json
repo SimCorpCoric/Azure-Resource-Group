@@ -28,6 +28,18 @@
         },
         "subnets": [
           {
+            "name": "[parameters('globals').networkSettings.subnet0.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet0.addressPrefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet1.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet1.addressPrefix]"
+            }
+          },
+          {
             "name": "[parameters('globals').networkSettings.subnet2.name]",
             "properties": {
               "addressPrefix": "[parameters('globals').networkSettings.subnet2.addressPrefix]"
@@ -43,6 +55,24 @@
             "name": "[parameters('globals').networkSettings.subnet4.name]",
             "properties": {
               "addressPrefix": "[parameters('globals').networkSettings.subnet4.addressPrefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet5.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet5.addressPrefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet6.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet6.addressPrefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet7.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet7.addressPrefix]"
             }
           }
         ]
