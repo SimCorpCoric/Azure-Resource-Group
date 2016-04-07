@@ -27,12 +27,13 @@
     }
   },
 
-    "variables": {
-      "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
-      "nicName": "[concat('nic', parameters('machineSettings').basename)]",
-      "vmName": "[parameters('machineSettings').basename]",
-      "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
-    },
+  "variables": {
+    "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
+    "nicName": "[concat('nic', parameters('machineSettings').basename)]",
+    "pipName": "[concat('pip', parameters('machineSettings').basename)]",
+    "vmName": "[parameters('machineSettings').basename]",
+    "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
+  },
 
   "resources": [
     {
@@ -41,13 +42,50 @@
       "name": "[concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "nicLoop",
+        "name": "vmLoop",
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "properties": {
         "ipConfigurations": "[parameters('machineSettings').ipConfigurations]",
         "dnsSettings": {
           "dnsServers": "[parameters('machineSettings').dnsServers]"
+        }
+      }
+    },
+
+    {
+      "name": "[concat(variables('pipName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('machineSettings').numberOfVMs]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('machineSettings').publicIPTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersionPIP": {
+            "value": "[parameters('globals').apiVersion.pip]"
+          },
+          "apiVersionNIC": {
+            "value": "[parameters('globals').apiVersion.nic]"
+          },
+          "pipName": {
+            "value": "[concat(variables('pipName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+          },
+          "nicName": {
+            "value": "[concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+          },
+          "dnsPrefix": {
+            "value": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+          }
         }
       }
     },

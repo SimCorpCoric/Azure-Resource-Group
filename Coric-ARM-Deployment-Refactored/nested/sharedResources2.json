@@ -33,13 +33,14 @@
             "privateIPAllocationMethod": "Static",
             "privateIPAddress": "[parameters('globals').networkSettings.dc02IPAddress]",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet1.name)]"
             }
           }
         }
       ],
       "numberOfVMs": 1,
       "ouPath": "[parameters('globals').ou.domainControllers]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sizeOfDataDiskInGB": 1023,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
@@ -60,13 +61,14 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet4.name)]"
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet6.name)]"
             }
           }
         }
       ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.rdg, parameters('globals').ou.serverRoles)]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIP]",
       "sizeOfDataDiskInGB": 0,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[parameters('globals').storageAccountAdmin]"

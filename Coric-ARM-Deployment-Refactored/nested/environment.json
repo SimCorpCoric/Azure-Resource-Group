@@ -28,13 +28,14 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet3.name)]"
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet5.name)]"
             }
           }
         }
       ],
       "numberOfVMs": "[parameters('globals').environment.desktopCount]",
       "ouPath": "[concat(parameters('globals').ou.desktop, parameters('globals').ou.serverRoles)]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sizeOfDataDiskInGB": 0,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
@@ -55,13 +56,14 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet3.name)]"
             }
           }
         }
       ],
       "numberOfVMs": "[parameters('globals').environment.droneCount]",
       "ouPath": "[concat(parameters('globals').ou.drone, parameters('globals').ou.serverRoles)]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sizeOfDataDiskInGB": 0,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
@@ -89,6 +91,7 @@
       ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.sql, parameters('globals').ou.serverRoles)]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sizeOfDataDiskInGB": 1023,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVault]",
       "storageAccount": "[variables('storageAccountNamePremium')]"
@@ -114,13 +117,14 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet4.name)]"
             }
           }
         }
       ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.iis, parameters('globals').ou.serverRoles)]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sizeOfDataDiskInGB": 1023,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
