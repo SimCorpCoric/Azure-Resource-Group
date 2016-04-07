@@ -47,3 +47,6 @@ Coric-ARM-Deployment/ARM Template Deployment.ps1
 Coric-ARM-Deployment/coricAzureParameters.json
 Coric-ARM-Deployment/nested/nsgSubnetBackend.json
 Coric-ARM-Deployment-Refactored/coricAzureParameters3.json
+Coric-ARM-Deployment-Refactored/RBCTest-coricAzureParameters3.json
+Coric-ARM-Deployment-Refactored/RBCTest-coricAzureParameters2.json
+Coric-ARM-Deployment-Refactored/RBCTest-coricAzureParameters1.json
