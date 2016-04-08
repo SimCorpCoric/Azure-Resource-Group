@@ -153,11 +153,35 @@
               "Password": "PrivateSettingsRef:AdminPassword"
             }
           },
-          "WmfVersion": "4.0"
+          "WmfVersion": "5.0"
         },
         "protectedSettings": {
           "Items": {
             "AdminPassword": "[parameters('globals').domainAdminPassword]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "UpdatingDNStoPrimaryADVM",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').networkWithDNSTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "dnsServers": {
+            "value": [
+              "[parameters('globals').networkSettings.dc01IPAddress]",
+              "[parameters('globals').networkSettings.azureDNS]"
+            ]
           }
         }
       }
