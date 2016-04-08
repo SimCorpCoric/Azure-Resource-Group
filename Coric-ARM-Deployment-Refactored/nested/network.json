@@ -23,9 +23,7 @@
           ]
         },
         "dhcpOptions": {
-          "dnsServers": [
-            "[parameters('globals').networkSettings.dnsServers]"
-          ]
+          "dnsServers": "[parameters('globals').networkSettings.dnsServers]"
         },
         "subnets": [
           {
