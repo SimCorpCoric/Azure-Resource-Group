@@ -26,7 +26,7 @@
           "dnsServers": [
             "[parameters('globals').networkSettings.dnsServers]"
           ]
-        }
+        },
         "subnets": [
           {
             "name": "[parameters('globals').networkSettings.subnet0.name]",
