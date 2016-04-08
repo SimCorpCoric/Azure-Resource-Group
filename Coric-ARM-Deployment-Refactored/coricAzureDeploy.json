@@ -247,7 +247,7 @@
 
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
-    "dc01IPAddress": "10.1.0.4'",
+    "dc01IPAddress": "10.1.0.4",
     "dc02IPAddress": "10.1.0.5'",
     "domainSuffix": "Hosted",
     "environmentShortNameDevelopment": "Dev",
