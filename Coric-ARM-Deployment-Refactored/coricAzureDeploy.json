@@ -247,8 +247,8 @@
 
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
-    "dc01IPAddress": "[concat('10.1.0.4')]",
-    "dc02IPAddress": "[concat('10.1.0.5')]",
+    "dc01IPAddress": "10.1.0.4')]",
+    "dc02IPAddress": "10.1.0.5')]",
     "domainSuffix": "Hosted",
     "environmentShortNameDevelopment": "Dev",
     "environmentShortNameProduction": "Prod",
@@ -259,7 +259,7 @@
         "deployment": "2015-01-01",
         "dsc": "2015-06-15",
         "extension": "2015-06-15",
-        "network": "2015-06-15",
+        "network": "2016-03-30",
         "nic": "2016-03-30",
         "nsg": "2015-06-15",
         "pip": "2016-03-30",
@@ -307,7 +307,7 @@
       "localAdminPassword": "[parameters('localAdminPassword')]",
       "localAdminUsername": "[parameters('localAdminUsername')]",
       "networkSettings": {
-        "addressPrefix": "[concat('10.0.0.0/8')]",
+        "addressPrefix": "10.0.0.0/8",
         "dc01IPAddress": "[variables('dc01IPAddress')]",
         "dc02IPAddress": "[variables('dc02IPAddress')]",
         "dnsServers": [
@@ -317,35 +317,35 @@
         "gatewayIPAddress": "10.0.0.10",
         "subnet0": {
           "name": "gateway",
-          "prefix": "[concat('10.0.0.0/16')]"
+          "prefix": "10.0.0.0/16"
         },
         "subnet1": {
           "name": "admin",
-          "addressPrefix": "[concat('10.1.0.0/16')]"
+          "addressPrefix": "10.1.0.0/16"
         },
         "subnet2": {
           "name": "database",
-          "addressPrefix": "[concat('10.2.0.0/16')]"
+          "addressPrefix": "10.2.0.0/16"
         },
         "subnet3": {
           "name": "backend",
-          "addressPrefix": "[concat('10.3.0.0/16')]"
+          "addressPrefix": "10.3.0.0/16"
         },
         "subnet4": {
           "name": "frontend",
-          "addressPrefix": "[concat('10.4.0.0/16')]"
+          "addressPrefix": "10.4.0.0/16"
         },
         "subnet5": {
           "name": "user",
-          "addressPrefix": "[concat('10.5.0.0/16')]"
+          "addressPrefix": "10.5.0.0/16"
         },
         "subnet6": {
           "name": "public",
-          "addressPrefix": "[concat('10.6.0.0/16')]"
+          "addressPrefix": "10.6.0.0/16"
         },
         "subnet7": {
           "name": "dmz",
-          "addressPrefix": "[concat('10.7.0.0/16')]"
+          "addressPrefix": "10.7.0.0/16"
         },
         "name": "[concat('vn', variables('baseName'))]"
       },
