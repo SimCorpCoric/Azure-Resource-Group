@@ -167,6 +167,9 @@
       "name": "UpdatingDNStoPrimaryADVM",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateADForest')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
