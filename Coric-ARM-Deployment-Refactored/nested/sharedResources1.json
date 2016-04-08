@@ -168,7 +168,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateADForest')]"
+        "[concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc01', '/extensions/CreateADForest')]"
       ],
       "properties": {
         "mode": "Incremental",
