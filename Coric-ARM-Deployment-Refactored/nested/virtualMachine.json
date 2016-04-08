@@ -46,10 +46,7 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "properties": {
-        "ipConfigurations": "[parameters('machineSettings').ipConfigurations]",
-        "dnsSettings": {
-          "dnsServers": "[parameters('machineSettings').dnsServers]"
-        }
+        "ipConfigurations": "[parameters('machineSettings').ipConfigurations]"
       }
     },
 

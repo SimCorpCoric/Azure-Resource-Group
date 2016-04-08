@@ -13,14 +13,11 @@
 
   "variables": {
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+
     "primaryDomainController": {
       "adminPassword": "[parameters('globals').domainAdminPassword]",
       "adminUsername": "[parameters('globals').domainAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-dc')]",
-      "dnsServers": [
-        "127.0.0.1",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
-      ],
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoinNull]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",

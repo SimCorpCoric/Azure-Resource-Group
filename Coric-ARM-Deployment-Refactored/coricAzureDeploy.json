@@ -312,7 +312,8 @@
         "dc02IPAddress": "[variables('dc02IPAddress')]",
         "dnsServers": [
           "[variables('dc01IPAddress')]",
-          "[variables('dc02IPAddress')]"
+          "[variables('dc02IPAddress')]",
+          "168.63.129.16"
         ],
         "gatewayIPAddress": "10.0.0.10",
         "subnet0": {
