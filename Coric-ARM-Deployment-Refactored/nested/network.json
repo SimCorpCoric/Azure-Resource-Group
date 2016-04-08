@@ -1,7 +1,6 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-
   "parameters": {
     "globals": {
       "type": "object",
@@ -10,10 +9,7 @@
       }
     }
   },
-
-  "variables": {
-  },
-
+  "variables": {},
   "resources": [
     {
       "apiVersion": "[parameters('globals').apiVersion.network]",
@@ -23,56 +19,56 @@
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[parameters('globals').networkSettings.addressPrefix]"
+            "[parameters('globals').networkSettings.addressSpace]"
           ]
         },
         "subnets": [
           {
             "name": "[parameters('globals').networkSettings.subnet0.name]",
             "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.subnet0.addressPrefix]"
+              "addressPrefix": "[parameters('globals').networkSettings.subnet0.prefix]"
             }
           },
           {
             "name": "[parameters('globals').networkSettings.subnet1.name]",
             "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.subnet1.addressPrefix]"
+              "addressPrefix": "[parameters('globals').networkSettings.subnet1.prefix]"
             }
           },
           {
             "name": "[parameters('globals').networkSettings.subnet2.name]",
             "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.subnet2.addressPrefix]"
+              "addressPrefix": "[parameters('globals').networkSettings.subnet2.prefix]"
             }
           },
           {
             "name": "[parameters('globals').networkSettings.subnet3.name]",
             "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.subnet3.addressPrefix]"
+              "addressPrefix": "[parameters('globals').networkSettings.subnet3.prefix]"
             }
           },
           {
             "name": "[parameters('globals').networkSettings.subnet4.name]",
             "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.subnet4.addressPrefix]"
+              "addressPrefix": "[parameters('globals').networkSettings.subnet4.prefix]"
             }
           },
           {
             "name": "[parameters('globals').networkSettings.subnet5.name]",
             "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.subnet5.addressPrefix]"
+              "addressPrefix": "[parameters('globals').networkSettings.subnet5.prefix]"
             }
           },
           {
             "name": "[parameters('globals').networkSettings.subnet6.name]",
             "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.subnet6.addressPrefix]"
+              "addressPrefix": "[parameters('globals').networkSettings.subnet6.prefix]"
             }
           },
           {
             "name": "[parameters('globals').networkSettings.subnet7.name]",
             "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.subnet7.addressPrefix]"
+              "addressPrefix": "[parameters('globals').networkSettings.subnet7.prefix]"
             }
           }
         ]
