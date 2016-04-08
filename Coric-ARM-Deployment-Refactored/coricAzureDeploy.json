@@ -33,17 +33,6 @@
       "type": "string"
     },
 
-    "secondIPOctet": {
-      "type": "int",
-      "defaultValue": 12,
-      "minValue": 12,
-      "maxValue": 12,
-      "allowedValues": [ 12 ],
-      "metadata": {
-        "description": "The second IP octet used to denote the local network address space.  This is a value reserved and provided by SimCorp Group IT to esure VPN connectivity into the SimCorp offices."
-      }
-    },
-
     "windowsOSVersion": {
       "type": "string",
       "defaultValue": "2012-R2-Datacenter",
@@ -372,7 +361,6 @@
         "ftp": "OU=FTP;",
         "pushPull": "OU=PushPull;"
       },
-      "secondIPOctet": "[parameters('secondIPOctet')]",
       "sqlEncryption": {
         "keyVaultURL": "[concat('https://', parameters('sqlKeyVaultName'), '.vault.azure.net/')]",
         "servicePrincipalName": "[parameters('sqlServicePrincipalName')]",
