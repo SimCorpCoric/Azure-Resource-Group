@@ -100,7 +100,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc02')]"
+        "backupDCSetup"
       ],
       "properties": {
         "mode": "Incremental",
