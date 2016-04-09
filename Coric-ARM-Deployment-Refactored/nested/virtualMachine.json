@@ -86,6 +86,7 @@
           "ipConfigurations": {
             "value": "[parameters('machineSettings').ipConfigurations]"
           }
+        }
       }
     },
 
