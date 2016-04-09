@@ -42,27 +42,6 @@
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
     },
 
-    {
-      "name": "UpdatingDNSwithBackupADVM",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateADForest')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').networkWithDNSTemplateLink]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          }
-        }
-      }
-    },
-
     "rdsGateway": {
       "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
@@ -111,6 +90,27 @@
           },
           "copyIndexOffset": {
             "value": 2
+          }
+        }
+      }
+    },
+
+    {
+      "name": "UpdatingDNSwithBackupADVM",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc02')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').networkWithDNSTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
           }
         }
       }
