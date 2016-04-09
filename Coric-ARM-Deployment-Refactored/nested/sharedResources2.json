@@ -18,10 +18,6 @@
       "adminPassword": "[parameters('globals').domainAdminPassword]",
       "adminUsername": "[parameters('globals').domainAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-dc')]",
-      "dnsServers": [
-        "127.0.0.1",
-        "[parameters('globals').networkSettings.dc01IPAddress]"
-      ],
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
@@ -44,6 +40,34 @@
       "sizeOfDataDiskInGB": 1023,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
+    },
+
+    {
+      "name": "UpdatingDNSwithBackupADVM",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateADForest')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').networkWithDNSTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "dnsServers": {
+            "value": [
+              "[parameters('globals').networkSettings.dc01IPAddress]",
+              "[parameters('globals').networkSettings.dc02IPAddress]",
+              "[parameters('globals').networkSettings.azureDNS]"
+            ]
+          }
+        }
+      }
     },
 
     "rdsGateway": {
