@@ -36,6 +36,13 @@
         "Description": "DNS prefix for Public IP"
       },
       "type": "string"
+    },
+
+    "ipConfigurations": {
+      "metadata": {
+        "Description": "NIC ipConfigurations object"
+      },
+      "type": "array"
     }
   },
 
@@ -66,6 +73,8 @@
           {
             "name": "ipconfig",
             "properties": {
+              "privateIPAllocationMethod": "[parameters('ipConfigurations')[0].privateIPAllocationMethod]",
+              "subnet": "[parameters('ipConfigurations')[0].subnet]",
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('pipName'))]"
               }

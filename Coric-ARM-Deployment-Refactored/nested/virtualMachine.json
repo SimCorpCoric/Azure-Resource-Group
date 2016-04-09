@@ -82,8 +82,10 @@
           },
           "dnsPrefix": {
             "value": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+          },
+          "ipConfigurations": {
+            "value": "[parameters('machineSettings').ipConfigurations]"
           }
-        }
       }
     },
 
