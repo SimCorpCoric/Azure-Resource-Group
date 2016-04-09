@@ -36,6 +36,13 @@
         "Description": "DNS prefix for Public IP"
       },
       "type": "string"
+    },
+
+    "ipConfigurations": {
+      "metadata": {
+        "Description": "NIC ipConfigurations object"
+      },
+      "type": "array"
     }
   },
 
