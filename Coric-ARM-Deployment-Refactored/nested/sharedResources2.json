@@ -58,13 +58,6 @@
         "parameters": {
           "globals": {
             "value": "[parameters('globals')]"
-          },
-          "dnsServers": {
-            "value": [
-              "[parameters('globals').networkSettings.dc01IPAddress]",
-              "[parameters('globals').networkSettings.dc02IPAddress]",
-              "[parameters('globals').networkSettings.azureDNS]"
-            ]
           }
         }
       }
@@ -74,7 +67,6 @@
       "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-rdg')]",
-      "dnsServers": "[parameters('globals').networkSettings.dnsServers]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
