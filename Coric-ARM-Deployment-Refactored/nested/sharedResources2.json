@@ -72,7 +72,7 @@
 
   "resources": [
     {
-      "name": "backupDCSetup",
+      "name": "secondDCSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "properties": {
@@ -96,11 +96,11 @@
     },
 
     {
-      "name": "UpdatingDNSwithBackupADVM",
+      "name": "UpdatingDNStoSecondADVM",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "backupDCSetup"
+        "secondDCSetup"
       ],
       "properties": {
         "mode": "Incremental",
@@ -111,6 +111,13 @@
         "parameters": {
           "globals": {
             "value": "[parameters('globals')]"
+          },
+          "dnsServers": {
+            "value": [
+              "[parameters('globals').networkSettings.dc01IPAddress]",
+              "[parameters('globals').networkSettings.dc02IPAddress]",
+              "[parameters('globals').networkSettings.azureDNS]"
+            ]
           }
         }
       }
@@ -120,6 +127,9 @@
       "name": "rdsGatewaySetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "UpdatingDNStoSecondADVM"
+      ]
       "properties": {
         "mode": "Incremental",
         "templateLink": {
