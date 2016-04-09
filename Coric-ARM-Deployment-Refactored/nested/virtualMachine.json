@@ -97,7 +97,7 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+        "[concat(variables('pipName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
       ],
       "properties": {
         "hardwareProfile": {
