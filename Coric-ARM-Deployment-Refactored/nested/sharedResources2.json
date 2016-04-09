@@ -129,7 +129,7 @@
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "UpdatingDNStoSecondADVM"
-      ]
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
