@@ -136,7 +136,7 @@
     },
 
     {
-      "apiVersion": "[parameters('globals').apiVersionNIC]",
+      "apiVersion": "[parameters('globals').apiVersion.nic]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat('nic', variables('primaryDomainController').basename, '01')]",
       "location": "[resourceGroup().location]",
