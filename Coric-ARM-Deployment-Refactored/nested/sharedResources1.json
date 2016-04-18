@@ -150,7 +150,7 @@
             "properties": {
               "dhcpOptions": {
                 "dnsServers": [
-                  "[parameters('globals').networkSettings.dnsServers]"
+                  "[variables('primaryDomainController').dnsServers]"
                 ]
               }
             }
