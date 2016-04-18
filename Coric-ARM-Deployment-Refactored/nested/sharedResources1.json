@@ -149,6 +149,7 @@
             "name": "ipconfig",
             "properties": {
               "privateIPAllocationMethod": "[variables('primaryDomainController').ipConfigurations[0].properties.privateIPAllocationMethod]",
+              "privateIPAddress": "[variables('primaryDomainController').ipConfigurations[0].properties.privateIPAddress]",
               "subnet": "[variables('primaryDomainController').ipConfigurations[0].properties.subnet]",
               "dhcpOptions": {
                 "dnsServers": [
