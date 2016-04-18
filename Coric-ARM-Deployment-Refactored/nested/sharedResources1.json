@@ -19,6 +19,11 @@
       "adminUsername": "[parameters('globals').domainAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-dc')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dnsServers": [
+        "127.0.0.1",
+        "[parameters('globals').networkSettings.azureDNS]",
+        "[parameters('globals').networkSettings.dc02IPAddress]"
+      ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoinNull]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
@@ -131,12 +136,36 @@
     },
 
     {
+      "apiVersion": "[parameters('globals').apiVersionNIC]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat('nic', variables('primaryDomainController').basename, '01')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "primaryDCSetup"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "dhcpOptions": {
+                "dnsServers": [
+                  "[parameters('globals').networkSettings.dnsServers]"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+
+    {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateADForest')]",
       "apiVersion": "[parameters('globals').apiVersion.dsc]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "primaryDCSetup"
+        "[concat('nic', variables('primaryDomainController').basename, '01')]"
       ],
       "properties": {
         "publisher": "Microsoft.Powershell",
@@ -182,8 +211,7 @@
           },
           "dnsServers": {
             "value": [
-              "[parameters('globals').networkSettings.dc01IPAddress]",
-              "[parameters('globals').networkSettings.azureDNS]"
+              "[parameters('globals').networkSettings.dc01IPAddress]"
             ]
           }
         }
