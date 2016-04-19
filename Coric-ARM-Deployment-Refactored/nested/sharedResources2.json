@@ -122,6 +122,9 @@
           },
           "copyIndexOffset": {
             "value": 2
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
           }
         }
       }
@@ -193,6 +196,9 @@
           },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
           }
         }
       }
