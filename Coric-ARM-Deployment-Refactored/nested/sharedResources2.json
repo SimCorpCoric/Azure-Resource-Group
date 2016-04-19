@@ -106,7 +106,7 @@
       "name": "[concat('nic', variables('backupDomainController').basename, '02')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "primaryDCSetup"
+        "secondDCSetup"
       ],
       "properties": {
         "ipConfigurations": "[variables('backupDomainController').ipConfigurations]",
@@ -148,6 +148,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
+        "[concat('nic', variables('backupDomainController').basename, '02')]",
         "UpdatingDNStoSecondADVM"
       ],
       "properties": {
