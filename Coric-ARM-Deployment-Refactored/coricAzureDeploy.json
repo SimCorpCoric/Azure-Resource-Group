@@ -247,8 +247,6 @@
 
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
-    "dc01IPAddress": "10.1.0.4",
-    "dc02IPAddress": "10.1.0.5",
     "domainSuffix": "Hosted",
     "environmentShortNameDevelopment": "Dev",
     "environmentShortNameProduction": "Prod",
@@ -307,42 +305,42 @@
       "localAdminPassword": "[parameters('localAdminPassword')]",
       "localAdminUsername": "[parameters('localAdminUsername')]",
       "networkSettings": {
-        "addressSpace": "10.0.0.0/8",
+        "addressSpace": "10.200.0.0/20",
         "azureDNS": "168.63.129.16",
-        "dc01IPAddress": "[variables('dc01IPAddress')]",
-        "dc02IPAddress": "[variables('dc02IPAddress')]",
-        "gatewayIPAddress": "10.0.0.10",
+        "dc01IPAddress": "10.200.1.4",
+        "dc02IPAddress": "10.200.1.5",
+        "gatewayIPAddress": "10.200.0.10",
         "subnet0": {
           "name": "gateway",
-          "prefix": "10.0.0.0/16"
+          "prefix": "10.200.0.0/24"
         },
         "subnet1": {
           "name": "admin",
-          "prefix": "10.1.0.0/16"
+          "prefix": "10.200.1.0/24"
         },
         "subnet2": {
           "name": "database",
-          "prefix": "10.2.0.0/16"
+          "prefix": "10.200.2.0/24"
         },
         "subnet3": {
           "name": "backend",
-          "prefix": "10.3.0.0/16"
+          "prefix": "10.200.3.0/24"
         },
         "subnet4": {
           "name": "frontend",
-          "prefix": "10.4.0.0/16"
+          "prefix": "10.200.4.0/24"
         },
         "subnet5": {
           "name": "user",
-          "prefix": "10.5.0.0/16"
+          "prefix": "10.200.5.0/24"
         },
         "subnet6": {
           "name": "public",
-          "prefix": "10.6.0.0/16"
+          "prefix": "10.200.6.0/24"
         },
         "subnet7": {
           "name": "dmz",
-          "prefix": "10.7.0.0/16"
+          "prefix": "10.200.7.0/24"
         },
         "name": "[concat('vn', variables('baseName'))]"
       },
