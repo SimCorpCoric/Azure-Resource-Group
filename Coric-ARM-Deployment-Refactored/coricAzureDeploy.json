@@ -160,10 +160,10 @@
     "windowsVMSize": {
       "type": "string",
       "allowedValues": [
-        "Standard_D1",
-        "Standard_D2"
+        "Standard_D1_v2",
+        "Standard_D2_v2"
       ],
-      "defaultValue": "Standard_D1",
+      "defaultValue": "Standard_D1_v2",
       "metadata": {
         "Description": "VM size for Windows Servers."
       }
