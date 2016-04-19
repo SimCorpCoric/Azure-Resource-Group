@@ -450,6 +450,10 @@
             "value": "[variables('globals')]"
           },
 
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
+          },
+
           "localAdminPassword": {
             "value": "[parameters('localAdminPassword')]"
           }

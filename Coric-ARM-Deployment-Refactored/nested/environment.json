@@ -10,6 +10,13 @@
       "type": "object"
     },
 
+    "domainAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
+    },
+
     "localAdminPassword": {
       "type": "securestring",
       "metadata": {
@@ -201,6 +208,9 @@
           },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
           }
         }
       }
@@ -228,6 +238,9 @@
           },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
           }
         }
       }
@@ -255,6 +268,9 @@
           },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
           }
         }
       }
@@ -282,6 +298,9 @@
           },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
           }
         }
       }

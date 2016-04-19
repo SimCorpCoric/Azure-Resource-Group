@@ -24,6 +24,13 @@
       "type": "securestring"
     },
 
+    "domainAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
+    },
+
     "copyIndexOffset": {
       "metadata": {
         "Description": "Number to start copy index from"
@@ -282,6 +289,9 @@
           },
           "ouPath": {
             "value": "[parameters('machineSettings').ouPath]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
           }
         }
       }

@@ -10,6 +10,13 @@
       "type": "object"
     },
 
+    "domainAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
+    },
+
     "localAdminPassword": {
       "type": "securestring",
       "metadata": {
