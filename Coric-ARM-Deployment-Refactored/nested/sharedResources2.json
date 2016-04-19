@@ -19,6 +19,11 @@
       "adminUsername": "[parameters('globals').domainAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-dc')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dnsServers": [
+        "127.0.0.1",
+        "[parameters('globals').networkSettings.azureDNS]",
+        "[parameters('globals').networkSettings.dc01IPAddress]"
+      ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
@@ -96,6 +101,22 @@
     },
 
     {
+      "apiVersion": "[parameters('globals').apiVersion.nic]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat('nic', variables('backupDomainController').basename, '02')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "primaryDCSetup"
+      ],
+      "properties": {
+        "ipConfigurations": "[variables('backupDomainController').ipConfigurations]",
+        "dnsSettings": {
+          "dnsServers": "[variables('backupDomainController').dnsServers]"
+        }
+      }
+    },
+
+    {
       "name": "UpdatingDNStoSecondADVM",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
@@ -115,8 +136,7 @@
           "dnsServers": {
             "value": [
               "[parameters('globals').networkSettings.dc01IPAddress]",
-              "[parameters('globals').networkSettings.dc02IPAddress]",
-              "[parameters('globals').networkSettings.azureDNS]"
+              "[parameters('globals').networkSettings.dc02IPAddress]"
             ]
           }
         }
