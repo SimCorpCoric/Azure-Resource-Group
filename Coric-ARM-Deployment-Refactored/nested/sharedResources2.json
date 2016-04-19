@@ -71,6 +71,17 @@
         {
           "name": "ipconfig",
           "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet6.name)]"
+            }
+          }
+        }
+      ],
+      "ipConfigurationsStatic": [
+        {
+          "name": "ipconfig",
+          "properties": {
             "privateIPAllocationMethod": "Static",
             "privateIPAddress": "[parameters('globals').networkSettings.rdgatewayIPAddress]",
             "subnet": {
@@ -184,6 +195,19 @@
             "value": "[parameters('localAdminPassword')]"
           }
         }
+      }
+    },
+
+    {
+      "apiVersion": "[parameters('globals').apiVersion.nic]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat('nic', variables('rdsGateway').basename, '01')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "rdsGatewaySetup"
+      ],
+      "properties": {
+        "ipConfigurations": "[variables('rdsGateway').ipConfigurationsStatic]"
       }
     }
   ]
