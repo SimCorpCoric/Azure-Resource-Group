@@ -8,6 +8,20 @@
       "metadata": {
         "Description": "Global complex object passed to nested templates"
       }
+    },
+
+    "domainAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
+    },
+
+    "localAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Local admin password"
+      }
     }
   },
 

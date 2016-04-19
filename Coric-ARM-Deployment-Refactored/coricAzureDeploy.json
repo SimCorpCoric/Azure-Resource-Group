@@ -281,7 +281,6 @@
         "keyVaultCertificateURL": "[parameters('keyVaultCertificateURL')]",
         "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]"
       },
-      "domainAdminPassword": "[parameters('domainAdminPassword')]",
       "domainAdminUsername": "[parameters('domainAdminUsername')]",
       "domainName": "[concat(variables('baseName'), '.', variables('domainSuffix'))]",
       "domainNameLDAP": "[concat('DC=', variables('baseName'), '; DC=', variables('domainSuffix'))]",
@@ -302,7 +301,6 @@
         "droneCount": "[parameters('droneCount')]",
         "desktopCount": "[parameters('desktopCount')]"
       },
-      "localAdminPassword": "[parameters('localAdminPassword')]",
       "localAdminUsername": "[parameters('localAdminUsername')]",
       "networkSettings": {
         "addressSpace": "10.200.0.0/20",
@@ -310,6 +308,8 @@
         "dc01IPAddress": "10.200.1.4",
         "dc02IPAddress": "10.200.1.5",
         "gatewayIPAddress": "10.200.0.10",
+        "rdgatewayIPAddress": "10.200.6.4",
+        "ftpIPAddress": "10.200.6.5",
         "subnet0": {
           "name": "gateway",
           "prefix": "10.200.0.0/24"
@@ -419,6 +419,14 @@
         "parameters": {
           "globals": {
             "value": "[variables('globals')]"
+          },
+
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
+          },
+
+          "localAdminPassword": {
+            "value": "[parameters('localAdminPassword')]"
           }
         }
       }
@@ -440,6 +448,10 @@
         "parameters": {
           "globals": {
             "value": "[variables('globals')]"
+          },
+
+          "localAdminPassword": {
+            "value": "[parameters('localAdminPassword')]"
           }
         }
       }

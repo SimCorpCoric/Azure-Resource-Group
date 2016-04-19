@@ -4,9 +4,16 @@
 
   "parameters": {
     "globals": {
-      "type": "object",
       "metadata": {
         "Description": "Global complex object passed to nested templates"
+      },
+      "type": "object"
+    },
+
+    "localAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Local admin password"
       }
     }
   },
@@ -14,7 +21,6 @@
   "variables": {
     "acronym": "[toLower(parameters('globals').environment.acronym)]",
     "desktop": {
-      "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
@@ -41,7 +47,6 @@
     },
 
     "drone": {
-      "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
@@ -68,7 +73,6 @@
     },
 
     "sql": {
-      "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
@@ -100,7 +104,6 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
 
     "warehouse": {
-      "adminPassword": "[parameters('globals').localAdminPassword]",
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
@@ -195,6 +198,9 @@
           },
           "machineSettings": {
             "value": "[variables('sql')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('localAdminPassword')]"
           }
         }
       }
@@ -219,6 +225,9 @@
           },
           "machineSettings": {
             "value": "[variables('warehouse')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('localAdminPassword')]"
           }
         }
       }
@@ -243,6 +252,9 @@
           },
           "machineSettings": {
             "value": "[variables('drone')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('localAdminPassword')]"
           }
         }
       }
@@ -267,6 +279,9 @@
           },
           "machineSettings": {
             "value": "[variables('desktop')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('localAdminPassword')]"
           }
         }
       }

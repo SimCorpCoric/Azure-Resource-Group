@@ -17,6 +17,13 @@
       "type": "object"
     },
 
+    "adminPassword": {
+      "metadata": {
+        "Description": "Administrator password for the VM"
+      },
+      "type": "securestring"
+    },
+
     "copyIndexOffset": {
       "metadata": {
         "Description": "Number to start copy index from"
@@ -109,7 +116,7 @@
         "osProfile": {
           "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
           "adminUsername": "[parameters('machineSettings').adminUsername]",
-          "adminPassword": "[parameters('machineSettings').adminPassword]",
+          "adminPassword": "[parameters('adminPassword')]",
           "secrets": [
             {
               "sourceVault": {
