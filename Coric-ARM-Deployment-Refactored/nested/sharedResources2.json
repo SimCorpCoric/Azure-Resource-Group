@@ -71,17 +71,6 @@
         {
           "name": "ipconfig",
           "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet6.name)]"
-            }
-          }
-        }
-      ],
-      "ipConfigurationsStatic": [
-        {
-          "name": "ipconfig",
-          "properties": {
             "privateIPAllocationMethod": "Static",
             "privateIPAddress": "[parameters('globals').networkSettings.rdgatewayIPAddress]",
             "subnet": {
