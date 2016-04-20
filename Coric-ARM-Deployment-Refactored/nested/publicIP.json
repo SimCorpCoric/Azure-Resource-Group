@@ -77,6 +77,7 @@
             "name": "ipconfig",
             "properties": {
               "privateIPAllocationMethod": "[parameters('ipConfigurations')[0].properties.privateIPAllocationMethod]",
+              "privateIPAllocationMethod": "[parameters('ipConfigurations')[0].properties.privateIPAddress]",
               "subnet": "[parameters('ipConfigurations')[0].properties.subnet]",
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('pipName'))]"
