@@ -75,5 +75,8 @@
       }
     }
 
-  ]
+  ],
+  "outputs": {
+    "BitLocker": "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'BitLocker')).instanceView.statuses[0].message]",
+  }
 }
