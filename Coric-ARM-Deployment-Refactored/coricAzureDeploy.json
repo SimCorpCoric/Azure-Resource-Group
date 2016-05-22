@@ -342,6 +342,10 @@
           "name": "dmz",
           "prefix": "10.200.7.0/24"
         },
+        "subnet8": {
+          "name": "GatewaySubnet",
+          "prefix": "10.200.8.0/24"
+        },
         "name": "[concat('vn', variables('baseName'))]"
       },
       "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",

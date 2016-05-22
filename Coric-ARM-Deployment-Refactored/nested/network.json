@@ -79,6 +79,12 @@
             "properties": {
               "addressPrefix": "[parameters('globals').networkSettings.subnet7.prefix]"
             }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet8.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet8.prefix]"
+            }
           }
         ]
       }
