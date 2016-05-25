@@ -346,6 +346,10 @@
           "name": "GatewaySubnet",
           "prefix": "10.200.8.0/24"
         },
+        "subnet9": {
+          "name": "FirewallInternal",
+          "prefix": "10.200.9.0/24"
+        },
         "name": "[concat('vn', variables('baseName'))]"
       },
       "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
