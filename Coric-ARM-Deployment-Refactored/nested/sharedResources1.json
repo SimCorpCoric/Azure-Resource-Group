@@ -22,13 +22,6 @@
       "metadata": {
         "description": "Local admin password"
       }
-    },
-
-    "sicKey": {
-      "type": "securestring",
-      "metadata": {
-        "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
-      }
     }
   },
 
