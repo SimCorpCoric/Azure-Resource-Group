@@ -12,7 +12,6 @@
     },
 
     "clientID": {
-      "defaultValue": "14",
       "metadata": {
         "description": "Unique ClientID for the system."
       },
@@ -51,7 +50,7 @@
       "type": "int",
       "defaultValue": 1,
       "metadata": {
-        "description": "The implementation build phase.  1 = DC01.  2 = Remaining admin VMs.  3 = Environment supplied in 'environmentName'"
+        "description": "The implementation build phase.  1 = DC01.  2 = Remaining admin VMs.  3 = Environment supplied in 'environmentName.  4=Check Point"
       }
     },
 
@@ -241,6 +240,14 @@
       "metadata": {
         "description": "Name of the SQL user to be created for use with TDE EKM on Key Vault"
       }
+    },
+
+    "sicKey": {
+      "defaultValue": "",
+      "type": "securestring",
+      "metadata": {
+        "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
+      }
     }
 
   },
@@ -257,14 +264,17 @@
         "deployment": "2015-01-01",
         "dsc": "2015-06-15",
         "extension": "2015-06-15",
+        "loadBalancer": "2016-03-30",
         "network": "2016-03-30",
         "nic": "2016-03-30",
         "nsg": "2015-06-15",
         "pip": "2016-03-30",
+        "routeTables": "2016-03-30",
         "storage": "2015-06-15",
         "virtualMachine": "2015-06-15"
       },
       "baseName": "[variables('baseName')]",
+      "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
       "clientID": "[parameters('clientID')]",
       "customScript": {
         "diskInitialize": {
@@ -307,46 +317,57 @@
         "azureDNS": "168.63.129.16",
         "dc01IPAddress": "10.200.1.4",
         "dc02IPAddress": "10.200.1.5",
-        "gatewayIPAddress": "10.200.0.10",
+        "gatewayExternalIPAddress": "10.200.0.4",
+        "gatewayInternalIPAddress": "10.200.9.4",
         "rdgatewayIPAddress": "10.200.6.4",
         "ftpIPAddress": "10.200.6.5",
         "subnet0": {
+          "id": 0,
           "name": "gateway",
           "prefix": "10.200.0.0/24"
         },
         "subnet1": {
+          "id": 1,
           "name": "admin",
           "prefix": "10.200.1.0/24"
         },
         "subnet2": {
+          "id": 2,
           "name": "database",
           "prefix": "10.200.2.0/24"
         },
         "subnet3": {
+          "id": 3,
           "name": "backend",
           "prefix": "10.200.3.0/24"
         },
         "subnet4": {
+          "id": 4,
           "name": "frontend",
           "prefix": "10.200.4.0/24"
         },
         "subnet5": {
+          "id": 5,
           "name": "user",
           "prefix": "10.200.5.0/24"
         },
         "subnet6": {
+          "id": 6,
           "name": "public",
           "prefix": "10.200.6.0/24"
         },
         "subnet7": {
+          "id": 7,
           "name": "dmz",
           "prefix": "10.200.7.0/24"
         },
         "subnet8": {
+          "id": 8,
           "name": "GatewaySubnet",
           "prefix": "10.200.8.0/24"
         },
         "subnet9": {
+          "id": 9,
           "name": "FirewallInternal",
           "prefix": "10.200.9.0/24"
         },
@@ -410,7 +431,8 @@
     "templateLinkEnvironment": "[variables(concat('templateLinkEnvironment', parameters('implementationPhase')))]",
     "templateLinkEnvironment1": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
     "templateLinkEnvironment2": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
-    "templateLinkEnvironment3": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]"
+    "templateLinkEnvironment3": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
+    "templateLinkEnvironment4": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]"
   },
 
   "resources": [
@@ -464,6 +486,10 @@
 
           "localAdminPassword": {
             "value": "[parameters('localAdminPassword')]"
+          },
+
+          "sicKey": {
+            "value": "[parameters('sicKey')]"
           }
         }
       }
