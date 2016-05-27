@@ -177,6 +177,9 @@
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('globals').networkSettings.name]",
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[variables('routeTableName')]"
+      ],
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
