@@ -63,6 +63,7 @@
     },
 
     "domainAdminPassword": {
+      "defaultValue": "",
       "type": "securestring",
       "metadata": {
         "description": "Domain admin password"
@@ -78,6 +79,7 @@
     },
 
     "localAdminPassword": {
+      "defaultValue": "",
       "type": "securestring",
       "metadata": {
         "description": "Local admin password"
@@ -127,12 +129,11 @@
     "sqlVMSize": {
       "type": "string",
       "allowedValues": [
-        "Standard_DS1",
-        "Standard_DS2",
-        "Standard_DS11",
-        "Standard_DS12"
+        "Standard_DS1_v2",
+        "Standard_DS11_v2",
+        "Standard_DS12_v2"
       ],
-      "defaultValue": "Standard_DS1",
+      "defaultValue": "Standard_DS11_v2",
       "metadata": {
         "Description": "VM size for SQL Server Enterprise."
       }
@@ -169,6 +170,7 @@
     },
 
     "keyVaultName": {
+      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Name of Key Vault which contains the encryption certificate"
@@ -176,6 +178,7 @@
     },
 
     "keyVaultResourceGroup": {
+      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Resource Group of Key Vault which contains the encryption certificate"
@@ -183,6 +186,7 @@
     },
 
     "keyVaultCertificateURL": {
+      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Url of the aadApp access certificate in the Key Vault.  E.g: https://mytestvault.vault.azure.net:443/secrets/myaadappcertificate/<version>"
@@ -190,6 +194,7 @@
     },
 
     "keyVaultKEKURL": {
+      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Url of the BitLocker Key Encryption Key in the Key Vault.  E.g: https://mytestvault.vault.azure.net/keys/mykek/<version>"
@@ -197,6 +202,7 @@
     },
 
     "aadClientID": {
+      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Client ID of AAD app which has permissions to KeyVault"
@@ -204,6 +210,7 @@
     },
 
     "aadClientCertThumbprint": {
+      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
