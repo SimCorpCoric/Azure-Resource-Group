@@ -464,6 +464,10 @@
 
           "localAdminPassword": {
             "value": "[parameters('localAdminPassword')]"
+          },
+
+          "sicKey": {
+            "value": "[parameters('sicKey')]"
           }
         }
       }
@@ -493,10 +497,6 @@
 
           "localAdminPassword": {
             "value": "[parameters('localAdminPassword')]"
-          },
-
-          "sicKey": {
-            "value": "[parameters('sicKey')]"
           }
         }
       }
