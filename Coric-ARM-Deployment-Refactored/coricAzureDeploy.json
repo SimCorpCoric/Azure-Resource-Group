@@ -242,7 +242,6 @@
     },
 
     "sqlCredentialName": {
-      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Name of the SQL user to be created for use with TDE EKM on Key Vault"
