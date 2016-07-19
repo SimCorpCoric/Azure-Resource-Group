@@ -51,14 +51,14 @@
     },
     "incomingTraffic": [
       {
-        "name": "rdg-443",
+        "name": "cor0009-rdg01",
         "frontendPort": 443,
         "backendPort": 8443
       },
       {
-        "name": "null-443",
-        "frontendPort": 443,
-        "backendPort": 8444
+        "name": "cor0009-rdg01",
+        "frontendPort": 3389,
+        "backendPort": 3389
       }
     ],
 
@@ -443,7 +443,7 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nic2Name'))]"
       ],
       "location": "[resourceGroup().location]",
-      "name": "[variables('vmName')]",
+      "name": "[variables('vmNamePortal')]",
       "plan": "[variables('plan')]",
       "properties": {
         "diagnosticsProfile": {
