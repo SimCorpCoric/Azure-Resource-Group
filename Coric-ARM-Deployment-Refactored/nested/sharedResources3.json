@@ -33,6 +33,31 @@
   },
 
   "variables": {
+        "sql": {
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryptionNull]",
+      "imageReference": "[parameters('globals').sqlVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+            }
+          }
+        }
+      ],
+      "numberOfVMs": 1,
+      "ouPath": "[concat(parameters('globals').ou.sql, parameters('globals').ou.serverRoles)]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+      "sizeOfDataDiskInGB": 1023,
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVault]",
+      "storageAccount": "[variables('storageAccountNamePremium')]"
+    },
   },
 
   "resources": [
