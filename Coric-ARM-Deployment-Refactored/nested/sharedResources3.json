@@ -33,9 +33,10 @@
   },
 
   "variables": {
-        "sql": {
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+    "sql": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
+      "basename": "[concat(parameters('globals').baseName, '-sql')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryptionNull]",
@@ -58,8 +59,63 @@
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVault]",
       "storageAccount": "[variables('storageAccountNamePremium')]"
     },
+    "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, 'sharedprem')]",
+    "storageAccountNamePremiumType": "Premium_LRS"
   },
 
   "resources": [
+    {
+      "name": "SharedStoragePremium",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').storageAccountTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "Name": {
+            "value": "[variables('storageAccountNamePremium')]"
+          },
+          "accountType": {
+            "value": "[variables('storageAccountNamePremiumType')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "sqlSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'SharedStoragePremium')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('sql')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('localAdminPassword')]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
+          }
+        }
+      }
+    }
   ]
 }

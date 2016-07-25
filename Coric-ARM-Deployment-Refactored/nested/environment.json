@@ -187,36 +187,6 @@
     },
 
     {
-      "name": "sqlSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStoragePremium')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').templateLinkVirtualMachine]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('sql')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          }
-        }
-      }
-    },
-
-    {
       "name": "warehouseSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",

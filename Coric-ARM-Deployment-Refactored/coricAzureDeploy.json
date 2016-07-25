@@ -267,7 +267,7 @@
     "environmentShortNameWeb": "Web",
     "globals": {
       "apiVersion": {
-        "deployment": "2015-01-01",
+        "deployment": "2016-02-01",
         "dsc": "2015-06-15",
         "extension": "2015-06-15",
         "loadBalancer": "2016-03-30",
