@@ -118,9 +118,10 @@
       "type": "string",
       "allowedValues": [
         "SQL2012SP2",
+        "SQL2012SP3",
         "SQL2014SP1"
       ],
-      "defaultValue": "SQL2012SP2",
+      "defaultValue": "SQL2012SP3",
       "metadata": {
         "Description": "Version of SQL Server Enterprise to use.  Use following PowerShell cmdlet to see available options for the deployment region: Get-AzureRmVMImageOffer -PublisherName 'MicrosoftSQLServer"
       }
@@ -136,6 +137,18 @@
       "defaultValue": "Standard_DS11_v2",
       "metadata": {
         "Description": "VM size for SQL Server Enterprise."
+      }
+    },
+
+    "sqlBYOL": {
+      "type": "string",
+      "allowedValues": [
+        "",
+        "-BYOL"
+      ],
+      "defaultValue": "",
+      "metadata": {
+        "Description": "Internal-use BYOL or client-licensed instance of SQL"
       }
     },
 
@@ -400,7 +413,7 @@
       },
       "sqlVM": {
         "publisher": "MicrosoftSQLServer",
-        "offer": "[variables(parameters('sqlVersion'))]",
+        "offer": "[variables('sqlOffer')]",
         "sku": "Enterprise",
         "version": "latest",
         "size": "[parameters('sqlVMSize')]"
@@ -433,7 +446,9 @@
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
     "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, concat('nested/sharedResources', parameters('implementationPhase'), '.json'))]",
     "sql2012SP2": "SQL2012SP2-WS2012R2",
+    "sql2012SP3": "SQL2012SP3-WS2012R2",
     "sql2014SP1": "SQL2014SP1-WS2012R2",
+    "sqlOffer": "[concat(variables(parameters('sqlVersion')),parameters('sqlBYOL'))",
     "templateLinkEnvironment": "[variables(concat('templateLinkEnvironment', parameters('implementationPhase')))]",
     "templateLinkEnvironment1": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
     "templateLinkEnvironment2": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
