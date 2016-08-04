@@ -423,7 +423,6 @@
       "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
       "storageType": "Standard_RAGRS",
       "templateLinkDataDisk": "[uri(deployment().properties.templateLink.uri, 'nested/dataDisk.json')]",
-      "templateLinkDataDiskIteration": "[uri(deployment().properties.templateLink.uri, 'nested/dataDiskIteration.json')]",
       "templateLinkDataDiskNull": "[uri(deployment().properties.templateLink.uri, 'nested/dataDiskNull.json')]",
       "templateLinkDiskEncryption": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]",
       "templateLinkDiskEncryptionNull": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryptionNull.json')]",

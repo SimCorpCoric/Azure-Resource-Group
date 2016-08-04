@@ -37,8 +37,7 @@
     "sql": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-sql')]",
-      "dataDiskIterationTemplateLink": "[parameters('globals').templateLinkDataDiskIteration]",
-      "dataDiskCount": 3,
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryptionNull]",
       "imageReference": "[parameters('globals').sqlVM]",

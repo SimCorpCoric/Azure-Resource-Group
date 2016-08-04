@@ -172,7 +172,7 @@
 
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-DataDisks')]",
+      "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-DataDisk')]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "copy": {
         "name": "vmLoop",
@@ -184,18 +184,21 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('machineSettings').dataDiskIterationTemplateLink]",
+          "uri": "[parameters('machineSettings').dataDiskTemplateLink]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
           "globals": {
             "value": "[parameters('globals')]"
           },
-          "machineSettings": {
-            "value": "[parameters('machineSettings')]"
-          },
           "vmName": {
             "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+          },
+          "storageAccount": {
+            "value": "[parameters('machineSettings').storageAccount]"
+          },
+          "sizeOfDataDiskInGB": {
+            "value": "[parameters('machineSettings').sizeOfDataDiskInGB]"
           }
         }
       }
