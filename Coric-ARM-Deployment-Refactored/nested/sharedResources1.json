@@ -155,7 +155,7 @@
       "dataDisks": [
         {
           "name": "[concat(variables('ftpBasename'), '01-datadisk-0')]",
-          "diskSizeGB": "[parameters('globals').dataDiskSizes.dc]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.ftp]",
           "lun": 0,
           "vhd": {
             "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('ftpBasename'), '01-Data0.vhd')]"

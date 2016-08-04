@@ -32,6 +32,7 @@
     }
   },
 
+
   "variables": {
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
     "sqlBasename": "[concat(parameters('globals').baseName, '-sql')]",
@@ -41,29 +42,29 @@
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "dataDisks": [
         {
-          "name": "[concat(variables('sql').basename, '-datadisk-0')]",
+          "name": "[concat(variables('sqlBasename'), '01-datadisk-0')]",
           "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
           "lun": 0,
           "vhd": {
-            "uri": "[concat('http://', variables('sql').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sql').basename,'-Data0.vhd')]"
+            "uri": "[concat('http://', variables('storageAccountNamePremium'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'),'01-Data0.vhd')]"
           },
           "createOption": "Empty"
         },
         {
-          "name": "[concat(variables('sql').basename, '-datadisk-1')]",
+          "name": "[concat(variables('sqlBasename'), '01-datadisk-1')]",
           "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
           "lun": 1,
           "vhd": {
-            "uri": "[concat('http://', variables('sql').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sql').basename,'-Data1.vhd')]"
+            "uri": "[concat('http://', variables('storageAccountNamePremium'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'),'01-Data1.vhd')]"
           },
           "createOption": "Empty"
         },
         {
-          "name": "[concat(variables('sql').basename, '-datadisk-2')]",
+          "name": "[concat(variables('sqlBasename'), '01-datadisk-2')]",
           "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
           "lun": 2,
           "vhd": {
-            "uri": "[concat('http://', variables('sql').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sql').basename,'-Data2.vhd')]"
+            "uri": "[concat('http://', variables('storageAccountNamePremium'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'),'01-Data2.vhd')]"
           },
           "createOption": "Empty"
         }
