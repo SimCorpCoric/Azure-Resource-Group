@@ -30,6 +30,13 @@
       },
       "type": "int",
       "defaultValue": 1023
+    },
+
+    "dataDiskID": {
+      "metadata": {
+        "Description": "The ID of the Data Disk"
+      },
+      "type": "int"
     }
   },
 
@@ -47,11 +54,11 @@
         "storageProfile": {
           "dataDisks": [
             {
-              "name": "[concat(parameters('vmName'), '-datadisk-1')]",
+              "name": "[concat(parameters('vmName'), '-datadisk-', parameters('dataDiskID'))]",
               "diskSizeGB": "[parameters('sizeOfDataDiskInGB')]",
-              "lun": 0,
+              "lun": "[sub(parameters('dataDiskID'), 1)]",
               "vhd": {
-                "uri": "[concat('http://', parameters('storageAccount'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', parameters('vmName'),'-Data1.vhd')]"
+                "uri": "[concat('http://', parameters('storageAccount'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', parameters('vmName'),'-Data', parameters('dataDiskID'),'.vhd')]"
               },
               "createOption": "Empty"
             }

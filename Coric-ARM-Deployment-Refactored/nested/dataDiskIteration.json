@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "globals": {
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      },
+      "type": "object"
+    },
+
+    "machineSettings": {
+      "metadata": {
+        "Description": "Machine settings object"
+      },
+      "type": "object"
+    },
+
+    "vmName": {
+      "metadata": {
+        "Description": "The VM's name as shown in the portal - NOT the server's BIOS/hostname"
+      },
+      "type": "string"
+    }
+
+  },
+
+  "variables": {
+
+  },
+
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "[concat(parameters('vmName'), '-DataDisk', copyIndex())]",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "copy": {
+        "name": "diskLoop",
+        "count": "[parameters('machineSettings').dataDiskCount]"
+      },
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').templateLinkDataDisk]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "vmName": {
+            "value": "[parameters('vmName')]"
+          },
+          "storageAccount": {
+            "value": "[parameters('machineSettings').storageAccount]"
+          },
+          "sizeOfDataDiskInGB": {
+            "value": "[parameters('machineSettings').sizeOfDataDiskInGB]"
+          }
+        }
+      }
+    }
+  ]
+}
