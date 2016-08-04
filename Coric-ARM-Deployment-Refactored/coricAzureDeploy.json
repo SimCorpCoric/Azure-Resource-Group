@@ -301,6 +301,12 @@
           "scriptURL": "[uri(deployment().properties.templateLink.uri, 'customScript/DiskInitialize.ps1')]"
         }
       },
+      "dataDiskSizes": {
+        "dc": 1023,
+        "ftp": 1023,
+        "sql": 1023,
+        "warehouse": 1023
+      },
       "diskEncryption": {
         "aadClientID": "[parameters('aadClientID')]",
         "aadClientCertThumbprint": "[parameters('aadClientCertThumbprint')]",

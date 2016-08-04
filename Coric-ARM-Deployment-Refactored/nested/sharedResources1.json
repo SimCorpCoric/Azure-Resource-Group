@@ -34,11 +34,23 @@
 
   "variables": {
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+    "dcBasename": "[concat(parameters('globals').baseName, '-dc')]",
 
     "primaryDomainController": {
       "adminUsername": "[parameters('globals').domainAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-dc')]",
+      "basename": "[variables('dcBasename')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('dcBasename'), '01-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.ftp]",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dcBasename'), '01-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
       "dnsServers": [
         "127.0.0.1",
         "[parameters('globals').networkSettings.azureDNS]",
@@ -62,15 +74,25 @@
       "numberOfVMs": 1,
       "ouPath": "",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sizeOfDataDiskInGB": 1023,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
     },
-	
-	    "backupDomainController": {
+
+    "backupDomainController": {
       "adminUsername": "[parameters('globals').domainAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-dc')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('dcBasename'), '02-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.dc]",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dcBasename'), '02-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
       "dnsServers": [
         "127.0.0.1",
         "[parameters('globals').networkSettings.azureDNS]",
@@ -121,15 +143,26 @@
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.rdg, parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIP]",
-      "sizeOfDataDiskInGB": 0,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
     },
 
+    "ftpBasename": "[concat(parameters('globals').baseName, '-ftp')]",
     "ftp": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-ftp')]",
+      "basename": "[variables('ftpBasename')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('ftpBasename'), '01-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.dc]",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('ftpBasename'), '01-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",

@@ -34,15 +34,16 @@
 
   "variables": {
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+    "sqlBasename": "[concat(parameters('globals').baseName, '-sql')]",
     "sql": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-sql')]",
+      "basename": "[variables('sqlBasename')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "dataDisks": [
         {
           "name": "[concat(variables('sql').basename, '-datadisk-0')]",
-          "diskSizeGB": "[variables('sql').sizeOfDataDiskInGB]",
-          "lun": "[copyIndex()]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
+          "lun": 0,
           "vhd": {
             "uri": "[concat('http://', variables('sql').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sql').basename,'-Data0.vhd')]"
           },
@@ -50,8 +51,8 @@
         },
         {
           "name": "[concat(variables('sql').basename, '-datadisk-1')]",
-          "diskSizeGB": "[variables('sql').sizeOfDataDiskInGB]",
-          "lun": "[copyIndex()]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
+          "lun": 1,
           "vhd": {
             "uri": "[concat('http://', variables('sql').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sql').basename,'-Data1.vhd')]"
           },
@@ -59,8 +60,8 @@
         },
         {
           "name": "[concat(variables('sql').basename, '-datadisk-2')]",
-          "diskSizeGB": "[variables('sql').sizeOfDataDiskInGB]",
-          "lun": "[copyIndex()]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
+          "lun": 2,
           "vhd": {
             "uri": "[concat('http://', variables('sql').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sql').basename,'-Data2.vhd')]"
           },
@@ -84,7 +85,6 @@
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.sql, parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sizeOfDataDiskInGB": 1023,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVault]",
       "storageAccount": "[variables('storageAccountNamePremium')]"
     },

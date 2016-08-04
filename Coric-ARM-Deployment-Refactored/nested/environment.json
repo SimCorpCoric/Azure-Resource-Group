@@ -48,7 +48,6 @@
       "numberOfVMs": "[parameters('globals').environment.desktopCount]",
       "ouPath": "[concat(parameters('globals').ou.desktop, parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sizeOfDataDiskInGB": 0,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
     },
@@ -74,7 +73,6 @@
       "numberOfVMs": "[parameters('globals').environment.droneCount]",
       "ouPath": "[concat(parameters('globals').ou.drone, parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sizeOfDataDiskInGB": 0,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
     },
@@ -84,17 +82,18 @@
     "storageAccountNamePremiumType": "Premium_LRS",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
 
+    "warehouseBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
     "warehouse": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
+      "basename": "[variables('warehouseBasename')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "dataDisks": [
         {
-          "name": "[concat(variables('warehouse').basename, '-datadisk-0')]",
-          "diskSizeGB": "[variables('warehouse').sizeOfDataDiskInGB]",
-          "lun": "[copyIndex()]",
+          "name": "[concat(variables('warehouseBasename'), '01-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.warehouse]",
+          "lun": 0,
           "vhd": {
-            "uri": "[concat('http://', variables('warehouse').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('warehouse').basename,'-Data0.vhd')]"
+            "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('warehouseBasename'), '01-Data0.vhd')]"
           },
           "createOption": "Empty"
         }
@@ -116,7 +115,6 @@
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.iis, parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sizeOfDataDiskInGB": 1023,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
     }
