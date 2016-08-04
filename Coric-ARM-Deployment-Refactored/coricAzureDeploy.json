@@ -449,7 +449,7 @@
     "sql2012SP2": "SQL2012SP2-WS2012R2",
     "sql2012SP3": "SQL2012SP3-WS2012R2",
     "sql2014SP1": "SQL2014SP1-WS2012R2",
-    "sqlOffer": "[concat(variables(parameters('sqlVersion')),parameters('sqlBYOL'))]",
+    "sqlOffer": "[concat(variables(parameters('sqlVersion')),parameters('sqlBYOL'))",
     "templateLinkEnvironment": "[variables(concat('templateLinkEnvironment', parameters('implementationPhase')))]",
     "templateLinkEnvironment1": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
     "templateLinkEnvironment2": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
