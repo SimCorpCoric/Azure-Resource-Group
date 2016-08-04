@@ -10,18 +10,18 @@
       "type": "object"
     },
 
-    "machineSettings": {
-      "metadata": {
-        "Description": "Machine settings object"
-      },
-      "type": "object"
-    },
-
     "vmName": {
       "metadata": {
         "Description": "The VM's name as shown in the portal - NOT the server's BIOS/hostname"
       },
       "type": "string"
+    },
+
+    "machineSettings": {
+      "metadata": {
+        "Description": "Machine settings object"
+      },
+      "type": "object"
     }
   },
 

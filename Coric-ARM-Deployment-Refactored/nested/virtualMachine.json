@@ -194,11 +194,8 @@
           "vmName": {
             "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
           },
-          "storageAccount": {
-            "value": "[parameters('machineSettings').storageAccount]"
-          },
-          "sizeOfDataDiskInGB": {
-            "value": "[parameters('machineSettings').sizeOfDataDiskInGB]"
+          "machineSettings": {
+            "value": "[parameters('machineSettings')]"
           }
         }
       }

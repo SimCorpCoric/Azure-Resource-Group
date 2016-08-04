@@ -79,32 +79,6 @@
       "storageAccount": "[variables('storageAccountName')]"
     },
 
-    "sql": {
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryptionNull]",
-      "imageReference": "[parameters('globals').sqlVM]",
-      "ipConfigurations": [
-        {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
-            }
-          }
-        }
-      ],
-      "numberOfVMs": 1,
-      "ouPath": "[concat(parameters('globals').ou.sql, parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sizeOfDataDiskInGB": 1023,
-      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVault]",
-      "storageAccount": "[variables('storageAccountNamePremium')]"
-    },
-
     "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname))]",
     "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
     "storageAccountNamePremiumType": "Premium_LRS",
@@ -114,6 +88,17 @@
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('warehouse').basename, '-datadisk-0')]",
+          "diskSizeGB": "[variables('warehouse').sizeOfDataDiskInGB]",
+          "lun": "[copyIndex()]",
+          "vhd": {
+            "uri": "[concat('http://', variables('warehouse').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('warehouse').basename,'-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",

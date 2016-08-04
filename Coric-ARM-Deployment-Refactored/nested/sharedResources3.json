@@ -38,6 +38,35 @@
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-sql')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('sql').basename, '-datadisk-0')]",
+          "diskSizeGB": "[variables('sql').sizeOfDataDiskInGB]",
+          "lun": "[copyIndex()]",
+          "vhd": {
+            "uri": "[concat('http://', variables('sql').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sql').basename,'-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        },
+        {
+          "name": "[concat(variables('sql').basename, '-datadisk-1')]",
+          "diskSizeGB": "[variables('sql').sizeOfDataDiskInGB]",
+          "lun": "[copyIndex()]",
+          "vhd": {
+            "uri": "[concat('http://', variables('sql').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sql').basename,'-Data1.vhd')]"
+          },
+          "createOption": "Empty"
+        },
+        {
+          "name": "[concat(variables('sql').basename, '-datadisk-2')]",
+          "diskSizeGB": "[variables('sql').sizeOfDataDiskInGB]",
+          "lun": "[copyIndex()]",
+          "vhd": {
+            "uri": "[concat('http://', variables('sql').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sql').basename,'-Data2.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryptionNull]",
       "imageReference": "[parameters('globals').sqlVM]",
