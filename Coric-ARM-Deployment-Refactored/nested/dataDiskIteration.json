@@ -57,6 +57,9 @@
           },
           "sizeOfDataDiskInGB": {
             "value": "[parameters('machineSettings').sizeOfDataDiskInGB]"
+          },
+          "dataDiskID": {
+            "value": "[copyIndex()]"
           }
         }
       }
