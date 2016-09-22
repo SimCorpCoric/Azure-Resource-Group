@@ -17,18 +17,24 @@
       "type": "string"
     },
 
-    "machineSettings": {
+    "ouPath": {
       "metadata": {
-        "Description": "Machine settings object"
+        "Description": "Specifies an organizational unit (OU) for the domain account. Enter in LDAP format: OU=Drone; OU=Coric Server Roles"
       },
-      "type": "object"
+      "type": "string"
+    },
+
+    "domainAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
     }
   },
 
   "variables": {
-
   },
 
-  "resources": [
-  ]
+  "resources": []
+
 }

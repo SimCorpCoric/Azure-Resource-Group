@@ -1,0 +1,151 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "globals": {
+      "type": "object",
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      }
+    },
+
+    "domainAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
+    },
+
+    "localAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Local admin password"
+      }
+    },
+
+    "sicKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
+      }
+    }
+  },
+
+
+  "variables": {
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+    "sqlBasename": "[concat(parameters('globals').baseName, '-sql')]",
+    "sql": {
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[variables('sqlBasename')]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('sqlBasename'), '01-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', variables('storageAccountNamePremium'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'),'01-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        },
+        {
+          "name": "[concat(variables('sqlBasename'), '01-datadisk-1')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
+          "lun": 1,
+          "vhd": {
+            "uri": "[concat('http://', variables('storageAccountNamePremium'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'),'01-Data1.vhd')]"
+          },
+          "createOption": "Empty"
+        },
+        {
+          "name": "[concat(variables('sqlBasename'), '01-datadisk-2')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
+          "lun": 2,
+          "vhd": {
+            "uri": "[concat('http://', variables('storageAccountNamePremium'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'),'01-Data2.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryptionNull]",
+      "imageReference": "[parameters('globals').sqlVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+            }
+          }
+        }
+      ],
+      "numberOfVMs": 1,
+      "ouPath": "[concat(parameters('globals').ou.sql, parameters('globals').ou.serverRoles)]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVault]",
+      "storageAccount": "[variables('storageAccountNamePremium')]"
+    },
+    "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, 'sharedprem')]",
+    "storageAccountNamePremiumType": "Premium_LRS"
+  },
+
+  "resources": [
+    {
+      "name": "SharedStoragePremium",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').storageAccountTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "Name": {
+            "value": "[variables('storageAccountNamePremium')]"
+          },
+          "accountType": {
+            "value": "[variables('storageAccountNamePremiumType')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "sqlSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'SharedStoragePremium')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('sql')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('localAdminPassword')]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
+          }
+        }
+      }
+    }
+  ]
+}

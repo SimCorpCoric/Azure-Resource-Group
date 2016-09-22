@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "apiVersionPIP": {
+      "metadata": {
+        "Description": "API Version for the publicIPAddresses resource type"
+      },
+      "type": "string"
+    },
+
+    "apiVersionNIC": {
+      "metadata": {
+        "Description": "API Version for the networkInterfaces resource type"
+      },
+      "type": "string"
+    },
+
+    "pipName": {
+      "metadata": {
+        "Description": "PIP name"
+      },
+      "type": "string"
+    },
+
+    "nicName": {
+      "metadata": {
+        "Description": "NIC name"
+      },
+      "type": "string"
+    },
+
+    "dnsPrefix": {
+      "metadata": {
+        "Description": "DNS prefix for Public IP"
+      },
+      "type": "string"
+    },
+
+    "ipConfigurations": {
+      "metadata": {
+        "Description": "NIC ipConfigurations object"
+      },
+      "type": "array"
+    }
+  },
+
+  "variables": {
+  },
+
+  "resources": [ ]
+
+}

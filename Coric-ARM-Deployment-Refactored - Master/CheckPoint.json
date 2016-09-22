@@ -1,0 +1,360 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminPassword": {
+      "metadata": {
+        "description": "Administrator password"
+      },
+      "type": "securestring"
+    },
+    "newStorageAccountName": {
+      "metadata": {
+        "description": "Name of storage account"
+      },
+      "defaultValue": "sacptest",
+      "type": "string"
+    },
+    "vmName": {
+      "metadata": {
+        "description": "Name of the Security Gateway"
+      },
+      "defaultValue": "vmCPGatewayTest",
+      "type": "string"
+    },
+    "sicKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "One time key for Secure Internal Communication",
+        "minLength": 8
+      }
+    }
+  },
+  "variables": {
+    "apiVersion": "2015-06-15",
+    "customData": "[concat('#!/bin/bash\n', '\n', 'installSecurityGateway=\"', variables('installSecurityGateway'), '\"', '\n', 'installSecurityGateway=\"$(echo $installSecurityGateway | tr \"TF\" \"tf\")\"\n', 'installSecurityManagement=\"', variables('installSecurityManagement'), '\"', '\n', 'installSecurityManagement=\"$(echo $installSecurityManagement | tr \"TF\" \"tf\")\"\n', 'adminPassword=\"', parameters('adminPassword'), '\"', '\n', 'managementGUIClientNetwork=\"', variables('managementGUIClientNetwork'), '\"', '\n', 'ManagementGUIClientBase=\"$(echo $managementGUIClientNetwork | cut -d / -f 1)\"\n', 'ManagementGUIClientMaskLength=\"$(echo $managementGUIClientNetwork | cut -d / -f 2)\"\n', 'sicKey=\"', parameters('sicKey'), '\"', '\n', 'conf=\"install_security_gw=$installSecurityGateway\"\n', 'if $installSecurityGateway; then\n', '    conf=\"${conf}&install_ppak=true\"\n', '    conf=\"${conf}&gateway_cluster_member=false\"\n', 'fi\n', 'conf=\"${conf}&install_security_managment=$installSecurityManagement\"\n', 'if $installSecurityManagement; then\n', '    conf=\"${conf}&install_mgmt_primary=true\"\n', '    conf=\"${conf}&mgmt_admin_name=admin\"\n', '    conf=\"${conf}&mgmt_admin_passwd=$adminPassword\"\n', '    conf=\"${conf}&mgmt_gui_clients_radio=network\"\n', '    conf=\"${conf}&mgmt_gui_clients_ip_field=$ManagementGUIClientBase\"\n', '    conf=\"${conf}&mgmt_gui_clients_subnet_field=$ManagementGUIClientMaskLength\"\n', 'fi\n', 'conf=\"${conf}&ftw_sic_key=$sicKey\"\n', '\n', 'config_system -s $conf\n', 'shutdown -r now\n')]",
+    "imageOffer": "check-point-r77-10",
+    "imagePublisher": "checkpoint",
+    "imageReference": {
+      "offer": "[variables('imageOffer')]",
+      "publisher": "[variables('imagePublisher')]",
+      "sku": "sg-byol",
+      "version": "latest"
+    },
+    "installSecurityGateway": true,
+    "installSecurityManagement": false,
+    "lbId": "[resourceId('Microsoft.Network/loadBalancers', variables('lbName'))]",
+    "lbName": "lbGateway",
+    "managementGUIClientNetwork": "0.0.0.0/0",
+    "nic1Name": "NICGateway",
+    "nic2Name": "NICFWInternal",
+    "osProfile": {
+      "adminPassword": "[parameters('adminPassword')]",
+      "adminUsername": "notused",
+      "computerName": "[parameters('vmName')]",
+      "customData": "[base64(variables('customData'))]"
+    },
+    "plan": {
+      "name": "sg-byol",
+      "product": "[variables('imageOffer')]",
+      "publisher": "[variables('imagePublisher')]"
+    },
+    "storageAccountType": "Standard_LRS",
+    "vnetName": "VNCPGateway",
+    "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+    "addressPrefix": "10.200.0.0/20",
+    "subnet0Name": "gateway",
+    "subnet0Prefix": "10.200.0.0/24",
+    "subnet0Id": "[concat(variables('vnetId'), '/subnets/', variables('subnet0Name'))]",
+    "subnet1Name": "admin",
+    "subnet1Prefix": "10.200.1.0/24",
+    "subnet1Id": "[concat(variables('vnetId'), '/subnets/', variables('subnet1Name'))]",
+    "subnet2Name": "database",
+    "subnet2Prefix": "10.200.2.0/24",
+    "subnet2Id": "[concat(variables('vnetId'), '/subnets/', variables('subnet2Name'))]",
+    "subnet9Name": "FWInternal",
+    "subnet9Prefix": "10.200.9.0/24",
+    "subnet9Id": "[concat(variables('vnetId'), '/subnets/', variables('subnet9Name'))]",
+    "externalPrivateAddress": "10.200.0.4",
+    "fwInternalPrivateAddress": "10.200.9.4",
+    "publicIPAddressName": "PIPGateway",
+    "publicIPAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
+    "incomingTraffic": [
+      "rdp1-3389",
+      "rdp2-3389"
+    ],
+    "publicIPAddressLB1Id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('incomingTraffic')[0])]",
+    "publicIPAddressLB2Id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('incomingTraffic')[1])]",
+    "LB1IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB1FrontEnd')]",
+    "LB2IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB2FrontEnd')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "[variables('apiVersion')]",
+      "location": "[resourceGroup().location]",
+      "name": "[parameters('newStorageAccountName')]",
+      "properties": {
+        "accountType": "[variables('storageAccountType')]"
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "[variables('apiVersion')]",
+      "location": "[resourceGroup().location]",
+      "name": "[variables('vnetName')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('addressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('subnet0Name')]",
+            "properties": {
+              "addressPrefix": "[variables('subnet0Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('subnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('subnet1Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('subnet2Name')]",
+            "properties": {
+              "addressPrefix": "[variables('subnet2Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('subnet9Name')]",
+            "properties": {
+              "addressPrefix": "[variables('subnet9Prefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "[variables('apiVersion')]",
+      "location": "[resourceGroup().location]",
+      "name": "[variables('publicIPAddressName')]",
+      "properties": {
+        "dnsSettings": {
+          "domainNameLabel": "[toLower(parameters('vmName'))]"
+        },
+        "idleTimeoutInMinutes": 30,
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "[variables('apiVersion')]",
+      "location": "[resourceGroup().location]",
+      "name": "[variables('incomingTraffic')[0]]",
+      "properties": {
+        "dnsSettings": {
+          "domainNameLabel": "[variables('incomingTraffic')[0]]"
+        },
+        "idleTimeoutInMinutes": 30,
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "[variables('apiVersion')]",
+      "location": "[resourceGroup().location]",
+      "name": "[variables('incomingTraffic')[1]]",
+      "properties": {
+        "dnsSettings": {
+          "domainNameLabel": "[variables('incomingTraffic')[1]]"
+        },
+        "idleTimeoutInMinutes": 30,
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.Network/loadBalancers",
+      "apiVersion": "[variables('apiVersion')]",
+      "dependsOn": [
+        "[variables('publicIPAddressLB1Id')]",
+        "[variables('publicIPAddressLB2Id')]"
+      ],
+      "location": "[resourceGroup().location]",
+      "name": "[variables('lbName')]",
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "LB1FrontEnd",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[variables('publicIPAddressLB1Id')]"
+              }
+            }
+          },
+          {
+            "name": "LB2FrontEnd",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[variables('publicIPAddressLB2Id')]"
+              }
+            }
+          }
+        ],
+        "inboundNatRules": [
+          {
+            "name": "[variables('incomingTraffic')[0]]",
+            "properties": {
+              "backendPort": 33891,
+              "frontendIPConfiguration": {
+                "id": "[variables('LB1IPConfigId')]"
+              },
+              "frontendPort": 3389,
+              "protocol": "tcp"
+            }
+          },
+          {
+            "name": "[variables('incomingTraffic')[1]]",
+            "properties": {
+              "backendPort": 33892,
+              "frontendIPConfiguration": {
+                "id": "[variables('LB2IPConfigId')]"
+              },
+              "frontendPort": 3389,
+              "protocol": "tcp"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "[variables('apiVersion')]",
+      "dependsOn": [
+        "[variables('vnetId')]",
+        "[variables('lbId')]",
+        "[variables('publicIPAddressId')]"
+      ],
+      "location": "[resourceGroup().location]",
+      "name": "[variables('nic1Name')]",
+      "properties": {
+        "enableIPForwarding": true,
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAddress": "[variables('externalPrivateAddress')]",
+              "privateIPAllocationMethod": "Static",
+              "PublicIpAddress": {
+                "Id": "[variables('publicIPAddressId')]"
+              },
+              "subnet": {
+                "id": "[variables('subnet0Id')]"
+              },
+              "loadBalancerInboundNatRules": [
+                {
+                  "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[0])]"
+                },
+                {
+                  "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[1])]"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "[variables('apiVersion')]",
+      "dependsOn": [
+        "[variables('vnetId')]"
+      ],
+      "location": "[resourceGroup().location]",
+      "name": "[variables('nic2Name')]",
+      "properties": {
+        "enableIPForwarding": true,
+        "ipConfigurations": [
+          {
+            "name": "ipconfig2",
+            "properties": {
+              "privateIPAddress": "[variables('fwInternalPrivateAddress')]",
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "[variables('subnet9Id')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "[variables('apiVersion')]",
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nic1Name'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nic2Name'))]"
+      ],
+      "location": "[resourceGroup().location]",
+      "name": "[parameters('vmName')]",
+      "plan": "[variables('plan')]",
+      "properties": {
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": "true",
+            "storageUri": "[concat('http://', parameters('newStorageAccountName'), '.blob.core.windows.net')]"
+          }
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_D2_v2"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic1Name'))]",
+              "properties": {
+                "primary": true
+              }
+            },
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic2Name'))]",
+              "properties": {
+                "primary": false
+              }
+            }
+          ]
+        },
+        "osProfile": "[variables('osProfile')]",
+        "storageProfile": {
+          "imageReference": "[variables('imageReference')]",
+          "osDisk": {
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "name": "osDisk",
+            "vhd": {
+              "uri": "[concat('http://',parameters('newStorageAccountName'), '.blob.core.windows.net/vhds/', parameters('vmName'), '.vhd')]"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "Gateway": {
+      "type": "string",
+      "value": "[reference(variables('publicIPAddressId')).IpAddress]"
+    },
+    "WebApp1": {
+      "type": "string",
+      "value": "[reference(variables('publicIPAddressLB1Id')).IpAddress]"
+    },
+    "WebApp2": {
+      "type": "string",
+      "value": "[reference(variables('publicIPAddressLB2Id')).IpAddress]"
+    }
+  }
+}

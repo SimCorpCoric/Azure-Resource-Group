@@ -1,0 +1,99 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "globals": {
+      "type": "object",
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      }
+    },
+
+    "dnsServers": {
+      "defaultValue": [ "168.63.129.16" ],
+      "type": "array",
+      "metadata": {
+        "description": "The DNS address(es) of the DNS Server(s) used by the VNET"
+      }
+    }
+
+  },
+  "variables": {},
+  "resources": [
+    {
+      "apiVersion": "[parameters('globals').apiVersion.network]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('globals').networkSettings.name]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('globals').networkSettings.addressSpace]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('globals').networkSettings.subnet0.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet0.prefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet1.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet1.prefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet2.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet2.prefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet3.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet3.prefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet4.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet4.prefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet5.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet5.prefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet6.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet6.prefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet7.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet7.prefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet8.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet8.prefix]"
+            }
+          },
+          {
+            "name": "[parameters('globals').networkSettings.subnet9.name]",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.subnet9.prefix]"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

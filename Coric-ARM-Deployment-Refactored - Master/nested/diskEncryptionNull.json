@@ -4,29 +4,21 @@
 
   "parameters": {
     "globals": {
+      "type": "object",
       "metadata": {
         "Description": "Global complex object passed to nested templates"
-      },
-      "type": "object"
+      }
     },
 
     "vmName": {
+      "type": "string",
       "metadata": {
-        "Description": "The VM's name as shown in the portal - NOT the server's BIOS/hostname"
-      },
-      "type": "string"
-    },
-
-    "machineSettings": {
-      "metadata": {
-        "Description": "Machine settings object"
-      },
-      "type": "object"
+        "description": "Name of the Virtual Machine"
+      }
     }
   },
 
   "variables": {
-
   },
 
   "resources": [

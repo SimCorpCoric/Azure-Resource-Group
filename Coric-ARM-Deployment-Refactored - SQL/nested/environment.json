@@ -77,47 +77,7 @@
       "storageAccount": "[variables('storageAccountName')]"
     },
 
-    "sqlBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
-    "sql": {
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[variables('sqlBasename')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-      "dataDisks": [
-        {
-          "name": "[concat(variables('sqlBasename'), '01-datadisk-0')]",
-          "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
-          "lun": 0,
-          "vhd": {
-            "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'), '01-Data0.vhd')]"
-          },
-          "createOption": "Empty"
-        }
-      ],
-      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryptionNull]",
-      "imageReference": "[parameters('globals').sqlVM]",
-      "ipConfigurations": [
-        {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
-            }
-          }
-        }
-      ],
-      "numberOfVMs": 1,
-      "ouPath": "[concat(parameters('globals').ou.sql, parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sizeOfDataDiskInGB": 1023,
-      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVault]",
-      "storageAccount": "[variables('storageAccountNamePremium')]"
-    },
-
     "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname))]",
-    "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
-    "storageAccountNamePremiumType": "Premium_LRS",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
 
     "warehouseBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
@@ -183,59 +143,6 @@
       }
     },
 
-    {
-      "name": "environmentStoragePremium",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').storageAccountTemplateLink]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "Name": {
-            "value": "[variables('storageAccountNamePremium')]"
-          },
-          "accountType": {
-            "value": "[variables('storageAccountNamePremiumType')]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "sqlSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStoragePremium')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').templateLinkVirtualMachine]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('sql')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          }
-        }
-      }
-    },
 
     {
       "name": "warehouseSetup",
