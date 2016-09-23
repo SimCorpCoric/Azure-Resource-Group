@@ -88,7 +88,7 @@
           "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
           "lun": 0,
           "vhd": {
-            "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'), '01-Data0.vhd')]"
+            "uri": "[concat('http://', variables('storageAccountNamePremium'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'), '01-Data0.vhd')]"
           },
           "createOption": "Empty"
         }
