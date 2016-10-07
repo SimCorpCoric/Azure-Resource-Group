@@ -94,7 +94,7 @@
         }
       ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryptionNull]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').sqlVM]",
       "ipConfigurations": [
         {
