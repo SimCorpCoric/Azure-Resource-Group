@@ -111,7 +111,7 @@
       "ouPath": "[concat(parameters('globals').ou.sql, parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sizeOfDataDiskInGB": 1023,
-      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVault]",
+      "sqlKeyVaultTemplateLink": "[parameters('globals').sqlEncryptionTemplate]",
       "storageAccount": "[variables('storageAccountNamePremium')]"
     },
 

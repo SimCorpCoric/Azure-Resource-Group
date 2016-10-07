@@ -114,6 +114,18 @@
       "type": "string"
     },
 
+    "sqlSKU": {
+      "type": "string",
+      "allowedValues": [
+        "Standard",
+        "Enterprise"
+      ],
+      "defaultValue": "Enterprise",
+      "metadata": {
+        "Description": "Defines whether an Azure VM containing SQL Enterprise, or a blank Windows VM which subsequent scripts then install SQL Standard onto, is used"
+      }
+    },
+
     "sqlVersion": {
       "type": "string",
       "allowedValues": [
@@ -136,7 +148,7 @@
       ],
       "defaultValue": "Standard_DS11_v2",
       "metadata": {
-        "Description": "VM size for SQL Server Enterprise."
+        "Description": "VM size for SQL Server."
       }
     },
 
@@ -417,13 +429,8 @@
         "servicePrincipalSecret": "[parameters('sqlServicePrincipalSecret')]",
         "sqlCredentialName": "[parameters('sqlCredentialName')]"
       },
-      "sqlVM": {
-        "publisher": "MicrosoftSQLServer",
-        "offer": "[variables('sqlOffer')]",
-        "sku": "Enterprise",
-        "version": "latest",
-        "size": "[parameters('sqlVMSize')]"
-      },
+      "sqlVM": "[variables(concat('sql',parameters('sqlSKU'),'VM'))]",
+      "sqlEncryptionTemplate": "[variables(concat('sql',parameters('sqlSKU'),'Encryption'))]",
       "storageAccountAdmin": "[concat('sa', variables('baseName'), 'admin')]",
       "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
       "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
@@ -437,8 +444,8 @@
       "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
       "templateLinkPublicIP": "[uri(deployment().properties.templateLink.uri, 'nested/publicIP.json')]",
       "templateLinkPublicIPNull": "[uri(deployment().properties.templateLink.uri, 'nested/publicIPNull.json')]",
-      "templateLinkSQLKeyVault": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVault.json')]",
-      "templateLinkSQLKeyVaultNull": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVaultNull.json')]",
+      "templateLinkSQLKeyVault": "[variables('templateLinkSQLKeyVault')]",
+      "templateLinkSQLKeyVaultNull": "[variables('templateLinkSQLKeyVaultNull')]",
       "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
       "vhdContainerName": "vhds",
       "windowsVM": {
@@ -454,12 +461,30 @@
     "sql2012SP2": "SQL2012SP2-WS2012R2",
     "sql2012SP3": "SQL2012SP3-WS2012R2",
     "sql2014SP1": "SQL2014SP1-WS2012R2",
+    "sqlEnterpriseEncryption": "[variables('templateLinkSQLKeyVault')]",
+    "sqlEnterpriseVM": {
+      "publisher": "MicrosoftSQLServer",
+      "offer": "[variables('sqlOffer')]",
+      "sku": "Enterprise",
+      "version": "latest",
+      "size": "[parameters('sqlVMSize')]"
+    },
     "sqlOffer": "[concat(variables(parameters('sqlVersion')),parameters('sqlBYOL'))]",
+    "sqlStandardEncryption": "[variables('templateLinkSQLKeyVaultNull')]",
+    "sqlStandardVM": {
+      "publisher": "MicrosoftWindowsServer",
+      "offer": "WindowsServer",
+      "sku": "[parameters('windowsOSVersion')]",
+      "version": "latest",
+      "size": "[parameters('sqlVMSize')]"
+    },
     "templateLinkEnvironment": "[variables(concat('templateLinkEnvironment', parameters('implementationPhase')))]",
     "templateLinkEnvironment1": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
     "templateLinkEnvironment2": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
     "templateLinkEnvironment3": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
-    "templateLinkEnvironment4": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]"
+    "templateLinkEnvironment4": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
+    "templateLinkSQLKeyVault": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVault.json')]",
+    "templateLinkSQLKeyVaultNull": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVaultNull.json')]"
   },
 
   "resources": [
