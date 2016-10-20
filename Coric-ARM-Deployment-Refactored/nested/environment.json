@@ -143,6 +143,7 @@
     "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname))]",
     "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
     "storageAccountNamePremiumType": "Premium_LRS",
+    "vmTemplateSplit": "[split(parameters('globals').templateLinkVirtualMachine,'.')]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
 
     "warehouseBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
@@ -388,7 +389,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[replace(concat(parameters('globals').templateLinkVirtualMachine, parameters('globals').webReporter),'Yes','')]",
+          "uri": "[replace(concat(variables('vmTemplateSplit')[0], parameters('globals').webReporter,'.json'),'Yes','')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -418,7 +419,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').templateLinkVirtualMachine]",
+          "uri": "[replace(concat(variables('vmTemplateSplit')[0], parameters('globals').webReporter,'.json'),'Yes','')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
