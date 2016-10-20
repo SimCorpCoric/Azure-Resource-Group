@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "globals": {
+      "type": "object",
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      }
+    },
+
+    "machineSettings": {
+      "metadata": {
+        "Description": "Machine settings object"
+      },
+      "type": "object"
+    },
+
+    "adminPassword": {
+      "metadata": {
+        "Description": "Administrator password for the VM"
+      },
+      "type": "securestring"
+    },
+
+    "domainAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
+    },
+
+    "copyIndexOffset": {
+      "metadata": {
+        "Description": "Number to start copy index from"
+      },
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1
+    }
+  },
+
+  "variables": {
+  },
+
+  "resources": [
+  ]
+}

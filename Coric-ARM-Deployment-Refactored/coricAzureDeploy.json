@@ -114,6 +114,18 @@
       "type": "string"
     },
 
+    "sqlSKU": {
+      "type": "string",
+      "allowedValues": [
+        "Standard",
+        "Enterprise"
+      ],
+      "defaultValue": "Enterprise",
+      "metadata": {
+        "Description": "Defines whether an Azure VM containing SQL Enterprise, or a blank Windows VM which subsequent scripts then install SQL Standard onto, is used"
+      }
+    },
+
     "sqlVersion": {
       "type": "string",
       "allowedValues": [
@@ -136,7 +148,7 @@
       ],
       "defaultValue": "Standard_DS11_v2",
       "metadata": {
-        "Description": "VM size for SQL Server Enterprise."
+        "Description": "VM size for SQL Server."
       }
     },
 
@@ -167,6 +179,36 @@
       "defaultValue": 1,
       "metadata": {
         "Description": "The number of Desktops to build for this environment"
+      }
+    },
+
+    "webReporter": {
+      "type": "string",
+      "allowedValues": [
+        "No",
+        "Yes"
+      ],
+      "defaultValue": "No",
+      "metadata": {
+        "Description": "Whether or not Web Reporter is part of the deployment"
+      }
+    },
+
+    "pushPullCount": {
+      "type": "int",
+      "minValue": 1,
+      "defaultValue": 1,
+      "metadata": {
+        "Description": "The number of PushPull servers to build for this environment"
+      }
+    },
+
+    "webCount": {
+      "type": "int",
+      "minValue": 1,
+      "defaultValue": 1,
+      "metadata": {
+        "Description": "The number of Web Reporter servers to build for this environment"
       }
     },
 
@@ -334,7 +376,9 @@
         "shortname": "[variables(concat('environmentShortName', parameters('environmentName')))]",
         "acronym": "[parameters('environmentAcronym')]",
         "droneCount": "[parameters('droneCount')]",
-        "desktopCount": "[parameters('desktopCount')]"
+        "desktopCount": "[parameters('desktopCount')]",
+        "pushPullCount": "[parameters('pushPullCount')]",
+        "webCount": "[parameters('webCount')]"
       },
       "localAdminUsername": "[parameters('localAdminUsername')]",
       "networkSettings": {
@@ -346,6 +390,7 @@
         "gatewayInternalIPAddress": "10.200.9.4",
         "rdgatewayIPAddress": "10.200.6.4",
         "ftpIPAddress": "10.200.6.5",
+        "webIPAddress": "10.200.7.4",
         "subnet0": {
           "id": 0,
           "name": "gateway",
@@ -417,13 +462,8 @@
         "servicePrincipalSecret": "[parameters('sqlServicePrincipalSecret')]",
         "sqlCredentialName": "[parameters('sqlCredentialName')]"
       },
-      "sqlVM": {
-        "publisher": "MicrosoftSQLServer",
-        "offer": "[variables('sqlOffer')]",
-        "sku": "Enterprise",
-        "version": "latest",
-        "size": "[parameters('sqlVMSize')]"
-      },
+      "sqlVM": "[variables(concat('sql',parameters('sqlSKU'),'VM'))]",
+      "sqlEncryptionTemplate": "[variables(concat('sql',parameters('sqlSKU'),'Encryption'))]",
       "storageAccountAdmin": "[concat('sa', variables('baseName'), 'admin')]",
       "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
       "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
@@ -437,10 +477,11 @@
       "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
       "templateLinkPublicIP": "[uri(deployment().properties.templateLink.uri, 'nested/publicIP.json')]",
       "templateLinkPublicIPNull": "[uri(deployment().properties.templateLink.uri, 'nested/publicIPNull.json')]",
-      "templateLinkSQLKeyVault": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVault.json')]",
-      "templateLinkSQLKeyVaultNull": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVaultNull.json')]",
+      "templateLinkSQLKeyVault": "[variables('templateLinkSQLKeyVault')]",
+      "templateLinkSQLKeyVaultNull": "[variables('templateLinkSQLKeyVaultNull')]",
       "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
       "vhdContainerName": "vhds",
+      "webReporter": "[parameters('webReporter')]",
       "windowsVM": {
         "publisher": "MicrosoftWindowsServer",
         "offer": "WindowsServer",
@@ -454,12 +495,30 @@
     "sql2012SP2": "SQL2012SP2-WS2012R2",
     "sql2012SP3": "SQL2012SP3-WS2012R2",
     "sql2014SP1": "SQL2014SP1-WS2012R2",
+    "sqlEnterpriseEncryption": "[variables('templateLinkSQLKeyVault')]",
+    "sqlEnterpriseVM": {
+      "publisher": "MicrosoftSQLServer",
+      "offer": "[variables('sqlOffer')]",
+      "sku": "Enterprise",
+      "version": "latest",
+      "size": "[parameters('sqlVMSize')]"
+    },
     "sqlOffer": "[concat(variables(parameters('sqlVersion')),parameters('sqlBYOL'))]",
+    "sqlStandardEncryption": "[variables('templateLinkSQLKeyVaultNull')]",
+    "sqlStandardVM": {
+      "publisher": "MicrosoftWindowsServer",
+      "offer": "WindowsServer",
+      "sku": "[parameters('windowsOSVersion')]",
+      "version": "latest",
+      "size": "[parameters('sqlVMSize')]"
+    },
     "templateLinkEnvironment": "[variables(concat('templateLinkEnvironment', parameters('implementationPhase')))]",
     "templateLinkEnvironment1": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
     "templateLinkEnvironment2": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
     "templateLinkEnvironment3": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
-    "templateLinkEnvironment4": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]"
+    "templateLinkEnvironment4": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
+    "templateLinkSQLKeyVault": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVault.json')]",
+    "templateLinkSQLKeyVaultNull": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVaultNull.json')]"
   },
 
   "resources": [
