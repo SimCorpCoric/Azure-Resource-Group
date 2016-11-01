@@ -32,6 +32,7 @@
 
     "sicKey": {
       "type": "securestring",
+      "minLength": 8,
       "metadata": {
         "description": "One time key for Secure Internal Communication"
       }
@@ -51,12 +52,12 @@
     },
     "incomingTraffic": [
       {
-        "name": "cor0009-rdg01",
+        "name": "[concat(parameters('globals').baseName,'-rdg01')]",
         "frontendPort": 443,
         "backendPort": 8443
       },
       {
-        "name": "cor0009-rdg01",
+        "name": "[concat(parameters('globals').baseName,'-rdg01Direct')]",
         "frontendPort": 3389,
         "backendPort": 3389
       }
