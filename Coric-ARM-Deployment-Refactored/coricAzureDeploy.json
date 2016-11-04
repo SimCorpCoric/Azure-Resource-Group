@@ -510,26 +510,21 @@
       "name": "[concat('checkPointSetup', parameters('implementationPhase'))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('sharedResourcesSetup', parameters('implementationPhase'))]"
-      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('templateLinkEnvironment')]",
+          "uri": "[variables('templateLinkCheckPoint')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
           "globals": {
             "value": "[variables('globals')]"
           },
-
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          },
-
-          "localAdminPassword": {
+          "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
+          },
+          "sicKey": {
+            "value": "[parameters('sicKey')]"
           }
         }
       }
