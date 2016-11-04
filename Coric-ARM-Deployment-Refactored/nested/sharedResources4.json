@@ -61,12 +61,6 @@
           "machineSettings": {
             "value": "[variables('checkPoint')]"
           },
-          "dnsServers": {
-            "value": [
-              "[parameters('globals').networkSettings.dc01IPAddress]",
-              "[parameters('globals').networkSettings.dc02IPAddress]"
-            ]
-          },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
           },

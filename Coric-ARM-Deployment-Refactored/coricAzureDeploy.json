@@ -281,7 +281,6 @@
         "virtualMachine": "2015-06-15"
       },
       "baseName": "[variables('baseName')]",
-      "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
       "clientID": "[parameters('clientID')]",
       "customScript": {
         "diskInitialize": {
@@ -435,6 +434,11 @@
     "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, concat('nested/sharedResources', parameters('implementationPhase'), '.json'))]",
     "sql2012SP2": "SQL2012SP2-WS2012R2",
     "sql2014SP1": "SQL2014SP1-WS2012R2",
+    "templateLinkCheckPoint": "[variables(concat('templateLinkCheckPoint', parameters('implementationPhase')))]",
+    "templateLinkCheckPoint1": "[uri(deployment().properties.templateLink.uri, 'nested/CheckPointNull.json')]",
+    "templateLinkCheckPoint2": "[uri(deployment().properties.templateLink.uri, 'nested/CheckPointNull.json')]",
+    "templateLinkCheckPoint3": "[uri(deployment().properties.templateLink.uri, 'nested/CheckPointNull.json')]",
+    "templateLinkCheckPoint4": "[uri(deployment().properties.templateLink.uri, 'nested/CheckPoint.json')]",
     "templateLinkEnvironment": "[variables(concat('templateLinkEnvironment', parameters('implementationPhase')))]",
     "templateLinkEnvironment1": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
     "templateLinkEnvironment2": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
@@ -475,6 +479,35 @@
 
     {
       "name": "[concat('environmentSetup', parameters('implementationPhase'))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('sharedResourcesSetup', parameters('implementationPhase'))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('templateLinkEnvironment')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[variables('globals')]"
+          },
+
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
+          },
+
+          "localAdminPassword": {
+            "value": "[parameters('localAdminPassword')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "[concat('checkPointSetup', parameters('implementationPhase'))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('globals').apiVersion.deployment]",
       "dependsOn": [
