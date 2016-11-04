@@ -55,7 +55,7 @@
     "LB1IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB1FrontEnd')]",
     "LB2IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB2FrontEnd')]",
     "lbId": "[resourceId('Microsoft.Network/loadBalancers', variables('lbName'))]",
-    "lbName": "lbGateway",
+    "lbName": "lbCheckPointGateway",
     "managementGUIClientNetwork": "0.0.0.0/0",
     "nic1Name": "[concat(variables('nicName'), '-Gateway')]",
     "nic2Name": "[concat(variables('nicName'), '-FWInternal')]",
