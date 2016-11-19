@@ -601,12 +601,12 @@
           "globals": {
             "value": "[variables('globals')]"
           },
-	  "dnsServers": {
+          "dnsServers": {
             "value": [
               "[variables('globals').networkSettings.dc01IPAddress]",
               "[variables('globals').networkSettings.dc02IPAddress]"
             ]
-	  },
+          },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
           },
