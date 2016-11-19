@@ -33,13 +33,7 @@
   },
 
   "variables": {
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
-
-    "checkPoint": {
-      "basename": "[concat(parameters('globals').baseName, '-checkpoint01')]",
-      "storageAccount": "[parameters('globals').storageAccountAdmin]",
-      "vmSize": "Standard_D11_v2"
-    }
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]"
 
   },
 
@@ -57,9 +51,6 @@
         "parameters": {
           "globals": {
             "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('checkPoint')]"
           },
           "dnsServers": {
             "value": [
