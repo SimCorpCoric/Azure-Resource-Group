@@ -9,13 +9,6 @@
       }
     },
 
-    "machineSettings": {
-      "metadata": {
-        "Description": "Machine settings object"
-      },
-      "type": "object"
-    },
-
     "dnsServers": {
       "type": "array",
       "metadata": {
@@ -32,6 +25,7 @@
 
     "sicKey": {
       "type": "securestring",
+      "minLength": 8,
       "metadata": {
         "description": "One time key for Secure Internal Communication"
       }
@@ -40,6 +34,7 @@
   },
 
   "variables": {
+    "basename": "[concat(parameters('globals').baseName, '-cp')]",
     "customData": "[concat('#!/bin/bash\n', '\n', 'installSecurityGateway=\"', variables('installSecurityGateway'), '\"', '\n', 'installSecurityGateway=\"$(echo $installSecurityGateway | tr \"TF\" \"tf\")\"\n', 'installSecurityManagement=\"', variables('installSecurityManagement'), '\"', '\n', 'installSecurityManagement=\"$(echo $installSecurityManagement | tr \"TF\" \"tf\")\"\n', 'adminPassword=\"', parameters('adminPassword'), '\"', '\n', 'managementGUIClientNetwork=\"', variables('managementGUIClientNetwork'), '\"', '\n', 'ManagementGUIClientBase=\"$(echo $managementGUIClientNetwork | cut -d / -f 1)\"\n', 'ManagementGUIClientMaskLength=\"$(echo $managementGUIClientNetwork | cut -d / -f 2)\"\n', 'sicKey=\"', parameters('sicKey'), '\"', '\n', 'conf=\"install_security_gw=$installSecurityGateway\"\n', 'if $installSecurityGateway; then\n', '    conf=\"${conf}&install_ppak=true\"\n', '    conf=\"${conf}&gateway_cluster_member=false\"\n', 'fi\n', 'conf=\"${conf}&install_security_managment=$installSecurityManagement\"\n', 'if $installSecurityManagement; then\n', '    conf=\"${conf}&install_mgmt_primary=true\"\n', '    conf=\"${conf}&mgmt_admin_name=admin\"\n', '    conf=\"${conf}&mgmt_admin_passwd=$adminPassword\"\n', '    conf=\"${conf}&mgmt_gui_clients_radio=network\"\n', '    conf=\"${conf}&mgmt_gui_clients_ip_field=$ManagementGUIClientBase\"\n', '    conf=\"${conf}&mgmt_gui_clients_subnet_field=$ManagementGUIClientMaskLength\"\n', 'fi\n', 'conf=\"${conf}&ftw_sic_key=$sicKey\"\n', '\n', 'config_system -s $conf\n', '\n', 'clish -c \"set static-route 10.200.0.0/20 nexthop gateway address 10.200.9.1 on\"', '\n', 'clish -c \"save config\"', '\n', 'shutdown -r now\n')]",
     "imageOffer": "check-point-r77-10",
     "imagePublisher": "checkpoint",
@@ -51,14 +46,14 @@
     },
     "incomingTraffic": [
       {
-        "name": "rdg-443",
+        "name": "[concat(parameters('globals').baseName,'-rds')]",
         "frontendPort": 443,
         "backendPort": 8443
       },
       {
-        "name": "null-443",
-        "frontendPort": 443,
-        "backendPort": 8444
+        "name": "[concat(parameters('globals').baseName,'-rdp')]",
+        "frontendPort": 3389,
+        "backendPort": 3389
       }
     ],
 
@@ -67,18 +62,18 @@
     "LB1IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB1FrontEnd')]",
     "LB2IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB2FrontEnd')]",
     "lbId": "[resourceId('Microsoft.Network/loadBalancers', variables('lbName'))]",
-    "lbName": "lbGateway",
+    "lbName": "lbCheckPointGateway",
     "managementGUIClientNetwork": "0.0.0.0/0",
     "nic1Name": "[concat(variables('nicName'), '-Gateway')]",
     "nic2Name": "[concat(variables('nicName'), '-FWInternal')]",
-    "nicName": "[concat('nic', parameters('machineSettings').basename)]",
+    "nicName": "[concat('nic', variables('basename'))]",
     "osProfile": {
       "adminPassword": "[parameters('adminPassword')]",
       "adminUsername": "notused",
-      "computerName": "[variables('vmName')]",
+      "computerName": "[variables('basename')]",
       "customData": "[base64(variables('customData'))]"
     },
-    "pipName": "[concat('pip', parameters('machineSettings').basename)]",
+    "pipName": "[concat('pip', variables('basename'))]",
     "plan": {
       "name": "sg-byol",
       "product": "[variables('imageOffer')]",
@@ -87,11 +82,10 @@
     "publicIPAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))]",
     "publicIPAddressLB1Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name))]",
     "publicIPAddressLB2Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[1].name))]",
-    "routeTableName": "[concat('rt', parameters('machineSettings').basename)]",
+    "routeTableName": "[concat('rt', variables('basename'))]",
     "subnet0Id": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnet0.name)]",
     "subnet9Id": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnet9.name)]",
-    "vmName": "[parameters('machineSettings').basename]",
-    "vmNamePortal": "[concat('vm', variables('vmName'))]",
+    "vmNamePortal": "[concat('vm', variables('basename'))]",
     "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]"
   },
 
@@ -282,7 +276,7 @@
       "name": "[variables('pipName')]",
       "properties": {
         "dnsSettings": {
-          "domainNameLabel": "[toLower(variables('vmName'))]"
+          "domainNameLabel": "[toLower(variables('basename'))]"
         },
         "idleTimeoutInMinutes": 30,
         "publicIPAllocationMethod": "Static"
@@ -443,7 +437,7 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nic2Name'))]"
       ],
       "location": "[resourceGroup().location]",
-      "name": "[variables('vmName')]",
+      "name": "[variables('vmNamePortal')]",
       "plan": "[variables('plan')]",
       "properties": {
         "diagnosticsProfile": {
@@ -453,7 +447,7 @@
           }
         },
         "hardwareProfile": {
-          "vmSize": "[parameters('machineSettings').vmSize]"
+          "vmSize": "Standard_D2_v2"
         },
         "networkProfile": {
           "networkInterfaces": [
@@ -479,7 +473,7 @@
             "createOption": "FromImage",
             "name": "osDisk",
             "vhd": {
-              "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('vmNamePortal'), '-OS.vhd')]"
+              "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('vmNamePortal'), '-OS.vhd')]"
             }
           }
         }
