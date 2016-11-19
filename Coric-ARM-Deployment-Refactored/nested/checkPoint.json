@@ -341,7 +341,7 @@
         ],
         "inboundNatRules": [
           {
-            "name": "[concat('nat', variables('incomingTraffic')[0].name)]",
+            "name": "[variables('incomingTraffic')[0].name]",
             "properties": {
               "backendPort": "[variables('incomingTraffic')[0].backendPort]",
               "frontendIPConfiguration": {
@@ -352,7 +352,7 @@
             }
           },
           {
-            "name": "[concat('nat', variables('incomingTraffic')[1].name)]",
+            "name": "[variables('incomingTraffic')[1].name]",
             "properties": {
               "backendPort": "[variables('incomingTraffic')[1].backendPort]",
               "frontendIPConfiguration": {
