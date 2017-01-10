@@ -447,7 +447,7 @@
           }
         },
         "hardwareProfile": {
-          "vmSize": "Standard_D2_v2"
+          "vmSize": "Standard_D1_v2"
         },
         "networkProfile": {
           "networkInterfaces": [
