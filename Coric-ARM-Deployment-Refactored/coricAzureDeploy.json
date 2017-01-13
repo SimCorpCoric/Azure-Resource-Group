@@ -447,15 +447,15 @@
       "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
       "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
       "ou": {
-        "serverRoles": "OU=Coric Server Roles;",
-        "sql": "OU=SQL;",
-        "drone": "OU=Drone;",
+        "serverRoles": "OU=Coric Computers;",
+        "sql": "OU=SQL;OU=Admin;",
+        "drone": "[concat('OU=Drone;OU=', parameters('environmentName'))",
         "domainControllers": "OU=Domain Controllers;",
-        "desktop": "OU=Desktop;",
-        "iis": "OU=IIS;",
-        "rdg": "OU=RDG;",
-        "ftp": "OU=FTP;",
-        "pushPull": "OU=PushPull;"
+        "desktop": "[concat('OU=Desktop;OU=', parameters('environmentName'))",
+        "iis": "[concat('OU=IIS;OU=', parameters('environmentName'))",
+        "rdg": "OU=RDG;OU=Admin;",
+        "ftp": "OU=FTP;OU=Admin;",
+        "pushPull": "[concat('OU=PushPull;OU=', parameters('environmentName'))"
       },
       "sqlEncryption": {
         "keyVaultURL": "[concat('https://', parameters('sqlKeyVaultName'), '.vault.azure.net/')]",
