@@ -393,7 +393,6 @@
         "gatewayInternalIPAddress": "10.200.9.4",
         "rdgatewayIPAddress": "10.200.6.4",
         "ftpIPAddress": "10.200.6.5",
-        "webIPAddress": "10.200.7.4",
         "subnet0": {
           "id": 0,
           "name": "gateway",

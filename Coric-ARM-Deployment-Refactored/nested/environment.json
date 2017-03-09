@@ -194,8 +194,7 @@
         {
           "name": "ipconfig",
           "properties": {
-            "privateIPAllocationMethod": "Static",
-            "privateIPAddress": "[parameters('globals').networkSettings.webIPAddress]",
+            "privateIPAllocationMethod": "Dynamic",
             "subnet": {
               "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet7.name)]"
             }
