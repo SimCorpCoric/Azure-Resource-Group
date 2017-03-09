@@ -203,7 +203,7 @@
       ],
       "numberOfVMs": "[parameters('globals').environment.webCount]",
       "ouPath": "[concat(parameters('globals').ou.iis, parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIP]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
     }
