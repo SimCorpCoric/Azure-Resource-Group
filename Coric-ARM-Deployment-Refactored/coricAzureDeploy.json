@@ -132,7 +132,7 @@
         "SQL2012SP2",
         "SQL2012SP3",
         "SQL2014SP1",
-        "SQL2016SP1"
+        "SQL2016"
       ],
       "defaultValue": "SQL2012SP3",
       "metadata": {
@@ -498,7 +498,7 @@
     "sql2012SP2": "SQL2012SP2-WS2012R2",
     "sql2012SP3": "SQL2012SP3-WS2012R2",
     "sql2014SP1": "SQL2014SP1-WS2012R2",
-    "sql2016SP1": "SQL2016SP1-WS2012R2",
+    "sql2016": "SQL2016-WS2012R2",
     "sqlEnterpriseEncryption": "[variables('templateLinkSQLKeyVault')]",
     "sqlEnterpriseVM": {
       "publisher": "MicrosoftSQLServer",
