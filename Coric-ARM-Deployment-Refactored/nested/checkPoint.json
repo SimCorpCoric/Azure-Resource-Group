@@ -53,7 +53,7 @@
       {
         "name": "[concat(parameters('globals').baseName,'-rdp')]",
         "frontendPort": 3389,
-        "backendPort": 3389
+        "backendPort": 53389
       }
     ],
 
@@ -324,6 +324,9 @@
       "apiVersion": "[parameters('globals').apiVersion.pip]",
       "location": "[resourceGroup().location]",
       "name": "[concat('pip', variables('incomingTraffic')[0].name)]",
+      "dependsOn": [
+        "[concat('nic', variables('rdsGateway').basename, '01')]"
+      ],
       "properties": {
         "dnsSettings": {
           "domainNameLabel": "[variables('incomingTraffic')[0].name]"
@@ -351,7 +354,6 @@
       "type": "Microsoft.Network/loadBalancers",
       "apiVersion": "[parameters('globals').apiVersion.loadBalancer]",
       "dependsOn": [
-        "[concat('nic', variables('rdsGateway').basename, '01')]",
         "[variables('publicIPAddressLB1Id')]",
         "[variables('publicIPAddressLB2Id')]"
       ],
