@@ -588,36 +588,7 @@
           }
         }
       }
-    },
-
-    {
-      "name": "[concat('checkPointSetup', parameters('implementationPhase'))]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('globals').apiVersion.deployment]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('templateLinkCheckPoint')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[variables('globals')]"
-          },
-          "dnsServers": {
-            "value": [
-              "[variables('globals').networkSettings.dc01IPAddress]",
-              "[variables('globals').networkSettings.dc02IPAddress]"
-            ]
-          },
-          "adminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-          "sicKey": {
-            "value": "[parameters('sicKey')]"
-          }
-        }
-      }
     }
+
   ]
 }
