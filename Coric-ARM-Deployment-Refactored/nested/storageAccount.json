@@ -40,7 +40,7 @@
     {
       "apiVersion": "[parameters('globals').apiVersion.storage]",
       "location": "[resourceGroup().location]",
-      "name": "[parameters('name')]",
+      "name": "[replace(parameters('name'),'-','')]",
       "properties": {
         "accountType": "[parameters('accountType')]"
       },
