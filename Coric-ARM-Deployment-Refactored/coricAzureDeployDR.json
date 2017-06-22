@@ -57,7 +57,6 @@
       "baseName": "[variables('baseName')]",
       "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
       "clientID": "[parameters('clientID')]",
-      "localAdminUsername": "[parameters('localAdminUsername')]",
       "networkSettings": {
         "addressSpace": "10.200.0.0/20",
         "azureDNS": "168.63.129.16",
