@@ -312,7 +312,7 @@
       "name": "[variables('pipName')]",
       "properties": {
         "dnsSettings": {
-          "domainNameLabel": "[toLower(variables('basename'))]"
+          "domainNameLabel": "[concat(toLower(variables('basename')),parameters('globals').test)]"
         },
         "idleTimeoutInMinutes": 30,
         "publicIPAllocationMethod": "Static"
