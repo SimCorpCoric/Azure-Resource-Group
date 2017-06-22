@@ -40,7 +40,7 @@
       "type": "string",
       "allowedValues": [
         "",
-        "-test"
+        "test-"
       ],
       "metadata": {
         "description": "Denotes test deployment"
@@ -50,7 +50,7 @@
   },
 
   "variables": {
-    "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+    "baseName": "[concat(parameters('test'),parameters('prefix'), variables('paddedClientID'))]",
     "globals": {
       "apiVersion": {
         "deployment": "2016-02-01",
@@ -132,11 +132,12 @@
       },
       "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
       "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
+      "storageAccountAdmin": "[concat('sa', variables('baseName'), 'admin')]",
       "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
+      "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
       "templateLinkPublicIP": "[uri(deployment().properties.templateLink.uri, 'nested/publicIP.json')]",
       "templateLinkPublicIPNull": "[uri(deployment().properties.templateLink.uri, 'nested/publicIPNull.json')]",
       "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
-      "test": "[parameters('test')]",
       "vhdContainerName": "vhds"
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
@@ -146,7 +147,55 @@
 
   "resources": [
     {
-      "name": "DR-Setup",
+      "name": "adminStorage",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('globals').storageAccountTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[variables('globals')]"
+          },
+          "Name": {
+            "value": "[variables('globals').storageAccountAdmin]"
+          },
+          "accountType": {
+            "value": "Standard_LRS"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "diagnosticsStorage",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('globals').storageAccountTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[variables('globals')]"
+          },
+          "Name": {
+            "value": "[variables('globals').storageAccountDiagnostics]"
+          },
+          "accountType": {
+            "value": "Standard_LRS"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "CheckPoint-DR-Setup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('globals').apiVersion.deployment]",
       "properties": {
