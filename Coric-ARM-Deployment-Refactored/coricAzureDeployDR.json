@@ -33,6 +33,18 @@
       "metadata": {
         "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
       }
+    },
+
+    "test": {
+      "defaultValue": "",
+      "type": "string",
+      "allowedValues": [
+        "",
+        "-test"
+      ],
+      "metadata": {
+        "description": "Denotes test deployment"
+      }
     }
 
   },
@@ -123,6 +135,7 @@
       "templateLinkPublicIP": "[uri(deployment().properties.templateLink.uri, 'nested/publicIP.json')]",
       "templateLinkPublicIPNull": "[uri(deployment().properties.templateLink.uri, 'nested/publicIPNull.json')]",
       "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
+      "test": "[parameters('test')]",
       "vhdContainerName": "vhds"
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
