@@ -20,7 +20,7 @@
       "metadata": {
         "description": "Administrator password"
       },
-      "type": "string"
+      "type": "securestring"
     },
 
     "sicKey": {
