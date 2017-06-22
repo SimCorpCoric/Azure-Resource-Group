@@ -40,7 +40,7 @@
       "type": "string",
       "allowedValues": [
         "",
-        "test-"
+        "test"
       ],
       "metadata": {
         "description": "Denotes test deployment"
