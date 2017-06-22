@@ -198,6 +198,10 @@
       "name": "CheckPoint-DR-Setup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "diagnosticsStorage",
+        "adminStorage"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
