@@ -19,7 +19,6 @@
     },
 
     "localAdminPassword": {
-      "defaultValue": "",
       "type": "securestring",
       "metadata": {
         "description": "Local admin password"
@@ -27,7 +26,6 @@
     },
 
     "sicKey": {
-      "defaultValue": "",
       "type": "securestring",
       "minLength": 8,
       "metadata": {
@@ -39,8 +37,8 @@
       "defaultValue": "",
       "type": "string",
       "allowedValues": [
-        "",
-        "test"
+        "yes",
+        "no"
       ],
       "metadata": {
         "description": "Denotes test deployment"
@@ -50,7 +48,6 @@
   },
 
   "variables": {
-    "baseName": "[concat(parameters('test'),parameters('prefix'), variables('paddedClientID'))]",
     "globals": {
       "apiVersion": {
         "deployment": "2016-02-01",
@@ -142,7 +139,8 @@
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
     "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResourcesDR.json')]",
-    "templateLinkCheckPoint": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]"
+    "templateLinkCheckPoint": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
+    "test": "[replace(replace(parameters('test'),'yes','test'),'no','')]"
   },
 
   "resources": [
