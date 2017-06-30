@@ -83,22 +83,6 @@
     "publicIPAddressLB1Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name))]",
     "publicIPAddressLB2Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[1].name))]",
 
-    "rdsGateway": {
-      "basename": "[concat(parameters('globals').baseName, '-rdg')]",
-      "ipConfigurations": [
-        {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Static",
-            "privateIPAddress": "[parameters('globals').networkSettings.rdgatewayIPAddress]",
-            "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet6.name)]"
-            }
-          }
-        }
-      ]
-    },
-
     "routeTableName": "[concat('rt', variables('basename'))]",
     "subnet0Id": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnet0.name)]",
     "subnet9Id": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnet9.name)]",
@@ -107,28 +91,6 @@
   },
 
   "resources": [
-    {
-      "apiVersion": "[parameters('globals').apiVersion.nic]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat('nic', variables('rdsGateway').basename, '01')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[parameters('globals').networkSettings.name]"
-      ],
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig",
-            "properties": {
-              "privateIPAllocationMethod": "[variables('rdsGateway').ipConfigurations[0].properties.privateIPAllocationMethod]",
-              "privateIPAddress": "[variables('rdsGateway').ipConfigurations[0].properties.privateIPAddress]",
-              "subnet": "[variables('rdsGateway').ipConfigurations[0].properties.subnet]"
-            }
-          }
-        ]
-      }
-    },
-
     {
       "type": "Microsoft.Network/routeTables",
       "name": "[variables('routeTableName')]",
