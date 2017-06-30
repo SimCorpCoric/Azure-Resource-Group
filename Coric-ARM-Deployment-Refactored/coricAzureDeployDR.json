@@ -48,6 +48,7 @@
   },
 
   "variables": {
+    "baseName": "[concat(variables('test'),parameters('prefix'), variables('paddedClientID'))]",
     "globals": {
       "apiVersion": {
         "deployment": "2016-02-01",
