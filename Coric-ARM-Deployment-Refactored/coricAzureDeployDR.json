@@ -48,7 +48,7 @@
   },
 
   "variables": {
-    "baseName": "[concat(variables('test'),parameters('prefix'), variables('paddedClientID'))]",
+    "baseName": "[concat(variables('test'),parameters('prefix'), variables('paddedClientID'),'asr')]",
     "globals": {
       "apiVersion": {
         "deployment": "2016-02-01",
@@ -126,11 +126,11 @@
           "name": "FirewallInternal",
           "prefix": "10.200.9.0/24"
         },
-        "name": "[concat('vn', variables('baseName'))]"
+        "name": "[concat('vn', variables('baseName'), '-asr')]"
       },
       "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
       "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
-      "storageAccountAdmin": "[concat('sa', variables('baseName'), 'admin')]",
+      "storageAccountAdmin": "[concat('sa', variables('baseName'), 'adminasr')]",
       "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
       "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
       "templateLinkPublicIP": "[uri(deployment().properties.templateLink.uri, 'nested/publicIP.json')]",
@@ -222,6 +222,9 @@
           },
           "sicKey": {
             "value": "[parameters('sicKey')]"
+          },
+          "dr": {
+            "value": "yes"
           }
         }
       }
