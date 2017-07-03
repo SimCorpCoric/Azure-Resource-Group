@@ -44,7 +44,7 @@
       "name": "[replace(parameters('name'),'-','')]",
       "sku": {
         "name": "[parameters('accountType')]",
-        "tier": "[split(parameters('accountType'),'_')[0]]"
+        "tier": "[first(split(parameters('accountType'),'_'))]"
       },
       "type": "Microsoft.Storage/storageAccounts"
     }
