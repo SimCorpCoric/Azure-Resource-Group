@@ -131,7 +131,7 @@
       "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
       "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
       "storageAccountAdmin": "[concat('sa', variables('baseName'), 'adminasr')]",
-      "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
+      "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnosticsasr')]",
       "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
       "templateLinkPublicIP": "[uri(deployment().properties.templateLink.uri, 'nested/publicIP.json')]",
       "templateLinkPublicIPNull": "[uri(deployment().properties.templateLink.uri, 'nested/publicIPNull.json')]",
