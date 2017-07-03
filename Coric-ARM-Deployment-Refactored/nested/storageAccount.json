@@ -39,10 +39,12 @@
   "resources": [
     {
       "apiVersion": "[parameters('globals').apiVersion.storage]",
+      "kind": "Storage",
       "location": "[resourceGroup().location]",
       "name": "[replace(parameters('name'),'-','')]",
-      "properties": {
-        "accountType": "[parameters('accountType')]"
+      "sku": {
+        "name": "[parameters('accountType')]",
+        "tier": "[split(parameters('accountType'),'_')[0]]"
       },
       "type": "Microsoft.Storage/storageAccounts"
     }
