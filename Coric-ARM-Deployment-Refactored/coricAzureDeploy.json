@@ -25,7 +25,7 @@
         "Standard_RAGRS",
         "Premium_LRS"
       ],
-      "defaultValue": "Standard_RAGRS",
+      "defaultValue": "Standard_LRS",
       "metadata": {
         "Description": "The type of the Storage Account created"
       },
