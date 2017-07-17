@@ -351,7 +351,8 @@
         "dc": 1023,
         "ftp": 1023,
         "sql": 1023,
-        "warehouse": 1023
+        "warehouse": 1023,
+        "wsus": 1023
       },
       "diskEncryption": {
         "aadClientID": "[parameters('aadClientID')]",
@@ -457,7 +458,8 @@
         "iis": "OU=IIS;",
         "rdg": "OU=RDG;",
         "ftp": "OU=FTP;",
-        "pushPull": "OU=PushPull;"
+        "pushPull": "OU=PushPull;",
+        "wsus": "OU=WSUS;"
       },
       "sqlEncryption": {
         "keyVaultURL": "[concat('https://', parameters('sqlKeyVaultName'), '.vault.azure.net/')]",

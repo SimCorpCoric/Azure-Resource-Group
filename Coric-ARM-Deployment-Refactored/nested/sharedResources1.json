@@ -181,7 +181,45 @@
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.ftp, parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sizeOfDataDiskInGB": 1023,
+      "sizeOfDataDiskInGB": "[parameters('globals').dataDiskSizes.ftp]",
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+      "storageAccount": "[parameters('globals').storageAccountAdmin]"
+    },
+
+    "wsusBasename": "[concat(parameters('globals').baseName, '-wsus')]",
+    "wsus": {
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[variables('wsusBasename')]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('wsusBasename'), '01-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.wsus]",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('wsusBasename'), '01-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet1.name)]"
+            }
+          }
+        }
+      ],
+      "numberOfVMs": 1,
+      "ouPath": "[concat(parameters('globals').ou.wsus, parameters('globals').ou.serverRoles)]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+      "sizeOfDataDiskInGB": "[parameters('globals').dataDiskSizes.wsus]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
     }
@@ -354,8 +392,8 @@
         }
       }
     },
-	
-	{
+
+    {
       "name": "secondDCSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
@@ -464,6 +502,37 @@
 
     {
       "name": "ftpSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('nic', variables('backupDomainController').basename, '02')]",
+        "UpdatingDNStoSecondADVM"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('ftp')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('localAdminPassword')]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "wsusSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
