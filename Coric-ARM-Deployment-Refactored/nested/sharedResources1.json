@@ -550,7 +550,7 @@
             "value": "[parameters('globals')]"
           },
           "machineSettings": {
-            "value": "[variables('ftp')]"
+            "value": "[variables('wsus')]"
           },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
