@@ -25,7 +25,7 @@
         "Standard_RAGRS",
         "Premium_LRS"
       ],
-      "defaultValue": "Standard_RAGRS",
+      "defaultValue": "Standard_LRS",
       "metadata": {
         "Description": "The type of the Storage Account created"
       },
@@ -43,8 +43,7 @@
       "location": "[resourceGroup().location]",
       "name": "[replace(parameters('name'),'-','')]",
       "sku": {
-        "name": "[parameters('accountType')]",
-        "tier": "[first(split(parameters('accountType'),'_'))]"
+        "name": "[parameters('accountType')]"
       },
       "type": "Microsoft.Storage/storageAccounts"
     }
