@@ -335,7 +335,7 @@
         "nsg": "2015-06-15",
         "pip": "2016-03-30",
         "routeTables": "2016-03-30",
-        "storage": "2015-06-15",
+        "storage": "2017-06-01",
         "virtualMachine": "2015-06-15"
       },
       "baseName": "[variables('baseName')]",
