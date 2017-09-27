@@ -351,7 +351,8 @@
         "dc": 1023,
         "ftp": 1023,
         "sql": 1023,
-        "warehouse": 1023
+        "warehouse": 1023,
+        "rdg": 1023
       },
       "diskEncryption": {
         "aadClientID": "[parameters('aadClientID')]",

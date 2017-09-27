@@ -121,10 +121,22 @@
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
     },
 
+    "rdsBasename": "[concat(parameters('globals').baseName, '-rdg')]",
     "rdsGateway": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-rdg')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
+      "basename": "[variables('rdsBasename')]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('rdsBasename'), '01-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.rdg]",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('rdsBasename'), '01-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
@@ -143,6 +155,7 @@
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.rdg, parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIP]",
+      "sizeOfDataDiskInGB": 1023,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
     },
