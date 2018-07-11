@@ -263,6 +263,52 @@
     },
 
     {
+      "name": "networkVnetV2Setup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').networkVnetV2TemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          }
+        }
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'networkSetup')]"
+      ]
+    },
+
+    {
+      "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
+      "name": "[concat(parameters('globals').networkSettings.name, '/', 'vnp', parameters('globals').networkSettings.name, '-', parameters('globals').networkSettings.vnetV2name)]",
+      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+      "properties": {
+        "peeringState": "Connected",
+        "remoteVirtualNetwork": {
+          "id": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.vnetV2name)]"
+        },
+        "allowVirtualNetworkAccess": true,
+        "allowForwardedTraffic": true,
+        "allowGatewayTransit": false,
+        "useRemoteGateways": false,
+        "remoteAddressSpace": {
+          "addressPrefixes": [
+            "[parameters('globals').networkSettings.vnetV2addressSpace]"
+          ]
+        }
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'networkSetup')]",
+        "[concat('Microsoft.Resources/deployments/', 'networkVnetV2Setup')]"
+      ]
+    },
+
+    {
       "name": "primaryDCSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",

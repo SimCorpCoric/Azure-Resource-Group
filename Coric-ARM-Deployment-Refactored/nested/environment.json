@@ -40,7 +40,7 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet5.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-desktop'))]"
             }
           }
         }
@@ -65,7 +65,7 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet3.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-application'))]"
             }
           }
         }
@@ -90,7 +90,7 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet3.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-application'))]"
             }
           }
         }
@@ -127,7 +127,7 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-database'))]"
             }
           }
         }
@@ -144,7 +144,7 @@
     "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
     "storageAccountNamePremiumType": "Premium_LRS",
     "webReporterVMTemplate": "[replace(concat(split(parameters('globals').templateLinkVirtualMachine,'.json')[0], parameters('globals').webReporter,'.json'),'Yes','')]",
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+    "vnetID": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.vnetV2name)]",
 
     "warehouseBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
     "warehouse": {
@@ -171,7 +171,7 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet4.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-web'))]"
             }
           }
         }
@@ -196,7 +196,7 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet7.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-web'))]"
             }
           }
         }
@@ -213,6 +213,7 @@
     {
       "name": "environmentStorage",
       "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('globals').adminResourceGroupName]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "properties": {
         "mode": "Incremental",
@@ -237,6 +238,7 @@
     {
       "name": "environmentStoragePremium",
       "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('globals').adminResourceGroupName]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "properties": {
         "mode": "Incremental",
@@ -261,6 +263,7 @@
     {
       "name": "sqlSetup",
       "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('globals').adminResourceGroupName]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'environmentStoragePremium')]"
