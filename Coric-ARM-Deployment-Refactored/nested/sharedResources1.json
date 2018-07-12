@@ -496,8 +496,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('nic', variables('backupDomainController').basename, '02')]",
-        "UpdatingDNStoSecondADVM"
+        "UpdatingDNStoPrimaryADVM"
       ],
       "properties": {
         "mode": "Incremental",
@@ -527,8 +526,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('nic', variables('backupDomainController').basename, '02')]",
-        "UpdatingDNStoSecondADVM"
+        "UpdatingDNStoPrimaryADVM"
       ],
       "properties": {
         "mode": "Incremental",
