@@ -337,6 +337,10 @@
       "metadata": {
         "description": "Denotes DR test deployment"
       }
+    },
+
+    "timeStamp": {
+      "type": "string"
     }
 
   },
@@ -389,6 +393,7 @@
         "keyVaultName": "[parameters('keyVaultName')]",
         "keyVaultResourceGroup": "[parameters('keyVaultResourceGroup')]",
         "keyVaultCertificateURL": "[parameters('keyVaultCertificateURL')]",
+        "sequenceVersion": "[uniqueString(parameters('timeStamp')]",
         "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]"
       },
       "domainAdminUsername": "[parameters('domainAdminUsername')]",

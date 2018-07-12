@@ -40,7 +40,7 @@
           "KeyEncryptionAlgorithm": "RSA-OAEP",
           "VolumeType": "All",
           "EncryptionOperation": "EnableEncryption",
-          "SequenceVersion": "2"
+          "SequenceVersion": "[parameters('globals').diskEncryption.sequenceVersion]"
         }
       }
     },
