@@ -52,8 +52,8 @@
         }
       ],
       "dnsServers": [
-        "127.0.0.1",
         "[parameters('globals').networkSettings.dc02IPAddress]",
+        "[parameters('globals').networkSettings.dc01IPAddress]",
         "[parameters('globals').networkSettings.azureDNS]"
       ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoinNull]",
@@ -94,8 +94,8 @@
         }
       ],
       "dnsServers": [
-        "127.0.0.1",
         "[parameters('globals').networkSettings.dc01IPAddress]",
+        "[parameters('globals').networkSettings.dc02IPAddress]",
         "[parameters('globals').networkSettings.azureDNS]"
       ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
@@ -351,7 +351,7 @@
       "properties": {
         "ipConfigurations": "[variables('primaryDomainController').ipConfigurations]",
         "dnsSettings": {
-          "dnsServers": "[variables('primaryDomainController').dnsServers]"
+          "dnsServers": "[variables('backupDomainController').dnsServers]"
         }
       }
     },
@@ -408,7 +408,8 @@
           },
           "dnsServers": {
             "value": [
-              "[parameters('globals').networkSettings.dc01IPAddress]"
+              "[parameters('globals').networkSettings.dc01IPAddress]",
+              "[parameters('globals').networkSettings.dc02IPAddress]"
             ]
           }
         }
@@ -460,33 +461,6 @@
         "ipConfigurations": "[variables('backupDomainController').ipConfigurations]",
         "dnsSettings": {
           "dnsServers": "[variables('backupDomainController').dnsServers]"
-        }
-      }
-    },
-
-    {
-      "name": "UpdatingDNStoSecondADVM",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "secondDCSetup"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').networkWithDNSTemplateLink]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "dnsServers": {
-            "value": [
-              "[parameters('globals').networkSettings.dc01IPAddress]",
-              "[parameters('globals').networkSettings.dc02IPAddress]"
-            ]
-          }
         }
       }
     },
