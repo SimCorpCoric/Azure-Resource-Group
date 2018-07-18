@@ -76,7 +76,6 @@
     },
 
     "domainAdminPassword": {
-      "defaultValue": "",
       "type": "securestring",
       "metadata": {
         "description": "Domain admin password"
@@ -92,7 +91,6 @@
     },
 
     "localAdminPassword": {
-      "defaultValue": "",
       "type": "securestring",
       "metadata": {
         "description": "Local admin password"
@@ -109,7 +107,6 @@
         "Development",
         "Web"
       ],
-      "defaultValue": "Production",
       "type": "string"
     },
 
@@ -123,7 +120,6 @@
         "D",
         "W"
       ],
-      "defaultValue": "P",
       "type": "string"
     },
 
@@ -241,7 +237,6 @@
     },
 
     "keyVaultName": {
-      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Name of Key Vault which contains the encryption certificate"
@@ -249,7 +244,6 @@
     },
 
     "keyVaultResourceGroup": {
-      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Resource Group of Key Vault which contains the encryption certificate"
@@ -257,7 +251,6 @@
     },
 
     "keyVaultCertificateURL": {
-      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Url of the aadApp access certificate in the Key Vault.  E.g: https://mytestvault.vault.azure.net:443/secrets/myaadappcertificate/<version>"
@@ -265,7 +258,6 @@
     },
 
     "keyVaultKEKURL": {
-      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Url of the BitLocker Key Encryption Key in the Key Vault.  E.g: https://mytestvault.vault.azure.net/keys/mykek/<version>"
@@ -273,7 +265,6 @@
     },
 
     "aadClientID": {
-      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Client ID of AAD app which has permissions to KeyVault"
@@ -281,7 +272,6 @@
     },
 
     "aadClientCertThumbprint": {
-      "defaultValue": "",
       "type": "string",
       "metadata": {
         "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
@@ -486,14 +476,14 @@
       "networkVnetV2TemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json')]",
       "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
       "ou": {
-        "serverRoles": "OU=Coric Server Roles;",
+        "serverRoles": "OU=Coric Computers;",
         "sql": "OU=SQL;",
         "drone": "OU=Drone;",
         "domainControllers": "OU=Domain Controllers;",
         "desktop": "OU=Desktop;",
         "iis": "OU=IIS;",
-        "rdg": "OU=RDG;",
-        "ftp": "OU=FTP;",
+        "rdg": "OU=RDG;OU=Admin;",
+        "ftp": "OU=FTP;OU=Admin;",
         "pushPull": "OU=PushPull;"
       },
       "sqlEncryption": {
