@@ -61,7 +61,13 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "properties": {
-        "ipConfigurations": "[parameters('machineSettings').ipConfigurations]"
+        "ipConfigurations": "[parameters('machineSettings').ipConfigurations]",
+        "dnsSettings": {
+          "dnsServers": [
+            "[parameters('globals').networkSettings.dc01IPAddress]",
+            "[parameters('globals').networkSettings.dc02IPAddress]"
+          ]
+        }
       }
     },
 
