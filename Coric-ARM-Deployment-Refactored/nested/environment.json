@@ -263,7 +263,6 @@
     {
       "name": "sqlSetup",
       "type": "Microsoft.Resources/deployments",
-      "resourceGroup": "[parameters('globals').adminResourceGroupName]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'environmentStoragePremium')]"
