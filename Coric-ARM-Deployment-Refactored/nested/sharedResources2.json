@@ -104,7 +104,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('globals').networkVnetV2TemplateLink]",
+          "uri": "[parameters('globals').networkVnetV2WithRoutesTemplateLink]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

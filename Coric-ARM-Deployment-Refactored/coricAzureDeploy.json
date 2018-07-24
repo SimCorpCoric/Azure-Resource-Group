@@ -63,7 +63,7 @@
         4
       ],
       "metadata": {
-        "description": "The implementation build phase. 1 = Network infrastructure, admin VMs, and AD domain setup; 2 = Network infrastructure only;  3 = Environment supplied in 'environmentName (Dev/UAT/Prod);  4 = Check Point"
+        "description": "The implementation build phase. 1 = Network infrastructure, admin VMs, and AD domain setup; 2 = Full Network infrastructure (run after Checkpoint);  3 = Environment supplied in 'environmentName (Dev/UAT/Prod);  4 = Check Point"
       }
     },
 
@@ -474,6 +474,7 @@
       },
       "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
       "networkVnetV2TemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json')]",
+      "networkVnetV2WithRoutesTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json')]",
       "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
       "ou": {
         "serverRoles": "OU=Coric Computers;",
