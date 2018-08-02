@@ -101,6 +101,7 @@
       "metadata": {
         "Description": "Name of the environment being built"
       },
+      "defaultValue": "Production",
       "allowedValues": [
         "Production",
         "UAT",
@@ -114,6 +115,7 @@
       "metadata": {
         "Description": "Acronym for the environment being built"
       },
+      "defaultValue": "P",
       "allowedValues": [
         "P",
         "U",
@@ -415,8 +417,8 @@
         "vnetV2addressSpace": "[parameters('vnetV2addressSpace')]",
         "addressSpace": "10.200.0.0/20",
         "azureDNS": "168.63.129.16",
-        "dc01IPAddress": "10.200.1.244",
-        "dc02IPAddress": "10.200.1.245",
+        "dc01IPAddress": "10.200.1.4",
+        "dc02IPAddress": "10.200.1.5",
         "gatewayExternalIPAddress": "10.200.0.4",
         "gatewayInternalIPAddress": "10.200.9.4",
         "rdgatewayIPAddress": "10.200.6.4",
