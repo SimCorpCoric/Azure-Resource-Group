@@ -18,6 +18,14 @@
       "type": "int"
     },
 
+    "vnetV2addressSpace": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "VNET v2 Address space for the specific client, e.g., '10.11.16.0/21' ."
+      }
+    },
+
     "storageAccountType": {
       "allowedValues": [
         "Standard_LRS",
@@ -49,8 +57,14 @@
     "implementationPhase": {
       "type": "int",
       "defaultValue": 1,
+      "allowedValues": [
+        1,
+        2,
+        3,
+        4
+      ],
       "metadata": {
-        "description": "The implementation build phase.  1 = DC01.  2 = Remaining admin VMs.  3 = Environment supplied in 'environmentName.  4=Check Point"
+        "description": "The implementation build phase. 1 = Network infrastructure, admin VMs, and AD domain setup; 2 = Full Network infrastructure (run after Checkpoint);  3 = Environment supplied in 'environmentName (Dev/UAT/Prod);  4 = Check Point"
       }
     },
 
@@ -90,13 +104,13 @@
       "metadata": {
         "Description": "Name of the environment being built"
       },
+      "defaultValue": "Production",
       "allowedValues": [
         "Production",
         "UAT",
         "Development",
         "Web"
       ],
-      "defaultValue": "Production",
       "type": "string"
     },
 
@@ -104,13 +118,13 @@
       "metadata": {
         "Description": "Acronym for the environment being built"
       },
+      "defaultValue": "P",
       "allowedValues": [
         "P",
         "U",
         "D",
         "W"
       ],
-      "defaultValue": "P",
       "type": "string"
     },
 
@@ -325,6 +339,10 @@
       "metadata": {
         "description": "Denotes DR test deployment"
       }
+    },
+
+    "sequenceVersion": {
+      "type": "int"
     }
 
   },
@@ -332,23 +350,27 @@
   "variables": {
     "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
     "domainSuffix": "Hosted",
+    "environmentShortNameAdmin": "Admin",
     "environmentShortNameDevelopment": "Dev",
     "environmentShortNameProduction": "Prod",
     "environmentShortNameUAT": "UAT",
     "environmentShortNameWeb": "Web",
     "globals": {
+      "adminResourceGroupName": "[variables('baseName')]",
       "apiVersion": {
-        "deployment": "2016-02-01",
-        "dsc": "2015-06-15",
-        "extension": "2015-06-15",
-        "loadBalancer": "2016-03-30",
-        "network": "2016-03-30",
-        "nic": "2016-03-30",
+        "availabilitySets": "2018-06-01",
+        "deployment": "2018-05-01",
+        "dsc": "2018-06-01",
+        "extension": "2018-06-01",
+        "loadBalancer": "2018-02-01",
+        "network": "2018-02-01",
+        "networkpeerings": "2018-02-01",
+        "nic": "2018-02-01",
         "nsg": "2015-06-15",
-        "pip": "2016-03-30",
-        "routeTables": "2016-03-30",
-        "storage": "2017-06-01",
-        "virtualMachine": "2015-06-15"
+        "pip": "2018-07-01",
+        "routeTables": "2018-02-01",
+        "storage": "2018-02-01",
+        "virtualMachine": "2018-06-01"
       },
       "baseName": "[variables('baseName')]",
       "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
@@ -373,6 +395,7 @@
         "keyVaultName": "[parameters('keyVaultName')]",
         "keyVaultResourceGroup": "[parameters('keyVaultResourceGroup')]",
         "keyVaultCertificateURL": "[parameters('keyVaultCertificateURL')]",
+        "sequenceVersion": "[parameters('sequenceVersion')]",
         "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]"
       },
       "domainAdminUsername": "[parameters('domainAdminUsername')]",
@@ -399,6 +422,9 @@
       },
       "localAdminUsername": "[parameters('localAdminUsername')]",
       "networkSettings": {
+        "name": "[concat('vn', variables('baseName'))]",
+        "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
+        "vnetV2addressSpace": "[parameters('vnetV2addressSpace')]",
         "addressSpace": "10.200.0.0/20",
         "azureDNS": "168.63.129.16",
         "dc01IPAddress": "10.200.1.4",
@@ -456,20 +482,21 @@
           "id": 9,
           "name": "FirewallInternal",
           "prefix": "10.200.9.0/24"
-        },
-        "name": "[concat('vn', variables('baseName'))]"
+        }
       },
       "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
+      "networkVnetV2TemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json')]",
+      "networkVnetV2WithRoutesTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json')]",
       "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
       "ou": {
-        "serverRoles": "OU=Coric Server Roles;",
+        "serverRoles": "OU=Coric Computers;",
         "sql": "OU=SQL;",
         "drone": "OU=Drone;",
         "domainControllers": "OU=Domain Controllers;",
         "desktop": "OU=Desktop;",
         "iis": "OU=IIS;",
-        "rdg": "OU=RDG;",
-        "ftp": "OU=FTP;",
+        "rdg": "OU=RDG;OU=Admin;",
+        "ftp": "OU=FTP;OU=Admin;",
         "pushPull": "OU=PushPull;"
       },
       "sqlEncryption": {

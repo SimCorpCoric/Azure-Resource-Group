@@ -10,8 +10,8 @@
     },
     "dnsServers": {
       "defaultValue": [
-        "10.200.1.4",
-        "10.200.1.5"
+        "[parameters('globals').networkSettings.dc01IPAddress]",
+        "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
       "type": "array",
       "metadata": {
@@ -56,6 +56,14 @@
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
           }
         ]
       }
@@ -79,6 +87,14 @@
             "name": "default-to-checkpoint",
             "properties": {
               "addressPrefix": "0.0.0.0/0",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
@@ -108,6 +124,14 @@
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
           }
         ]
       }
@@ -131,6 +155,14 @@
             "name": "default-to-checkpoint",
             "properties": {
               "addressPrefix": "0.0.0.0/0",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
@@ -160,6 +192,14 @@
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
           }
         ]
       }
@@ -183,6 +223,14 @@
             "name": "default-to-checkpoint",
             "properties": {
               "addressPrefix": "0.0.0.0/0",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
@@ -212,6 +260,14 @@
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
           }
         ]
       }
@@ -235,6 +291,14 @@
             "name": "default-to-checkpoint",
             "properties": {
               "addressPrefix": "0.0.0.0/0",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
@@ -264,6 +328,14 @@
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
           }
         ]
       }
@@ -287,6 +359,14 @@
             "name": "default-to-checkpoint",
             "properties": {
               "addressPrefix": "0.0.0.0/0",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
@@ -316,6 +396,14 @@
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
           }
         ]
       }
@@ -342,6 +430,14 @@
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
           }
         ]
       }
@@ -365,6 +461,14 @@
             "name": "default-to-checkpoint",
             "properties": {
               "addressPrefix": "0.0.0.0/0",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+            }
+          },
+          {
+            "name": "vnet-to-checkpoint",
+            "properties": {
+              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
               "nextHopType": "VirtualAppliance",
               "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
             }

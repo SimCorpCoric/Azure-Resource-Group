@@ -40,13 +40,13 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet5.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-desktop'))]"
             }
           }
         }
       ],
       "numberOfVMs": "[parameters('globals').environment.desktopCount]",
-      "ouPath": "[concat(parameters('globals').ou.desktop, parameters('globals').ou.serverRoles)]",
+      "ouPath": "[concat(parameters('globals').ou.desktop, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
@@ -65,13 +65,13 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet3.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-application'))]"
             }
           }
         }
       ],
       "numberOfVMs": "[parameters('globals').environment.droneCount]",
-      "ouPath": "[concat(parameters('globals').ou.drone, parameters('globals').ou.serverRoles)]",
+      "ouPath": "[concat(parameters('globals').ou.drone, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
@@ -90,13 +90,13 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet3.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-application'))]"
             }
           }
         }
       ],
       "numberOfVMs": "[parameters('globals').environment.pushPullCount]",
-      "ouPath": "[concat(parameters('globals').ou.pushPull, parameters('globals').ou.serverRoles)]",
+      "ouPath": "[concat(parameters('globals').ou.pushPull, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
@@ -127,13 +127,13 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet2.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-database'))]"
             }
           }
         }
       ],
       "numberOfVMs": 1,
-      "ouPath": "[concat(parameters('globals').ou.sql, parameters('globals').ou.serverRoles)]",
+      "ouPath": "[concat(parameters('globals').ou.sql, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sizeOfDataDiskInGB": 1023,
       "sqlKeyVaultTemplateLink": "[parameters('globals').sqlEncryptionTemplate]",
@@ -144,7 +144,7 @@
     "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
     "storageAccountNamePremiumType": "Premium_LRS",
     "webReporterVMTemplate": "[replace(concat(split(parameters('globals').templateLinkVirtualMachine,'.json')[0], parameters('globals').webReporter,'.json'),'Yes','')]",
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+    "vnetID": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.vnetV2name)]",
 
     "warehouseBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
     "warehouse": {
@@ -171,13 +171,13 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet4.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-web'))]"
             }
           }
         }
       ],
       "numberOfVMs": 1,
-      "ouPath": "[concat(parameters('globals').ou.iis, parameters('globals').ou.serverRoles)]",
+      "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
@@ -196,13 +196,13 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet7.name)]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-web'))]"
             }
           }
         }
       ],
       "numberOfVMs": "[parameters('globals').environment.webCount]",
-      "ouPath": "[concat(parameters('globals').ou.iis, parameters('globals').ou.serverRoles)]",
+      "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
@@ -213,6 +213,7 @@
     {
       "name": "environmentStorage",
       "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('globals').adminResourceGroupName]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "properties": {
         "mode": "Incremental",
@@ -237,6 +238,7 @@
     {
       "name": "environmentStoragePremium",
       "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('globals').adminResourceGroupName]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "properties": {
         "mode": "Incremental",
