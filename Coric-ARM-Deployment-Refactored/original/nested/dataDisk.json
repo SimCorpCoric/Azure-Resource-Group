@@ -51,7 +51,7 @@
       ],
       "properties": {
         "type": "CustomScriptExtension",
-        "typeHandlerVersion": "1.4",
+        "typeHandlerVersion": "1.9",
         "publisher": "Microsoft.Compute",
         "settings": {
           "fileUris": [
