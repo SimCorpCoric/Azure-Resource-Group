@@ -1,0 +1,92 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "apiVersionPIP": {
+      "metadata": {
+        "Description": "API Version for the publicIPAddresses resource type"
+      },
+      "type": "string"
+    },
+
+    "apiVersionNIC": {
+      "metadata": {
+        "Description": "API Version for the networkInterfaces resource type"
+      },
+      "type": "string"
+    },
+
+    "pipName": {
+      "metadata": {
+        "Description": "PIP name"
+      },
+      "type": "string"
+    },
+
+    "nicName": {
+      "metadata": {
+        "Description": "NIC name"
+      },
+      "type": "string"
+    },
+
+    "dnsPrefix": {
+      "metadata": {
+        "Description": "DNS prefix for Public IP"
+      },
+      "type": "string"
+    },
+
+    "ipConfigurations": {
+      "metadata": {
+        "Description": "NIC ipConfigurations object"
+      },
+      "type": "array"
+    }
+  },
+
+  "variables": {
+  },
+
+  "resources": [
+    {
+      "apiVersion": "[parameters('apiVersionPIP')]",
+      "location": "[resourceGroup().location]",
+      "name": "[parameters('pipName')]",
+      "properties": {
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('dnsPrefix')]"
+        },
+        "publicIPAllocationMethod": "Static"
+      },
+      "type": "Microsoft.Network/publicIPAddresses"
+    },
+
+    {
+      "apiVersion": "[parameters('apiVersionNIC')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[parameters('nicName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[parameters('pipName')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "[parameters('ipConfigurations')[0].properties.privateIPAllocationMethod]",
+              "privateIPAddress": "[parameters('ipConfigurations')[0].properties.privateIPAddress]",
+              "subnet": "[parameters('ipConfigurations')[0].properties.subnet]",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('pipName'))]"
+              }
+            }
+          }
+        ]
+      }
+    }
+  
+  ]
+}

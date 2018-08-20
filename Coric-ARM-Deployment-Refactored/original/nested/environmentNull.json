@@ -4,10 +4,10 @@
 
   "parameters": {
     "globals": {
-      "type": "object",
       "metadata": {
         "Description": "Global complex object passed to nested templates"
-      }
+      },
+      "type": "object"
     },
 
     "domainAdminPassword": {
@@ -22,24 +22,12 @@
       "metadata": {
         "description": "Local admin password"
       }
-    },
-
-    "sicKey": {
-      "type": "securestring",
-      "metadata": {
-        "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
-      }
     }
   },
 
   "variables": {
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
-
-
   },
 
-  "resources": [
-    
+  "resources": []
 
-  ]
 }

@@ -1,0 +1,178 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+
+    "prefix": {
+      "type": "string",
+      "defaultValue": "cor",
+      "metadata": {
+        "description": "Characters used for the prefix of each Azure object."
+      }
+    },
+
+    "clientID": {
+      "metadata": {
+        "description": "Unique ClientID for the system."
+      },
+      "type": "int"
+    },
+
+    "localAdminPassword": {
+      "defaultValue": "",
+      "type": "securestring",
+      "metadata": {
+        "description": "Local admin password"
+      }
+    },
+
+    "sicKey": {
+      "defaultValue": "",
+      "type": "securestring",
+      "minLength": 8,
+      "metadata": {
+        "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
+      }
+    },
+
+    "test": {
+      "defaultValue": "",
+      "type": "string",
+      "allowedValues": [
+        "",
+        "-test"
+      ],
+      "metadata": {
+        "description": "Denotes test deployment"
+      }
+    }
+
+  },
+
+  "variables": {
+    "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+    "globals": {
+      "apiVersion": {
+        "deployment": "2016-02-01",
+        "dsc": "2015-06-15",
+        "extension": "2015-06-15",
+        "loadBalancer": "2016-03-30",
+        "network": "2016-03-30",
+        "nic": "2016-03-30",
+        "nsg": "2015-06-15",
+        "pip": "2016-03-30",
+        "recoveryServices": "2016-06-01",
+        "routeTables": "2016-03-30",
+        "storage": "2015-06-15",
+        "virtualMachine": "2015-06-15"
+      },
+      "baseName": "[variables('baseName')]",
+      "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
+      "clientID": "[parameters('clientID')]",
+      "networkSettings": {
+        "addressSpace": "10.200.0.0/20",
+        "azureDNS": "168.63.129.16",
+        "dc01IPAddress": "10.200.1.4",
+        "dc02IPAddress": "10.200.1.5",
+        "gatewayExternalIPAddress": "10.200.0.4",
+        "gatewayInternalIPAddress": "10.200.9.4",
+        "rdgatewayIPAddress": "10.200.6.4",
+        "ftpIPAddress": "10.200.6.5",
+        "subnet0": {
+          "id": 0,
+          "name": "gateway",
+          "prefix": "10.200.0.0/24"
+        },
+        "subnet1": {
+          "id": 1,
+          "name": "admin",
+          "prefix": "10.200.1.0/24"
+        },
+        "subnet2": {
+          "id": 2,
+          "name": "database",
+          "prefix": "10.200.2.0/24"
+        },
+        "subnet3": {
+          "id": 3,
+          "name": "backend",
+          "prefix": "10.200.3.0/24"
+        },
+        "subnet4": {
+          "id": 4,
+          "name": "frontend",
+          "prefix": "10.200.4.0/24"
+        },
+        "subnet5": {
+          "id": 5,
+          "name": "user",
+          "prefix": "10.200.5.0/24"
+        },
+        "subnet6": {
+          "id": 6,
+          "name": "public",
+          "prefix": "10.200.6.0/24"
+        },
+        "subnet7": {
+          "id": 7,
+          "name": "dmz",
+          "prefix": "10.200.7.0/24"
+        },
+        "subnet8": {
+          "id": 8,
+          "name": "GatewaySubnet",
+          "prefix": "10.200.8.0/24"
+        },
+        "subnet9": {
+          "id": 9,
+          "name": "FirewallInternal",
+          "prefix": "10.200.9.0/24"
+        },
+        "name": "[concat('vn', variables('baseName'))]"
+      },
+      "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
+      "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
+      "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
+      "templateLinkPublicIP": "[uri(deployment().properties.templateLink.uri, 'nested/publicIP.json')]",
+      "templateLinkPublicIPNull": "[uri(deployment().properties.templateLink.uri, 'nested/publicIPNull.json')]",
+      "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
+      "test": "[parameters('test')]",
+      "vhdContainerName": "vhds"
+    },
+    "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
+    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, 'nested/sharedResourcesDR.json')]",
+    "templateLinkCheckPoint": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]"
+  },
+
+  "resources": [
+    {
+      "name": "DR-Setup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('globals').checkPointTemplateLink]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[variables('globals')]"
+          },
+          "dnsServers": {
+            "value": [
+              "[variables('globals').networkSettings.dc01IPAddress]",
+              "[variables('globals').networkSettings.dc02IPAddress]"
+            ]
+          },
+          "adminPassword": {
+            "value": "[parameters('localAdminPassword')]"
+          },
+          "sicKey": {
+            "value": "[parameters('sicKey')]"
+          }
+        }
+      }
+    }
+  ]
+}

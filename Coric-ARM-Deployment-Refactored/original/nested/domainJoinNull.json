@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "globals": {
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      },
+      "type": "object"
+    },
+
+    "vmName": {
+      "metadata": {
+        "Description": "The VM's name as shown in the portal - NOT the server's BIOS/hostname"
+      },
+      "type": "string"
+    },
+
+    "ouPath": {
+      "metadata": {
+        "Description": "Specifies an organizational unit (OU) for the domain account. Enter in LDAP format: OU=Drone; OU=Coric Server Roles"
+      },
+      "type": "string"
+    },
+
+    "domainAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
+    }
+  },
+
+  "variables": {
+  },
+
+  "resources": []
+
+}
