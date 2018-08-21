@@ -89,10 +89,10 @@
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('pipName'))]"
               }
-            },
-            "dnsServers": "[parameters('dnsServers')]"
+            }
           }
-        ]
+        ],
+        "dnsServers": "[parameters('dnsServers')]"
       }
     }
 
