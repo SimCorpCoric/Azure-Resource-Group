@@ -51,11 +51,6 @@
           "createOption": "Empty"
         }
       ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc02IPAddress]",
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.azureDNS]"
-      ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoinNull]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
@@ -70,6 +65,14 @@
             }
           }
         }
+      ],
+      "dnsServers": [
+        "[parameters('globals').networkSettings.azureDNS]"
+      ],
+      "finalDnsServers": [
+        "[parameters('globals').networkSettings.dc01IPAddress]",
+        "[parameters('globals').networkSettings.dc02IPAddress]",
+        "[parameters('globals').networkSettings.azureDNS]"
       ],
       "numberOfVMs": 1,
       "ouPath": "",
@@ -93,11 +96,6 @@
           "createOption": "Empty"
         }
       ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]",
-        "[parameters('globals').networkSettings.azureDNS]"
-      ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
@@ -112,6 +110,11 @@
             }
           }
         }
+      ],
+      "dnsServers": [
+        "[parameters('globals').networkSettings.dc01IPAddress]",
+        "[parameters('globals').networkSettings.dc02IPAddress]",
+        "[parameters('globals').networkSettings.azureDNS]"
       ],
       "numberOfVMs": 1,
       "ouPath": "[parameters('globals').ou.domainControllers]",
@@ -152,6 +155,10 @@
           }
         }
       ],
+      "dnsServers": [
+        "[parameters('globals').networkSettings.dc01IPAddress]",
+        "[parameters('globals').networkSettings.dc02IPAddress]"
+      ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.rdg, parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIP]",
@@ -190,6 +197,10 @@
             }
           }
         }
+      ],
+      "dnsServers": [
+        "[parameters('globals').networkSettings.dc01IPAddress]",
+        "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.ftp, parameters('globals').ou.serverRoles)]",
@@ -351,7 +362,7 @@
       "properties": {
         "ipConfigurations": "[variables('primaryDomainController').ipConfigurations]",
         "dnsSettings": {
-          "dnsServers": "[variables('backupDomainController').dnsServers]"
+          "dnsServers": "[variables('primaryDomainController').finalDnsServers]"
         }
       }
     },
@@ -445,22 +456,6 @@
           "domainAdminPassword": {
             "value": "[parameters('domainAdminPassword')]"
           }
-        }
-      }
-    },
-
-    {
-      "apiVersion": "[parameters('globals').apiVersion.nic]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat('nic', variables('backupDomainController').basename, '02')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "secondDCSetup"
-      ],
-      "properties": {
-        "ipConfigurations": "[variables('backupDomainController').ipConfigurations]",
-        "dnsSettings": {
-          "dnsServers": "[variables('backupDomainController').dnsServers]"
         }
       }
     },

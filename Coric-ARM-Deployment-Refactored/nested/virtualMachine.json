@@ -43,8 +43,8 @@
 
   "variables": {
     "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
-    "asName": "[toLower(concat('as', parameters('machineSettings').basename))]",
     "nicName": "[toLower(concat('nic', parameters('machineSettings').basename))]",
+    "asName": "[toLower(concat('as', parameters('machineSettings').basename))]",
     "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
     "vmName": "[parameters('machineSettings').basename]",
     "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
@@ -63,10 +63,7 @@
       "properties": {
         "ipConfigurations": "[parameters('machineSettings').ipConfigurations]",
         "dnsSettings": {
-          "dnsServers": [
-            "[parameters('globals').networkSettings.dc01IPAddress]",
-            "[parameters('globals').networkSettings.dc02IPAddress]"
-          ]
+          "dnsServers": "[parameters('machineSettings').dnsServers]"
         }
       }
     },
