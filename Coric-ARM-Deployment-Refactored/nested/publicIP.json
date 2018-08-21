@@ -43,6 +43,13 @@
         "Description": "NIC ipConfigurations object"
       },
       "type": "array"
+    },
+
+    "dnsServers": {
+      "metadata": {
+        "Description": "DNSServers Array"
+      },
+      "type": "array"
     }
   },
 
@@ -82,11 +89,12 @@
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('pipName'))]"
               }
-            }
+            },
+            "dnsServers": "[parameters('dnsServers')]"
           }
         ]
       }
     }
-  
+
   ]
 }
