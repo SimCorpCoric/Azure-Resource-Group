@@ -45,7 +45,7 @@
     "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
     "nicName": "[toLower(concat('nic', parameters('machineSettings').basename))]",
     "asName": "[toLower(concat('as', parameters('machineSettings').basename))]",
-    "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
+    "pipName": "[toLower(concat('pipv2', parameters('machineSettings').basename))]",
     "vmName": "[parameters('machineSettings').basename]",
     "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
   },
