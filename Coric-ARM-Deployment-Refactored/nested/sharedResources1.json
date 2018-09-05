@@ -361,9 +361,6 @@
       ],
       "properties": {
         "ipConfigurations": "[variables('primaryDomainController').ipConfigurations]",
-        "dnsSettings": {
-          "dnsServers": "[variables('primaryDomainController').finalDnsServers]"
-        }
       }
     },
 
