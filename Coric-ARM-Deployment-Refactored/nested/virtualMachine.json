@@ -62,6 +62,9 @@
       },
       "properties": {
         "ipConfigurations": "[parameters('machineSettings').ipConfigurations]",
+        "dnsSettings": {
+          "dnsServers": "[parameters('machineSettings').dnsServers]"
+        }
       }
     },
 
@@ -100,6 +103,9 @@
           },
           "ipConfigurations": {
             "value": "[parameters('machineSettings').ipConfigurations]"
+          },
+          "dnsServers": {
+            "value": "[parameters('machineSettings').dnsServers]"
           }
         }
       }
