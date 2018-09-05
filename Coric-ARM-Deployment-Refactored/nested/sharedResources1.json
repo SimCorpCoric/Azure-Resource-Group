@@ -323,9 +323,6 @@
       "name": "rdsGatewaySetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "UpdatingDNStoPrimaryADVM"
-      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
