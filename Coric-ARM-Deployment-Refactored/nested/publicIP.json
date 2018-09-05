@@ -43,14 +43,8 @@
         "Description": "NIC ipConfigurations object"
       },
       "type": "array"
-    },
-
-    "dnsServers": {
-      "metadata": {
-        "Description": "DNSServers Array"
-      },
-      "type": "array"
     }
+
   },
 
   "variables": {
@@ -91,8 +85,7 @@
               }
             }
           }
-        ],
-        "dnsServers": "[parameters('dnsServers')]"
+        ]
       }
     }
 
