@@ -51,6 +51,11 @@
           "createOption": "Empty"
         }
       ],
+      "dnsServers": [
+        "127.0.0.1",
+        "[parameters('globals').networkSettings.azureDNS]",
+        "[parameters('globals').networkSettings.dc02IPAddress]"
+      ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoinNull]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
@@ -65,14 +70,6 @@
             }
           }
         }
-      ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.azureDNS]"
-      ],
-      "finalDnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]",
-        "[parameters('globals').networkSettings.azureDNS]"
       ],
       "numberOfVMs": 1,
       "ouPath": "",
@@ -96,6 +93,11 @@
           "createOption": "Empty"
         }
       ],
+      "dnsServers": [
+        "127.0.0.1",
+        "[parameters('globals').networkSettings.azureDNS]",
+        "[parameters('globals').networkSettings.dc01IPAddress]"
+      ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
@@ -110,11 +112,6 @@
             }
           }
         }
-      ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]",
-        "[parameters('globals').networkSettings.azureDNS]"
       ],
       "numberOfVMs": 1,
       "ouPath": "[parameters('globals').ou.domainControllers]",
@@ -157,7 +154,7 @@
       ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.rdg, parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIP]",
       "sizeOfDataDiskInGB": 1023,
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[parameters('globals').storageAccountAdmin]"
@@ -194,10 +191,6 @@
           }
         }
       ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
-      ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.ftp, parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
@@ -214,6 +207,10 @@
       "name": "rdsGatewaySetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('nic', variables('backupDomainController').basename, '02')]",
+        "UpdatingDNStoSecondADVM"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
