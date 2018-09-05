@@ -152,7 +152,7 @@
             "version": "[parameters('machineSettings').imageReference.version]"
           },
           "osDisk": {
-            "name": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-osdisk')]",
+            "name": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), 'osdisk')]",
             "vhd": {
               "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
             },
