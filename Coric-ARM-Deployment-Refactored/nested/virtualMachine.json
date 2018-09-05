@@ -43,8 +43,9 @@
 
   "variables": {
     "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
-    "nicName": "[concat('nic', parameters('machineSettings').basename)]",
-    "pipName": "[concat('pip', parameters('machineSettings').basename)]",
+    "nicName": "[toLower(concat('nic', parameters('machineSettings').basename))]",
+    "asName": "[toLower(concat('as', parameters('machineSettings').basename))]",
+    "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
     "vmName": "[parameters('machineSettings').basename]",
     "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
   },
@@ -111,6 +112,13 @@
     },
 
     {
+      "apiVersion": "[parameters('globals').apiVersion.availabilitySets]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[concat(variables('asName'))]",
+      "location": "[resourceGroup().location]"
+    },
+
+    {
       "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
@@ -120,9 +128,13 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[concat(variables('pipName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+        "[concat(variables('pipName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+        "[variables('asName')]"
       ],
       "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(variables('asName')))]"
+        },
         "hardwareProfile": {
           "vmSize": "[parameters('machineSettings').imageReference.size]"
         },
@@ -152,7 +164,7 @@
             "version": "[parameters('machineSettings').imageReference.version]"
           },
           "osDisk": {
-            "name": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), 'osdisk')]",
+            "name": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-osdisk')]",
             "vhd": {
               "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
             },
