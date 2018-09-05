@@ -62,9 +62,10 @@
       },
       "properties": {
         "ipConfigurations": "[parameters('machineSettings').ipConfigurations]",
-        "dnsSettings": {
-          "dnsServers": "[parameters('machineSettings').dnsServers]"
-        }
+                    "dnsServers": [
+                      "[parameters('globals').networkSettings.dc01IPAddress]",
+                      "[parameters('globals').networkSettings.dc02IPAddress]"
+                    ]
       }
     },
 
