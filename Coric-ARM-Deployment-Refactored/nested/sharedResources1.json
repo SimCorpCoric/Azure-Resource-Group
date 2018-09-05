@@ -131,7 +131,7 @@
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "dataDisks": [
         {
-          "name": "[concat(variables('rdsBasename'), '011-datadisk-0')]",
+          "name": "[concat(variables('rdsBasename'), '01-datadisk-0')]",
           "diskSizeGB": "[parameters('globals').dataDiskSizes.rdg]",
           "lun": 0,
           "vhd": {
