@@ -974,7 +974,7 @@
       "dependsOn": [
         "[variables('vnetId')]",
         "[variables('vnetV2Id')]",
-        "[resourceId('Microsoft.Network/virtualNetworks/virtualNetworkPeerings', concat(variables('vnetName'), '/', 'vnp', variables('vnetName'), '-', variables('vnetV2name')))]"
+        "[concat(variables('vnetName'), '/', 'vnp', variables('vnetName'), '-', variables('vnetV2name'))]"
       ]
     },
     {
