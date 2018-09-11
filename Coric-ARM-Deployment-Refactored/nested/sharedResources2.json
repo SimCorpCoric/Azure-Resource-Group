@@ -1,7 +1,6 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-
   "parameters": {
     "globals": {
       "type": "object",
@@ -9,21 +8,18 @@
         "Description": "Global complex object passed to nested templates"
       }
     },
-
     "domainAdminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "Domain admin password"
       }
     },
-
     "localAdminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "Local admin password"
       }
     },
-
     "sicKey": {
       "type": "securestring",
       "metadata": {
@@ -31,116 +27,6 @@
       }
     }
   },
-
-  "variables": {
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]"
-  },
-
-  "resources": [
-    {
-      "name": "adminStorage",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').storageAccountTemplateLink]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "Name": {
-            "value": "[parameters('globals').storageAccountAdmin]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "diagnosticsStorage",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').storageAccountTemplateLink]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "Name": {
-            "value": "[parameters('globals').storageAccountDiagnostics]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "networkSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').networkTemplateLink]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "networkVnetV2Setup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').networkVnetV2WithRoutesTemplateLink]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          }
-        }
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'networkSetup')]"
-      ]
-    },
-
-    {
-      "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
-      "name": "[concat(parameters('globals').networkSettings.name, '/', 'vnp', parameters('globals').networkSettings.name, '-', parameters('globals').networkSettings.vnetV2name)]",
-      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-      "properties": {
-        "peeringState": "Connected",
-        "remoteVirtualNetwork": {
-          "id": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.vnetV2name)]"
-        },
-        "allowVirtualNetworkAccess": true,
-        "allowForwardedTraffic": true,
-        "allowGatewayTransit": false,
-        "useRemoteGateways": false,
-        "remoteAddressSpace": {
-          "addressPrefixes": [
-            "[parameters('globals').networkSettings.vnetV2addressSpace]"
-          ]
-        }
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'networkSetup')]",
-        "[concat('Microsoft.Resources/deployments/', 'networkVnetV2Setup')]"
-      ]
-    }
-  ]
+  "variables": {},
+  "resources": []
 }
