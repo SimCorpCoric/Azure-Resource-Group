@@ -101,12 +101,14 @@
     "vnetV2name": "[parameters('globals').networkSettings.vnetV2name]",
     "vnetV2Id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.vnetV2name)]",
     "vnetV2addressSpace": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-    "vnetPeeringName": "[concat(variables('vnetName'), '/', 'vnp', variables('vnetName'), '-', variables('vnetV2name'))]",
+    "vnetPeeringName": "[concat('vnp', variables('vnetName'), '-', variables('vnetV2name'))]",
+    "vnetV2PeeringName": "[concat('vnp', variables('vnetV2name'), '-', variables('vnetName'))]",
     "oct3plus1": 1,
     "oct3plus2": 2,
     "oct3plus3": 3,
     "octetsArr": "[split(parameters('globals').networkSettings.vnetV2addressSpace,'.')]"
   },
+
   "resources": [
     {
       "apiVersion": "[parameters('globals').apiVersion.nic]",
@@ -126,6 +128,7 @@
         ]
       }
     },
+
     {
       "type": "Microsoft.Network/routeTables",
       "name": "[variables('routeTableName')]",
@@ -201,10 +204,11 @@
       },
       "dependsOn": []
     },
+
     {
       "apiVersion": "[parameters('globals').apiVersion.network]",
       "type": "Microsoft.Network/virtualNetworks",
-      "name": "[parameters('globals').networkSettings.name]",
+      "name": "[variables('vnetName')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[variables('routeTableName')]"
@@ -300,9 +304,30 @@
               "addressPrefix": "[parameters('globals').networkSettings.subnet9.prefix]"
             }
           }
+        ],
+        "virtualNetworkPeerings": [
+          {
+            "name": "[variables('vnetPeeringName')]",
+            "properties": {
+              "peeringState": "Connected",
+              "remoteVirtualNetwork": {
+                "id": "[variables('vnetV2Id')]"
+              },
+              "allowVirtualNetworkAccess": true,
+              "allowForwardedTraffic": true,
+              "allowGatewayTransit": false,
+              "useRemoteGateways": false,
+              "remoteAddressSpace": {
+                "addressPrefixes": [
+                  "[variables('vnetV2addressSpace')]"
+                ]
+              }
+            }
+          }
         ]
       }
     },
+
     {
       "apiVersion": "[parameters('globals').apiVersion.routeTables]",
       "name": "[concat('rt', variables('vnetV2name'), '-admin')]",
@@ -752,6 +777,7 @@
         ]
       }
     },
+
     {
       "apiVersion": "[parameters('globals').apiVersion.network]",
       "type": "Microsoft.Network/virtualNetworks",
@@ -911,9 +937,30 @@
               }
             }
           }
+        ],
+        "virtualNetworkPeerings": [
+          {
+            "name": "[variables('vnetV2PeeringName')]",
+            "properties": {
+              "peeringState": "Connected",
+              "remoteVirtualNetwork": {
+                "id": "[variables('vnetId')]"
+              },
+              "allowVirtualNetworkAccess": true,
+              "allowForwardedTraffic": true,
+              "allowGatewayTransit": false,
+              "useRemoteGateways": false,
+              "remoteAddressSpace": {
+                "addressPrefixes": [
+                  "[variables('vnetAddressSpace')]"
+                ]
+              }
+            }
+          }
         ]
       },
       "dependsOn": [
+        "[variables('vnetName')]",
         "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin'))]",
         "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]",
         "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]",
@@ -929,55 +976,7 @@
         "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]"
       ]
     },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
-      "name": "[variables('vnetPeeringName')]",
-      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-      "properties": {
-        "peeringState": "Connected",
-        "remoteVirtualNetwork": {
-          "id": "[variables('vnetV2Id')]"
-        },
-        "allowVirtualNetworkAccess": true,
-        "allowForwardedTraffic": true,
-        "allowGatewayTransit": false,
-        "useRemoteGateways": false,
-        "remoteAddressSpace": {
-          "addressPrefixes": [
-            "[variables('vnetV2addressSpace')]"
-          ]
-        }
-      },
-      "dependsOn": [
-        "[variables('vnetId')]",
-        "[variables('vnetV2Id')]"
-      ]
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
-      "name": "[concat(variables('vnetV2name'), '/', 'vnp', variables('vnetV2name'), '-', variables('vnetName'))]",
-      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-      "properties": {
-        "peeringState": "Connected",
-        "remoteVirtualNetwork": {
-          "id": "[variables('vnetId')]"
-        },
-        "allowVirtualNetworkAccess": true,
-        "allowForwardedTraffic": true,
-        "allowGatewayTransit": false,
-        "useRemoteGateways": false,
-        "remoteAddressSpace": {
-          "addressPrefixes": [
-            "[variables('vnetAddressSpace')]"
-          ]
-        }
-      },
-      "dependsOn": [
-        "[variables('vnetId')]",
-        "[variables('vnetV2Id')]",
-        "[variables('vnetPeeringName')]"
-      ]
-    },
+
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "[parameters('globals').apiVersion.pip]",
