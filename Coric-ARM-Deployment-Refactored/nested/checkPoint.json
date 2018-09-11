@@ -783,6 +783,22 @@
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('vnetV2name')]",
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[variables('vnetName')]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-application-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-database-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-desktop-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-web-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-application-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-database-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-desktop-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-web-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-application-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]"
+      ],
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
@@ -958,23 +974,7 @@
             }
           }
         ]
-      },
-      "dependsOn": [
-        "[variables('vnetName')]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-application-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-database-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-desktop-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-web-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-application-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-database-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-desktop-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-web-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-application-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]"
-      ]
+      }
     },
 
     {
