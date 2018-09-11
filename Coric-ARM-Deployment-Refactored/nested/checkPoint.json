@@ -101,7 +101,7 @@
     "vnetV2name": "[parameters('globals').networkSettings.vnetV2name]",
     "vnetV2Id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.vnetV2name)]",
     "vnetV2addressSpace": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-    "vnetPeeringName": "[concat(variables('vnetV2name'), '/', 'vnp', variables('vnetV2name'), '-', variables('vnetName'))]",
+    "vnetPeeringName": "[concat(variables('vnetName'), '/', 'vnp', variables('vnetName'), '-', variables('vnetV2name'))]",
     "oct3plus1": 1,
     "oct3plus2": 2,
     "oct3plus3": 3,
