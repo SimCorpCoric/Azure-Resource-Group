@@ -69,6 +69,7 @@
           "name": "ipconfig",
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
+            "privateIPAddress": "",
             "subnet": {
               "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-dmz'))]"
             }
@@ -168,7 +169,6 @@
           "name": "ipconfig",
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
-            "privateIPAddress": "",
             "subnet": {
               "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-database'))]"
             }
