@@ -24,6 +24,7 @@
     "oct3plus1": 1,
     "oct3plus2": 2,
     "oct3plus3": 3,
+    "oct3plus4": 4,
     "octetsArr": "[split(parameters('globals').networkSettings.vnetV2addressSpace,'.')]"
   },
   "resources": [
@@ -136,6 +137,24 @@
             "name": "[concat('sn', variables('vnetV2name'), '-dev-database')]",
             "properties": {
               "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.192/26')]"
+            }
+          },
+          {
+            "name": "[concat('sn', variables('vnetV2name'), '-prod-dmz')]",
+            "properties": {
+              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.0/26')]"
+            }
+          },
+          {
+            "name": "[concat('sn', variables('vnetV2name'), '-uat-dmz')]",
+            "properties": {
+              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.64/26')]"
+            }
+          },
+          {
+            "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz')]",
+            "properties": {
+              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]"
             }
           }
         ]

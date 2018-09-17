@@ -27,6 +27,7 @@
 
   "variables": {
     "acronym": "[toLower(parameters('globals').environment.acronym)]",
+
     "desktop": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
@@ -81,6 +82,35 @@
       "numberOfVMs": "[parameters('globals').environment.droneCount]",
       "ouPath": "[concat(parameters('globals').ou.drone, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+      "storageAccount": "[variables('storageAccountName')]"
+    },
+
+    "publicWeb": {
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-publicweb')]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Dynamic",
+            "subnet": {
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-dmz'))]"
+            }
+          }
+        }
+      ],
+      "dnsServers": [
+        "[parameters('globals').networkSettings.dc01IPAddress]",
+        "[parameters('globals').networkSettings.dc02IPAddress]"
+      ],
+      "numberOfVMs": "[parameters('globals').environment.publicWebCount]",
+      "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIP]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
     },
@@ -423,6 +453,36 @@
           },
           "machineSettings": {
             "value": "[variables('web')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('localAdminPassword')]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "publicWebSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('publicWeb')]"
           },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
