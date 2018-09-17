@@ -197,12 +197,12 @@
       }
     },
 
-    "dmzWebCount": {
+    "dmzServerCount": {
       "type": "int",
       "minValue": 1,
       "defaultValue": 1,
       "metadata": {
-        "Description": "The number of public-facing DMZ Web servers to build for this environment"
+        "Description": "The number of public-facing DMZ servers to build for this environment"
       }
     },
 
@@ -426,7 +426,7 @@
         "acronym": "[parameters('environmentAcronym')]",
         "droneCount": "[parameters('droneCount')]",
         "desktopCount": "[parameters('desktopCount')]",
-        "dmzWebCount": "[parameters('dmzWebCount')]",
+        "dmzServerCount": "[parameters('dmzServerCount')]",
         "pushPullCount": "[parameters('pushPullCount')]",
         "webCount": "[parameters('webCount')]",
       },
