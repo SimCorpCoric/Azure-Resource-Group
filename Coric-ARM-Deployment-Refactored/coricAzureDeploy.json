@@ -227,6 +227,15 @@
       }
     },
 
+    "publicWebCount": {
+      "type": "int",
+      "minValue": 1,
+      "defaultValue": 1,
+      "metadata": {
+        "Description": "The number of Public Web servers to build for this environment"
+      }
+    },
+
     "windowsVMSize": {
       "type": "string",
       "allowedValues": [
@@ -418,7 +427,8 @@
         "droneCount": "[parameters('droneCount')]",
         "desktopCount": "[parameters('desktopCount')]",
         "pushPullCount": "[parameters('pushPullCount')]",
-        "webCount": "[parameters('webCount')]"
+        "webCount": "[parameters('webCount')]",
+        "publicWebCount": "[parameters('publicWebCount')]"
       },
       "localAdminUsername": "[parameters('localAdminUsername')]",
       "networkSettings": {
