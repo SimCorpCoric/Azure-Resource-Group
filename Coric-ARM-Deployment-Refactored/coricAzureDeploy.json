@@ -209,6 +209,15 @@
       }
     },
 
+    "publicWebCount": {
+      "type": "int",
+      "minValue": 1,
+      "defaultValue": 1,
+      "metadata": {
+        "Description": "The number of Public Web servers to build for this environment"
+      }
+    },
+
     "pushPullCount": {
       "type": "int",
       "minValue": 1,
@@ -224,15 +233,6 @@
       "defaultValue": 1,
       "metadata": {
         "Description": "The number of Web Reporter servers to build for this environment"
-      }
-    },
-
-    "publicWebCount": {
-      "type": "int",
-      "minValue": 1,
-      "defaultValue": 1,
-      "metadata": {
-        "Description": "The number of Public Web servers to build for this environment"
       }
     },
 
