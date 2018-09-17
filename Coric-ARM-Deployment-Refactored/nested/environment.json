@@ -59,7 +59,7 @@
 
     "dmzWeb": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dmzweb')]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dzw')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
