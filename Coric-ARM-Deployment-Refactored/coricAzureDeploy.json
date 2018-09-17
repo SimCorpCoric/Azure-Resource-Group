@@ -197,6 +197,15 @@
       }
     },
 
+    "dmzWebCount": {
+      "type": "int",
+      "minValue": 1,
+      "defaultValue": 1,
+      "metadata": {
+        "Description": "The number of public-facing DMZ Web servers to build for this environment"
+      }
+    },
+
     "webReporter": {
       "type": "string",
       "allowedValues": [
@@ -206,15 +215,6 @@
       "defaultValue": "No",
       "metadata": {
         "Description": "Whether or not Web Reporter is part of the deployment"
-      }
-    },
-
-    "publicWebCount": {
-      "type": "int",
-      "minValue": 1,
-      "defaultValue": 1,
-      "metadata": {
-        "Description": "The number of Public Web servers to build for this environment"
       }
     },
 
@@ -426,9 +426,9 @@
         "acronym": "[parameters('environmentAcronym')]",
         "droneCount": "[parameters('droneCount')]",
         "desktopCount": "[parameters('desktopCount')]",
+        "dmzWebCount": "[parameters('dmzWebCount')]",
         "pushPullCount": "[parameters('pushPullCount')]",
         "webCount": "[parameters('webCount')]",
-        "publicWebCount": "[parameters('publicWebCount')]"
       },
       "localAdminUsername": "[parameters('localAdminUsername')]",
       "networkSettings": {
