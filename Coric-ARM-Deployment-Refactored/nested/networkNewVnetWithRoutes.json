@@ -582,6 +582,7 @@
         ]
       }
     },
+
     {
       "apiVersion": "[parameters('globals').apiVersion.network]",
       "type": "Microsoft.Network/virtualNetworks",
@@ -783,9 +784,13 @@
         "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-desktop-local'))]",
         "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-web-local'))]",
         "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-application-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]"
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-dmz-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-dmz-local'))]",
+        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-dmz-local'))]"
       ]
     },
+
     {
       "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
       "name": "[concat(variables('vnetV2name'), '/', 'vnp', variables('vnetV2name'), '-', parameters('globals').networkSettings.name)]",
