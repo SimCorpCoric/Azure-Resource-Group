@@ -57,9 +57,9 @@
       "storageAccount": "[variables('storageAccountName')]"
     },
 
-    "dmzWeb": {
+    "dmzServer": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dzw')]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dmz')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
@@ -79,7 +79,7 @@
         "[parameters('globals').networkSettings.dc01IPAddress]",
         "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
-      "numberOfVMs": "[parameters('globals').environment.dmzWebCount]",
+      "numberOfVMs": "[parameters('globals').environment.dmzServerCount]",
       "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
@@ -495,7 +495,7 @@
     },
 
     {
-      "name": "dmzWebSetup",
+      "name": "dmzServerSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
@@ -512,7 +512,7 @@
             "value": "[parameters('globals')]"
           },
           "machineSettings": {
-            "value": "[variables('dmzWeb')]"
+            "value": "[variables('dmzServer')]"
           },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
