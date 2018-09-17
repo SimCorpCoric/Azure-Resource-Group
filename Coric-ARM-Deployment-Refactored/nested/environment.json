@@ -69,7 +69,6 @@
           "name": "ipconfig",
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
-            "privateIPAddress": "",
             "subnet": {
               "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-dmz'))]"
             }
@@ -82,7 +81,7 @@
       ],
       "numberOfVMs": "[parameters('globals').environment.dmzWebCount]",
       "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIP]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
     },
