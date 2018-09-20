@@ -499,14 +499,14 @@
       "networkVnetV2WithRoutesTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json')]",
       "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
       "ou": {
-        "serverRoles": "OU=Coric Computers;",
+        "serverRoles": "OU=Coric Server Roles;",
         "sql": "OU=SQL;",
         "drone": "OU=Drone;",
         "domainControllers": "OU=Domain Controllers;",
         "desktop": "OU=Desktop;",
         "iis": "OU=IIS;",
-        "rdg": "OU=RDG;OU=Admin;",
-        "ftp": "OU=FTP;OU=Admin;",
+        "rdg": "OU=RDG;",
+        "ftp": "OU=FTP;",
         "pushPull": "OU=PushPull;"
       },
       "sqlEncryption": {
