@@ -57,9 +57,9 @@
       "storageAccount": "[variables('storageAccountName')]"
     },
 
-    "dmzServer": {
+    "c1Server": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dmz')]",
+      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-c1')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
@@ -79,7 +79,7 @@
         "[parameters('globals').networkSettings.dc01IPAddress]",
         "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
-      "numberOfVMs": "[parameters('globals').environment.dmzServerCount]",
+      "numberOfVMs": "[parameters('globals').environment.c1ServerCount]",
       "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
@@ -495,7 +495,7 @@
     },
 
     {
-      "name": "dmzServerSetup",
+      "name": "c1ServerSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
@@ -512,7 +512,7 @@
             "value": "[parameters('globals')]"
           },
           "machineSettings": {
-            "value": "[variables('dmzServer')]"
+            "value": "[variables('c1Server')]"
           },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
