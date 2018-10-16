@@ -391,6 +391,7 @@
         }
       },
       "dataDiskSizes": {
+        "c1": 1023,
         "dc": 1023,
         "ftp": 1023,
         "sql": 1023,
@@ -499,14 +500,15 @@
       "networkVnetV2WithRoutesTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json')]",
       "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
       "ou": {
-        "serverRoles": "OU=Coric Server Roles;",
+        "serverRoles": "OU=Coric Computers;",
         "sql": "OU=SQL;",
         "drone": "OU=Drone;",
         "domainControllers": "OU=Domain Controllers;",
         "desktop": "OU=Desktop;",
         "iis": "OU=IIS;",
-        "rdg": "OU=RDG;",
-        "ftp": "OU=FTP;",
+        "c1": "OU=IIS;",
+        "rdg": "OU=RDG;OU=Admin;",
+        "ftp": "OU=FTP;OU=Admin;",
         "pushPull": "OU=PushPull;"
       },
       "sqlEncryption": {

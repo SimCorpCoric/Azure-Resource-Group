@@ -57,10 +57,22 @@
       "storageAccount": "[variables('storageAccountName')]"
     },
 
+    "c1Basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-c1')]",
     "c1Server": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-c1')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
+      "basename": "[variables('c1Basename')]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('c1Basename'), '01-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.c1]",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('c1Basename'), '01-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
       "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
       "imageReference": "[parameters('globals').windowsVM]",
@@ -80,7 +92,7 @@
         "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
       "numberOfVMs": "[parameters('globals').environment.c1ServerCount]",
-      "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
+      "ouPath": "[concat(parameters('globals').ou.c1, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
