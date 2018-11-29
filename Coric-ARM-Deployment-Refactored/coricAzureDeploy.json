@@ -131,7 +131,10 @@
     "sqlSKU": {
       "type": "string",
       "allowedValues": [
+        "None",
+        "Express",
         "Standard",
+        "Developer",
         "Enterprise"
       ],
       "defaultValue": "Enterprise",
@@ -145,8 +148,15 @@
       "allowedValues": [
         "SQL2012SP2",
         "SQL2012SP3",
+        "SQL2012SP4",
         "SQL2014SP1",
-        "SQL2016"
+        "SQL2014SP2",
+        "SQL2014SP3",
+        "SQL2016",
+        "SQL2016SP1",
+        "SQL2016SP2",
+        "SQL2017",
+        "SQL2019",
       ],
       "defaultValue": "SQL2012SP3",
       "metadata": {
@@ -548,10 +558,17 @@
     },
     "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
     "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, concat('nested/sharedResources', parameters('implementationPhase'), '.json'))]",
-    "sql2012SP2": "SQL2012SP2-WS2012R2",
-    "sql2012SP3": "SQL2012SP3-WS2012R2",
-    "sql2014SP1": "SQL2014SP1-WS2012R2",
-    "sql2016": "SQL2016-WS2012R2",
+    "SQL2012SP2": "SQL2012SP2-WS2012R2",
+    "SQL2012SP3": "SQL2012SP3-WS2012R2",
+    "SQL2012SP4": "SQL2012SP4-WS2012R2",
+    "SQL2014SP1": "SQL2014SP1-WS2012R2",
+    "SQL2014SP2": "SQL2014SP2-WS2012R2",
+    "SQL2014SP3": "SQL2014SP3-WS2012R2",
+    "SQL2016": "SQL2016-WS2012R2",
+    "SQL2016SP1": "SQL2016SP1-WS2012R2",
+    "SQL2016SP2": "SQL2016SP2-WS2016",
+    "SQL2017": "SQL2017-WS2016",
+    "SQL2019": "SQL2019-WS2016",
     "sqlEnterpriseEncryption": "[variables('templateLinkSQLKeyVault')]",
     "sqlEnterpriseVM": {
       "publisher": "MicrosoftSQLServer",
@@ -563,6 +580,20 @@
     "sqlOffer": "[concat(variables(parameters('sqlVersion')),parameters('sqlBYOL'))]",
     "sqlStandardEncryption": "[variables('templateLinkSQLKeyVaultNull')]",
     "sqlStandardVM": {
+      "publisher": "MicrosoftSQLServer",
+      "offer": "[variables('sqlOffer')]",
+      "sku": "Standard",
+      "version": "latest",
+      "size": "[parameters('sqlVMSize')]"
+    },
+    "sqlExpressVM": {
+      "publisher": "MicrosoftSQLServer",
+      "offer": "[variables('sqlOffer')]",
+      "sku": "Express",
+      "version": "latest",
+      "size": "[parameters('sqlVMSize')]"
+    },
+    "sqlNoneVM": {
       "publisher": "MicrosoftWindowsServer",
       "offer": "WindowsServer",
       "sku": "[parameters('windowsOSVersion')]",
