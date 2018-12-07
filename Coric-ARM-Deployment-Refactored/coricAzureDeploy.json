@@ -209,8 +209,8 @@
 
     "c1ServerCount": {
       "type": "int",
-      "minValue": 1,
-      "defaultValue": 1,
+      "minValue": 0,
+      "defaultValue": 0,
       "metadata": {
         "Description": "The number of public-facing C1 servers to build for this environment, in the DMZ"
       }
