@@ -507,6 +507,7 @@
     },
 
     {
+      "condition": "[if(equals(parameters('globals').environment.c1ServerCount, 0), bool('false'), bool('true'))]",
       "name": "c1ServerSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
