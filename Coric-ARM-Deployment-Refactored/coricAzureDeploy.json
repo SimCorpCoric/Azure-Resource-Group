@@ -42,11 +42,12 @@
 
     "windowsOSVersion": {
       "type": "string",
-      "defaultValue": "2012-R2-Datacenter",
+      "defaultValue": "2016-Datacenter",
       "allowedValues": [
         "2008-R2-SP1",
         "2012-Datacenter",
         "2012-R2-Datacenter",
+        "2016-Datacenter",
         "Windows-Server-Technical-Preview"
       ],
       "metadata": {
@@ -137,7 +138,7 @@
         "Developer",
         "Enterprise"
       ],
-      "defaultValue": "Enterprise",
+      "defaultValue": "Developer",
       "metadata": {
         "Description": "Defines whether an Azure VM containing SQL Enterprise, or a blank Windows VM which subsequent scripts then install SQL Standard onto, is used"
       }
@@ -156,9 +157,9 @@
         "SQL2016SP1",
         "SQL2016SP2",
         "SQL2017",
-        "SQL2019",
+        "SQL2019"
       ],
-      "defaultValue": "SQL2012SP3",
+      "defaultValue": "SQL2016SP2",
       "metadata": {
         "Description": "Version of SQL Server Enterprise to use.  Use following PowerShell cmdlet to see available options for the deployment region: Get-AzureRmVMImageOffer -PublisherName 'MicrosoftSQLServer"
       }
@@ -192,7 +193,7 @@
     "droneCount": {
       "type": "int",
       "minValue": 1,
-      "defaultValue": 1,
+      "defaultValue": 2,
       "metadata": {
         "Description": "The number of Drones to build for this environment"
       }
@@ -201,7 +202,7 @@
     "desktopCount": {
       "type": "int",
       "minValue": 1,
-      "defaultValue": 1,
+      "defaultValue": 2,
       "metadata": {
         "Description": "The number of Desktops to build for this environment"
       }
