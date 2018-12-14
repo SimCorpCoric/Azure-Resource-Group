@@ -570,6 +570,13 @@
     "SQL2016SP2": "SQL2016SP2-WS2016",
     "SQL2017": "SQL2017-WS2016",
     "SQL2019": "SQL2019-WS2016",
+    "sqlDeveloperVM": {
+      "publisher": "MicrosoftSQLServer",
+      "offer": "[variables('sqlOffer')]",
+      "sku": "Developer",
+      "version": "latest",
+      "size": "[parameters('sqlVMSize')]"
+    },    
     "sqlEnterpriseEncryption": "[variables('templateLinkSQLKeyVault')]",
     "sqlEnterpriseVM": {
       "publisher": "MicrosoftSQLServer",
