@@ -570,13 +570,14 @@
     "SQL2016SP2": "SQL2016SP2-WS2016",
     "SQL2017": "SQL2017-WS2016",
     "SQL2019": "SQL2019-WS2016",
+    "sqlDeveloperEncryption": "[variables('templateLinkSQLKeyVault')]",
     "sqlDeveloperVM": {
       "publisher": "MicrosoftSQLServer",
       "offer": "[variables('sqlOffer')]",
       "sku": "Developer",
       "version": "latest",
       "size": "[parameters('sqlVMSize')]"
-    },    
+    },
     "sqlEnterpriseEncryption": "[variables('templateLinkSQLKeyVault')]",
     "sqlEnterpriseVM": {
       "publisher": "MicrosoftSQLServer",
@@ -586,7 +587,7 @@
       "size": "[parameters('sqlVMSize')]"
     },
     "sqlOffer": "[concat(variables(parameters('sqlVersion')),parameters('sqlBYOL'))]",
-    "sqlStandardEncryption": "[variables('templateLinkSQLKeyVaultNull')]",
+    "sqlStandardEncryption": "[variables('templateLinkSQLKeyVault')]",
     "sqlStandardVM": {
       "publisher": "MicrosoftSQLServer",
       "offer": "[variables('sqlOffer')]",
@@ -594,6 +595,7 @@
       "version": "latest",
       "size": "[parameters('sqlVMSize')]"
     },
+    "sqlExpressEncryption": "[variables('templateLinkSQLKeyVault')]",
     "sqlExpressVM": {
       "publisher": "MicrosoftSQLServer",
       "offer": "[variables('sqlOffer')]",
@@ -601,6 +603,7 @@
       "version": "latest",
       "size": "[parameters('sqlVMSize')]"
     },
+    "sqlNoneEncryption": "[variables('templateLinkSQLKeyVaultNull')]",
     "sqlNoneVM": {
       "publisher": "MicrosoftWindowsServer",
       "offer": "WindowsServer",
