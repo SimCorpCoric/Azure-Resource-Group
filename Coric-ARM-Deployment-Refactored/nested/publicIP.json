@@ -92,7 +92,9 @@
             }
           }
         ],
-        "dnsServers": "[parameters('dnsServers')]"
+        "dnsSettings": {
+          "dnsServers": "[parameters('dnsServers')]"
+        }        
       }
     }
 
