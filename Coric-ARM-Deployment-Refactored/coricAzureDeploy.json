@@ -135,7 +135,7 @@
         "None",
         "Express",
         "Standard",
-        "Developer",
+        "SQLDEV",
         "Enterprise"
       ],
       "defaultValue": "Developer",
