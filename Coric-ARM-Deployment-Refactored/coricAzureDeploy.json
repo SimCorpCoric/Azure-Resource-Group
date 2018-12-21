@@ -138,7 +138,7 @@
         "SQLDEV",
         "Enterprise"
       ],
-      "defaultValue": "Developer",
+      "defaultValue": "SQLDEV",
       "metadata": {
         "Description": "Defines whether an Azure VM containing SQL Enterprise, or a blank Windows VM which subsequent scripts then install SQL Standard onto, is used"
       }
@@ -574,7 +574,7 @@
     "sqlDeveloperVM": {
       "publisher": "MicrosoftSQLServer",
       "offer": "[variables('sqlOffer')]",
-      "sku": "Developer",
+      "sku": "SQLDEV",
       "version": "latest",
       "size": "[parameters('sqlVMSize')]"
     },
