@@ -42,12 +42,11 @@
 
     "windowsOSVersion": {
       "type": "string",
-      "defaultValue": "2016-Datacenter",
+      "defaultValue": "2012-R2-Datacenter",
       "allowedValues": [
         "2008-R2-SP1",
         "2012-Datacenter",
         "2012-R2-Datacenter",
-        "2016-Datacenter",
         "Windows-Server-Technical-Preview"
       ],
       "metadata": {
@@ -135,12 +134,12 @@
         "None",
         "Express",
         "Standard",
-        "SQLDEV",
+        "Development",
         "Enterprise"
       ],
-      "defaultValue": "SQLDEV",
+      "defaultValue": "Development",
       "metadata": {
-        "Description": "Defines whether an Azure VM containing SQL Enterprise, or a blank Windows VM which subsequent scripts then install SQL Standard onto, is used"
+        "Description": "Defines the SQL SKU of the SQL Server image offer"
       }
     },
 
@@ -159,7 +158,7 @@
         "SQL2017",
         "SQL2019"
       ],
-      "defaultValue": "SQL2016SP2",
+      "defaultValue": "SQL2012SP3",
       "metadata": {
         "Description": "Version of SQL Server Enterprise to use.  Use following PowerShell cmdlet to see available options for the deployment region: Get-AzureRmVMImageOffer -PublisherName 'MicrosoftSQLServer"
       }
@@ -193,7 +192,7 @@
     "droneCount": {
       "type": "int",
       "minValue": 1,
-      "defaultValue": 2,
+      "defaultValue": 1,
       "metadata": {
         "Description": "The number of Drones to build for this environment"
       }
@@ -202,7 +201,7 @@
     "desktopCount": {
       "type": "int",
       "minValue": 1,
-      "defaultValue": 2,
+      "defaultValue": 1,
       "metadata": {
         "Description": "The number of Desktops to build for this environment"
       }
@@ -210,8 +209,8 @@
 
     "c1ServerCount": {
       "type": "int",
-      "minValue": 0,
-      "defaultValue": 0,
+      "minValue": 1,
+      "defaultValue": 1,
       "metadata": {
         "Description": "The number of public-facing C1 servers to build for this environment, in the DMZ"
       }
@@ -570,14 +569,6 @@
     "SQL2016SP2": "SQL2016SP2-WS2016",
     "SQL2017": "SQL2017-WS2016",
     "SQL2019": "SQL2019-WS2016",
-    "sqlDeveloperEncryption": "[variables('templateLinkSQLKeyVault')]",
-    "sqlDeveloperVM": {
-      "publisher": "MicrosoftSQLServer",
-      "offer": "[variables('sqlOffer')]",
-      "sku": "SQLDEV",
-      "version": "latest",
-      "size": "[parameters('sqlVMSize')]"
-    },
     "sqlEnterpriseEncryption": "[variables('templateLinkSQLKeyVault')]",
     "sqlEnterpriseVM": {
       "publisher": "MicrosoftSQLServer",
@@ -587,7 +578,7 @@
       "size": "[parameters('sqlVMSize')]"
     },
     "sqlOffer": "[concat(variables(parameters('sqlVersion')),parameters('sqlBYOL'))]",
-    "sqlStandardEncryption": "[variables('templateLinkSQLKeyVault')]",
+    "sqlStandardEncryption": "[variables('templateLinkSQLKeyVaultNull')]",
     "sqlStandardVM": {
       "publisher": "MicrosoftSQLServer",
       "offer": "[variables('sqlOffer')]",
@@ -595,7 +586,6 @@
       "version": "latest",
       "size": "[parameters('sqlVMSize')]"
     },
-    "sqlExpressEncryption": "[variables('templateLinkSQLKeyVault')]",
     "sqlExpressVM": {
       "publisher": "MicrosoftSQLServer",
       "offer": "[variables('sqlOffer')]",
@@ -603,7 +593,6 @@
       "version": "latest",
       "size": "[parameters('sqlVMSize')]"
     },
-    "sqlNoneEncryption": "[variables('templateLinkSQLKeyVaultNull')]",
     "sqlNoneVM": {
       "publisher": "MicrosoftWindowsServer",
       "offer": "WindowsServer",
