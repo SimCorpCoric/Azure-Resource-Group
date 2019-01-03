@@ -1,678 +1,643 @@
 {
-  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-
-    "prefix": {
-      "type": "string",
-      "defaultValue": "cor",
-      "metadata": {
-        "description": "Characters used for the prefix of each Azure object."
-      }
-    },
-
-    "clientID": {
-      "metadata": {
-        "description": "Unique ClientID for the system."
-      },
-      "type": "int"
-    },
-
-    "vnetV2addressSpace": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "VNET v2 Address space for the specific client, e.g., '10.11.16.0/21' ."
-      }
-    },
-
-    "storageAccountType": {
-      "allowedValues": [
-        "Standard_LRS",
-        "Standard_GRS",
-        "Standard_RAGRS",
-        "Premium_LRS"
-      ],
-      "defaultValue": "Standard_LRS",
-      "metadata": {
-        "Description": "The type of the Storage Account created"
-      },
-      "type": "string"
-    },
-
-    "windowsOSVersion": {
-      "type": "string",
-      "defaultValue": "2012-R2-Datacenter",
-      "allowedValues": [
-        "2008-R2-SP1",
-        "2012-Datacenter",
-        "2012-R2-Datacenter",
-        "Windows-Server-Technical-Preview"
-      ],
-      "metadata": {
-        "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
-      }
-    },
-
-    "implementationPhase": {
-      "type": "int",
-      "defaultValue": 1,
-      "allowedValues": [
-        1,
-        2,
-        3,
-        4
-      ],
-      "metadata": {
-        "description": "The implementation build phase. 1 = Network infrastructure, admin VMs, and AD domain setup; 2 = Full Network infrastructure (run after Checkpoint);  3 = Environment supplied in 'environmentName (Dev/UAT/Prod);  4 = Check Point"
-      }
-    },
-
-    "domainAdminUsername": {
-      "type": "string",
-      "defaultValue": "DomainAdmin",
-      "metadata": {
-        "description": "Domain admin username"
-      }
-    },
-
-    "domainAdminPassword": {
-      "defaultValue": "",
-      "type": "securestring",
-      "metadata": {
-        "description": "Domain admin password"
-      }
-    },
-
-    "localAdminUsername": {
-      "type": "string",
-      "defaultValue": "LocalAdmin",
-      "metadata": {
-        "description": "Local admin username"
-      }
-    },
-
-    "localAdminPassword": {
-      "defaultValue": "",
-      "type": "securestring",
-      "metadata": {
-        "description": "Local admin password"
-      }
-    },
-
-    "environmentName": {
-      "metadata": {
-        "Description": "Name of the environment being built"
-      },
-      "defaultValue": "Production",
-      "allowedValues": [
-        "Production",
-        "UAT",
-        "Development",
-        "Web"
-      ],
-      "type": "string"
-    },
-
-    "environmentAcronym": {
-      "metadata": {
-        "Description": "Acronym for the environment being built"
-      },
-      "defaultValue": "P",
-      "allowedValues": [
-        "P",
-        "U",
-        "D",
-        "W"
-      ],
-      "type": "string"
-    },
-
-    "sqlSKU": {
-      "type": "string",
-      "allowedValues": [
-        "None",
-        "Express",
-        "Standard",
-        "Development",
-        "Enterprise"
-      ],
-      "defaultValue": "Development",
-      "metadata": {
-        "Description": "Defines the SQL SKU of the SQL Server image offer"
-      }
-    },
-
-    "sqlVersion": {
-      "type": "string",
-      "allowedValues": [
-        "SQL2012SP2",
-        "SQL2012SP3",
-        "SQL2012SP4",
-        "SQL2014SP1",
-        "SQL2014SP2",
-        "SQL2014SP3",
-        "SQL2016",
-        "SQL2016SP1",
-        "SQL2016SP2",
-        "SQL2017",
-        "SQL2019"
-      ],
-      "defaultValue": "SQL2012SP3",
-      "metadata": {
-        "Description": "Version of SQL Server Enterprise to use.  Use following PowerShell cmdlet to see available options for the deployment region: Get-AzureRmVMImageOffer -PublisherName 'MicrosoftSQLServer"
-      }
-    },
-
-    "sqlVMSize": {
-      "type": "string",
-      "allowedValues": [
-        "Standard_DS1_v2",
-        "Standard_DS11_v2",
-        "Standard_DS12_v2"
-      ],
-      "defaultValue": "Standard_DS11_v2",
-      "metadata": {
-        "Description": "VM size for SQL Server."
-      }
-    },
-
-    "sqlBYOL": {
-      "type": "string",
-      "allowedValues": [
-        "",
-        "-BYOL"
-      ],
-      "defaultValue": "",
-      "metadata": {
-        "Description": "Internal-use BYOL or client-licensed instance of SQL"
-      }
-    },
-
-    "droneCount": {
-      "type": "int",
-      "minValue": 1,
-      "defaultValue": 1,
-      "metadata": {
-        "Description": "The number of Drones to build for this environment"
-      }
-    },
-
-    "desktopCount": {
-      "type": "int",
-      "minValue": 1,
-      "defaultValue": 1,
-      "metadata": {
-        "Description": "The number of Desktops to build for this environment"
-      }
-    },
-
-    "c1ServerCount": {
-      "type": "int",
-      "minValue": 1,
-      "defaultValue": 1,
-      "metadata": {
-        "Description": "The number of public-facing C1 servers to build for this environment, in the DMZ"
-      }
-    },
-
-    "webReporter": {
-      "type": "string",
-      "allowedValues": [
-        "No",
-        "Yes"
-      ],
-      "defaultValue": "No",
-      "metadata": {
-        "Description": "Whether or not Web Reporter is part of the deployment"
-      }
-    },
-
-    "pushPullCount": {
-      "type": "int",
-      "minValue": 1,
-      "defaultValue": 1,
-      "metadata": {
-        "Description": "The number of PushPull servers to build for this environment"
-      }
-    },
-
-    "webCount": {
-      "type": "int",
-      "minValue": 1,
-      "defaultValue": 1,
-      "metadata": {
-        "Description": "The number of Web Reporter servers to build for this environment"
-      }
-    },
-
-    "windowsVMSize": {
-      "type": "string",
-      "allowedValues": [
-        "Standard_D1_v2",
-        "Standard_D2_v2",
-        "Standard_D11_v2",
-        "Standard_D12_v2"
-      ],
-      "defaultValue": "Standard_D1_v2",
-      "metadata": {
-        "Description": "VM size for Windows Servers."
-      }
-    },
-
-    "keyVaultName": {
-      "defaultValue": "",
-      "type": "string",
-      "metadata": {
-        "description": "Name of Key Vault which contains the encryption certificate"
-      }
-    },
-
-    "keyVaultResourceGroup": {
-      "defaultValue": "",
-      "type": "string",
-      "metadata": {
-        "description": "Resource Group of Key Vault which contains the encryption certificate"
-      }
-    },
-
-    "keyVaultCertificateURL": {
-      "defaultValue": "",
-      "type": "string",
-      "metadata": {
-        "description": "Url of the aadApp access certificate in the Key Vault.  E.g: https://mytestvault.vault.azure.net:443/secrets/myaadappcertificate/<version>"
-      }
-    },
-
-    "keyVaultKEKURL": {
-      "defaultValue": "",
-      "type": "string",
-      "metadata": {
-        "description": "Url of the BitLocker Key Encryption Key in the Key Vault.  E.g: https://mytestvault.vault.azure.net/keys/mykek/<version>"
-      }
-    },
-
-    "aadClientID": {
-      "defaultValue": "",
-      "type": "string",
-      "metadata": {
-        "description": "Client ID of AAD app which has permissions to KeyVault"
-      }
-    },
-
-    "aadClientCertThumbprint": {
-      "defaultValue": "",
-      "type": "string",
-      "metadata": {
-        "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
-      }
-    },
-
-    "sqlKeyVaultName": {
-      "defaultValue": "",
-      "type": "string",
-      "metadata": {
-        "description": "Name of the SQL Key Vault containing the Asymmetric Key to be used by SQL TDE"
-      }
-    },
-
-    "sqlServicePrincipalName": {
-      "defaultValue": "",
-      "type": "string",
-      "metadata": {
-        "description": "ApplicationId of the aadApp used to authenticate against the SQL Key Vault"
-      }
-    },
-
-    "sqlServicePrincipalSecret": {
-      "defaultValue": "",
-      "type": "securestring",
-      "metadata": {
-        "description": "aadApp secret used to authenticate against the SQL Key Vault"
-      }
-    },
-
-    "sqlCredentialName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the SQL user to be created for use with TDE EKM on Key Vault"
-      }
-    },
-
-    "sicKey": {
-      "defaultValue": "",
-      "type": "securestring",
-      "minLength": 8,
-      "metadata": {
-        "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
-      }
-    },
-
-    "drTest": {
-      "defaultValue": "",
-      "type": "string",
-      "allowedValues": [
-        "",
-        "-test"
-      ],
-      "metadata": {
-        "description": "Denotes DR test deployment"
-      }
-    },
-
-    "sequenceVersion": {
-      "type": "int"
-    }
-
-  },
-
-  "variables": {
-    "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
-    "domainSuffix": "Hosted",
-    "environmentShortNameAdmin": "Admin",
-    "environmentShortNameDevelopment": "Dev",
-    "environmentShortNameProduction": "Prod",
-    "environmentShortNameUAT": "UAT",
-    "environmentShortNameWeb": "Web",
-    "globals": {
-      "adminResourceGroupName": "[variables('baseName')]",
-      "apiVersion": {
-        "availabilitySets": "2018-06-01",
-        "deployment": "2018-05-01",
-        "dsc": "2018-06-01",
-        "extension": "2018-06-01",
-        "loadBalancer": "2018-02-01",
-        "network": "2018-02-01",
-        "networkpeerings": "2018-02-01",
-        "nic": "2018-02-01",
-        "nsg": "2015-06-15",
-        "pip": "2018-07-01",
-        "routeTables": "2018-02-01",
-        "storage": "2018-02-01",
-        "virtualMachine": "2018-06-01"
-      },
-      "baseName": "[variables('baseName')]",
-      "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
-      "clientID": "[parameters('clientID')]",
-      "customScript": {
-        "diskInitialize": {
-          "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file DiskInitialize.ps1",
-          "scriptURL": "[uri(deployment().properties.templateLink.uri, 'customScript/DiskInitialize.ps1')]"
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "prefix": {
+            "type": "string",
+            "defaultValue": "cor",
+            "metadata": {
+                "description": "Characters used for the prefix of each Azure object."
+            }
+        },
+        "clientID": {
+            "metadata": {
+                "description": "Unique ClientID for the system."
+            },
+            "type": "int"
+        },
+        "vnetV2addressSpace": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "VNET v2 Address space for the specific client, e.g., '10.11.16.0/21' ."
+            }
+        },
+        "storageAccountType": {
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Premium_LRS"
+            ],
+            "defaultValue": "Standard_LRS",
+            "metadata": {
+                "Description": "The type of the Storage Account created"
+            },
+            "type": "string"
+        },
+        "windowsOSVersion": {
+            "type": "string",
+            "defaultValue": "2012-R2-Datacenter",
+            "allowedValues": [
+                "2008-R2-SP1",
+                "2012-Datacenter",
+                "2012-R2-Datacenter",
+                "2016-Datacenter",
+                "Windows-Server-Technical-Preview"
+            ],
+            "metadata": {
+                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+            }
+        },
+        "implementationPhase": {
+            "type": "int",
+            "defaultValue": 1,
+            "allowedValues": [
+                1,
+                2,
+                3,
+                4
+            ],
+            "metadata": {
+                "description": "The implementation build phase. 1 = Network infrastructure, admin VMs, and AD domain setup; 2 = Full Network infrastructure (run after Checkpoint);  3 = Environment supplied in 'environmentName (Dev/UAT/Prod);  4 = Check Point"
+            }
+        },
+        "domainAdminUsername": {
+            "type": "string",
+            "defaultValue": "DomainAdmin",
+            "metadata": {
+                "description": "Domain admin username"
+            }
+        },
+        "domainAdminPassword": {
+            "defaultValue": "",
+            "type": "securestring",
+            "metadata": {
+                "description": "Domain admin password"
+            }
+        },
+        "localAdminUsername": {
+            "type": "string",
+            "defaultValue": "LocalAdmin",
+            "metadata": {
+                "description": "Local admin username"
+            }
+        },
+        "localAdminPassword": {
+            "defaultValue": "",
+            "type": "securestring",
+            "metadata": {
+                "description": "Local admin password"
+            }
+        },
+        "environmentName": {
+            "metadata": {
+                "Description": "Name of the environment being built"
+            },
+            "defaultValue": "Production",
+            "allowedValues": [
+                "Production",
+                "UAT",
+                "Development",
+                "Web"
+            ],
+            "type": "string"
+        },
+        "environmentAcronym": {
+            "metadata": {
+                "Description": "Acronym for the environment being built"
+            },
+            "defaultValue": "P",
+            "allowedValues": [
+                "P",
+                "U",
+                "D",
+                "W"
+            ],
+            "type": "string"
+        },
+        "sqlSKU": {
+            "type": "string",
+            "allowedValues": [
+                "None",
+                "Express",
+                "Standard",
+                "Developer",
+                "Enterprise"
+            ],
+            "defaultValue": "Developer",
+            "metadata": {
+                "Description": "Defines the SQL SKU offer image from which the SQL Servers are to be built. None builds from the standard Windows image instead."
+            }
+        },
+        "sqlVersion": {
+            "type": "string",
+            "allowedValues": [
+                "SQL2012SP2",
+                "SQL2012SP3",
+                "SQL2012SP4",
+                "SQL2014SP1",
+                "SQL2014SP2",
+                "SQL2014SP3",
+                "SQL2016",
+                "SQL2016SP1",
+                "SQL2016SP2",
+                "SQL2017",
+                "SQL2019"
+            ],
+            "defaultValue": "SQL2012SP3",
+            "metadata": {
+                "Description": "Version of SQL Server Enterprise to use.  Use following PowerShell cmdlet to see available options for the deployment region: Get-AzureRmVMImageOffer -PublisherName 'MicrosoftSQLServer"
+            }
+        },
+        "sqlVMSize": {
+            "type": "string",
+            "allowedValues": [
+                "Standard_DS1_v2",
+                "Standard_DS11_v2",
+                "Standard_DS12_v2"
+            ],
+            "defaultValue": "Standard_DS11_v2",
+            "metadata": {
+                "Description": "VM size for SQL Server."
+            }
+        },
+        "sqlBYOL": {
+            "type": "string",
+            "allowedValues": [
+                "",
+                "-BYOL"
+            ],
+            "defaultValue": "",
+            "metadata": {
+                "Description": "Internal-use BYOL or client-licensed instance of SQL"
+            }
+        },
+        "droneCount": {
+            "type": "int",
+            "minValue": 1,
+            "defaultValue": 1,
+            "metadata": {
+                "Description": "The number of Drones to build for this environment"
+            }
+        },
+        "desktopCount": {
+            "type": "int",
+            "minValue": 1,
+            "defaultValue": 1,
+            "metadata": {
+                "Description": "The number of Desktops to build for this environment"
+            }
+        },
+        "c1ServerCount": {
+            "type": "int",
+            "minValue": 0,
+            "defaultValue": 0,
+            "metadata": {
+                "Description": "The number of public-facing C1 servers to build for this environment, in the DMZ"
+            }
+        },
+        "webReporter": {
+            "type": "string",
+            "allowedValues": [
+                "No",
+                "Yes"
+            ],
+            "defaultValue": "No",
+            "metadata": {
+                "Description": "Whether or not Web Reporter is part of the deployment"
+            }
+        },
+        "pushPullCount": {
+            "type": "int",
+            "minValue": 1,
+            "defaultValue": 1,
+            "metadata": {
+                "Description": "The number of PushPull servers to build for this environment"
+            }
+        },
+        "webCount": {
+            "type": "int",
+            "minValue": 1,
+            "defaultValue": 1,
+            "metadata": {
+                "Description": "The number of Web Reporter servers to build for this environment"
+            }
+        },
+        "windowsVMSize": {
+            "type": "string",
+            "allowedValues": [
+                "Standard_D1_v2",
+                "Standard_D2_v2",
+                "Standard_D11_v2",
+                "Standard_D12_v2"
+            ],
+            "defaultValue": "Standard_D1_v2",
+            "metadata": {
+                "Description": "VM size for Windows Servers."
+            }
+        },
+        "keyVaultName": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Name of Key Vault which contains the encryption certificate"
+            }
+        },
+        "keyVaultResourceGroup": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Resource Group of Key Vault which contains the encryption certificate"
+            }
+        },
+        "keyVaultCertificateURL": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Url of the aadApp access certificate in the Key Vault.  E.g: https://mytestvault.vault.azure.net:443/secrets/myaadappcertificate/<version>"
+            }
+        },
+        "keyVaultKEKURL": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Url of the BitLocker Key Encryption Key in the Key Vault.  E.g: https://mytestvault.vault.azure.net/keys/mykek/<version>"
+            }
+        },
+        "aadClientID": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Client ID of AAD app which has permissions to KeyVault"
+            }
+        },
+        "aadClientCertThumbprint": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Thumbprint of the certificate associated with the AAD app which has permissions to KeyVault"
+            }
+        },
+        "sqlKeyVaultName": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Name of the SQL Key Vault containing the Asymmetric Key to be used by SQL TDE"
+            }
+        },
+        "sqlServicePrincipalName": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "ApplicationId of the aadApp used to authenticate against the SQL Key Vault"
+            }
+        },
+        "sqlServicePrincipalSecret": {
+            "defaultValue": "",
+            "type": "securestring",
+            "metadata": {
+                "description": "aadApp secret used to authenticate against the SQL Key Vault"
+            }
+        },
+        "sqlCredentialName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the SQL user to be created for use with TDE EKM on Key Vault"
+            }
+        },
+        "sicKey": {
+            "defaultValue": "",
+            "type": "securestring",
+            "minLength": 8,
+            "metadata": {
+                "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
+            }
+        },
+        "drTest": {
+            "defaultValue": "",
+            "type": "string",
+            "allowedValues": [
+                "",
+                "-test"
+            ],
+            "metadata": {
+                "description": "Denotes DR test deployment"
+            }
+        },
+        "sequenceVersion": {
+            "type": "int"
         }
-      },
-      "dataDiskSizes": {
-        "c1": 1023,
-        "dc": 1023,
-        "ftp": 1023,
-        "sql": 1023,
-        "warehouse": 1023,
-        "rdg": 1023
-      },
-      "diskEncryption": {
-        "aadClientID": "[parameters('aadClientID')]",
-        "aadClientCertThumbprint": "[parameters('aadClientCertThumbprint')]",
-        "keyVaultKEKURL": "[parameters('keyVaultKEKURL')]",
-        "keyVaultName": "[parameters('keyVaultName')]",
-        "keyVaultResourceGroup": "[parameters('keyVaultResourceGroup')]",
-        "keyVaultCertificateURL": "[parameters('keyVaultCertificateURL')]",
-        "sequenceVersion": "[parameters('sequenceVersion')]",
-        "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]"
-      },
-      "domainAdminUsername": "[parameters('domainAdminUsername')]",
-      "domainName": "[concat(variables('baseName'), '.', variables('domainSuffix'))]",
-      "domainNameLDAP": "[concat('DC=', variables('baseName'), '; DC=', variables('domainSuffix'))]",
-      "dsc": {
-        "adConfiguration": {
-          "function": "CreateADPDC.ps1\\CreateADPDC",
-          "url": "[uri(deployment().properties.templateLink.uri, 'DSC/CreateADPDC.ps1.zip')]"
+    },
+    "variables": {
+        "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+        "domainSuffix": "Hosted",
+        "environmentShortNameAdmin": "Admin",
+        "environmentShortNameDevelopment": "Dev",
+        "environmentShortNameProduction": "Prod",
+        "environmentShortNameUAT": "UAT",
+        "environmentShortNameWeb": "Web",
+        "globals": {
+            "adminResourceGroupName": "[variables('baseName')]",
+            "apiVersion": {
+                "availabilitySets": "2018-06-01",
+                "deployment": "2018-05-01",
+                "dsc": "2018-06-01",
+                "extension": "2018-06-01",
+                "loadBalancer": "2018-02-01",
+                "network": "2018-02-01",
+                "networkpeerings": "2018-02-01",
+                "nic": "2018-02-01",
+                "nsg": "2015-06-15",
+                "pip": "2018-07-01",
+                "routeTables": "2018-02-01",
+                "storage": "2018-02-01",
+                "virtualMachine": "2018-06-01"
+            },
+            "baseName": "[variables('baseName')]",
+            "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
+            "clientID": "[parameters('clientID')]",
+            "customScript": {
+                "diskInitialize": {
+                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file DiskInitialize.ps1",
+                    "scriptURL": "[uri(deployment().properties.templateLink.uri, 'customScript/DiskInitialize.ps1')]"
+                }
+            },
+            "dataDiskSizes": {
+                "c1": 1023,
+                "dc": 1023,
+                "ftp": 1023,
+                "sql": 1023,
+                "warehouse": 1023,
+                "rdg": 1023
+            },
+            "diskEncryption": {
+                "aadClientID": "[parameters('aadClientID')]",
+                "aadClientCertThumbprint": "[parameters('aadClientCertThumbprint')]",
+                "keyVaultKEKURL": "[parameters('keyVaultKEKURL')]",
+                "keyVaultName": "[parameters('keyVaultName')]",
+                "keyVaultResourceGroup": "[parameters('keyVaultResourceGroup')]",
+                "keyVaultCertificateURL": "[parameters('keyVaultCertificateURL')]",
+                "sequenceVersion": "[parameters('sequenceVersion')]",
+                "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]"
+            },
+            "domainAdminUsername": "[parameters('domainAdminUsername')]",
+            "domainName": "[concat(variables('baseName'), '.', variables('domainSuffix'))]",
+            "domainNameLDAP": "[concat('DC=', variables('baseName'), '; DC=', variables('domainSuffix'))]",
+            "dsc": {
+                "adConfiguration": {
+                    "function": "CreateADPDC.ps1\\CreateADPDC",
+                    "url": "[uri(deployment().properties.templateLink.uri, 'DSC/CreateADPDC.ps1.zip')]"
+                },
+                "diskInitialize": {
+                    "function": "DiskInitialize.ps1\\DiskInitialize",
+                    "url": "[uri(deployment().properties.templateLink.uri, 'DSC/DiskInitialize.ps1.zip')]"
+                }
+            },
+            "environment": {
+                "name": "[parameters('environmentName')]",
+                "shortname": "[variables(concat('environmentShortName', parameters('environmentName')))]",
+                "acronym": "[parameters('environmentAcronym')]",
+                "droneCount": "[parameters('droneCount')]",
+                "desktopCount": "[parameters('desktopCount')]",
+                "c1ServerCount": "[parameters('c1ServerCount')]",
+                "pushPullCount": "[parameters('pushPullCount')]",
+                "webCount": "[parameters('webCount')]",
+            },
+            "localAdminUsername": "[parameters('localAdminUsername')]",
+            "networkSettings": {
+                "name": "[concat('vn', variables('baseName'))]",
+                "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
+                "vnetV2addressSpace": "[parameters('vnetV2addressSpace')]",
+                "addressSpace": "10.200.0.0/20",
+                "azureDNS": "168.63.129.16",
+                "dc01IPAddress": "10.200.1.4",
+                "dc02IPAddress": "10.200.1.5",
+                "gatewayExternalIPAddress": "10.200.0.4",
+                "gatewayInternalIPAddress": "10.200.9.4",
+                "rdgatewayIPAddress": "10.200.6.4",
+                "ftpIPAddress": "10.200.6.5",
+                "subnet0": {
+                    "id": 0,
+                    "name": "gateway",
+                    "prefix": "10.200.0.0/24"
+                },
+                "subnet1": {
+                    "id": 1,
+                    "name": "admin",
+                    "prefix": "10.200.1.0/24"
+                },
+                "subnet2": {
+                    "id": 2,
+                    "name": "database",
+                    "prefix": "10.200.2.0/24"
+                },
+                "subnet3": {
+                    "id": 3,
+                    "name": "backend",
+                    "prefix": "10.200.3.0/24"
+                },
+                "subnet4": {
+                    "id": 4,
+                    "name": "frontend",
+                    "prefix": "10.200.4.0/24"
+                },
+                "subnet5": {
+                    "id": 5,
+                    "name": "user",
+                    "prefix": "10.200.5.0/24"
+                },
+                "subnet6": {
+                    "id": 6,
+                    "name": "public",
+                    "prefix": "10.200.6.0/24"
+                },
+                "subnet7": {
+                    "id": 7,
+                    "name": "dmz",
+                    "prefix": "10.200.7.0/24"
+                },
+                "subnet8": {
+                    "id": 8,
+                    "name": "GatewaySubnet",
+                    "prefix": "10.200.8.0/24"
+                },
+                "subnet9": {
+                    "id": 9,
+                    "name": "FirewallInternal",
+                    "prefix": "10.200.9.0/24"
+                }
+            },
+            "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
+            "networkVnetV2TemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json')]",
+            "networkVnetV2WithRoutesTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json')]",
+            "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
+            "ou": {
+                "serverRoles": "OU=Coric Computers;",
+                "sql": "OU=SQL;",
+                "drone": "OU=Drone;",
+                "domainControllers": "OU=Domain Controllers;",
+                "desktop": "OU=Desktop;",
+                "iis": "OU=IIS;",
+                "c1": "OU=IIS;",
+                "rdg": "OU=RDG;OU=Admin;",
+                "ftp": "OU=FTP;OU=Admin;",
+                "pushPull": "OU=PushPull;"
+            },
+            "sqlEncryption": {
+                "keyVaultURL": "[concat('https://', parameters('sqlKeyVaultName'), '.vault.azure.net/')]",
+                "servicePrincipalName": "[parameters('sqlServicePrincipalName')]",
+                "servicePrincipalSecret": "[parameters('sqlServicePrincipalSecret')]",
+                "sqlCredentialName": "[parameters('sqlCredentialName')]"
+            },
+            "sqlVM": "[variables(concat('sql',parameters('sqlSKU'),'VM'))]",
+            "sqlEncryptionTemplate": "[variables(concat('sql',parameters('sqlSKU'),'Encryption'))]",
+            "storageAccountAdmin": "[concat('sa', variables('baseName'), 'admin')]",
+            "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
+            "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
+            "storageType": "Standard_RAGRS",
+            "templateLinkDataDisk": "[uri(deployment().properties.templateLink.uri, 'nested/dataDisk.json')]",
+            "templateLinkDataDiskNull": "[uri(deployment().properties.templateLink.uri, 'nested/dataDiskNull.json')]",
+            "templateLinkDiskEncryption": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]",
+            "templateLinkDiskEncryptionNull": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryptionNull.json')]",
+            "templateLinkDomainJoin": "[uri(deployment().properties.templateLink.uri, 'nested/domainJoin.json')]",
+            "templateLinkDomainJoinNull": "[uri(deployment().properties.templateLink.uri, 'nested/domainJoinNull.json')]",
+            "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
+            "templateLinkPublicIP": "[uri(deployment().properties.templateLink.uri, 'nested/publicIP.json')]",
+            "templateLinkPublicIPNull": "[uri(deployment().properties.templateLink.uri, 'nested/publicIPNull.json')]",
+            "templateLinkSQLKeyVault": "[variables('templateLinkSQLKeyVault')]",
+            "templateLinkSQLKeyVaultNull": "[variables('templateLinkSQLKeyVaultNull')]",
+            "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
+            "test": "[parameters('drTest')]",
+            "vhdContainerName": "vhds",
+            "webReporter": "[parameters('webReporter')]",
+            "windowsVM": {
+                "publisher": "MicrosoftWindowsServer",
+                "offer": "WindowsServer",
+                "sku": "[parameters('windowsOSVersion')]",
+                "version": "latest",
+                "size": "[parameters('windowsVMSize')]"
+            }
         },
-        "diskInitialize": {
-          "function": "DiskInitialize.ps1\\DiskInitialize",
-          "url": "[uri(deployment().properties.templateLink.uri, 'DSC/DiskInitialize.ps1.zip')]"
+        "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
+        "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, concat('nested/sharedResources', parameters('implementationPhase'), '.json'))]",
+        "SQL2012SP2": "SQL2012SP2-WS2012R2",
+        "SQL2012SP3": "SQL2012SP3-WS2012R2",
+        "SQL2012SP4": "SQL2012SP4-WS2012R2",
+        "SQL2014SP1": "SQL2014SP1-WS2012R2",
+        "SQL2014SP2": "SQL2014SP2-WS2012R2",
+        "SQL2014SP3": "SQL2014SP3-WS2012R2",
+        "SQL2016": "SQL2016-WS2012R2",
+        "SQL2016SP1": "SQL2016SP1-WS2012R2",
+        "SQL2016SP2": "SQL2016SP2-WS2016",
+        "SQL2017": "SQL2017-WS2016",
+        "SQL2019": "SQL2019-WS2016",
+        "sqlDeveloperEncryption": "[variables('templateLinkSQLKeyVault')]",
+        "sqlDeveloperVM": {
+            "publisher": "MicrosoftSQLServer",
+            "offer": "[variables('sqlOffer')]",
+            "sku": "SQLDEV",
+            "version": "latest",
+            "size": "[parameters('sqlVMSize')]"
+        },
+        "sqlEnterpriseEncryption": "[variables('templateLinkSQLKeyVault')]",
+        "sqlEnterpriseVM": {
+            "publisher": "MicrosoftSQLServer",
+            "offer": "[variables('sqlOffer')]",
+            "sku": "Enterprise",
+            "version": "latest",
+            "size": "[parameters('sqlVMSize')]"
+        },
+        "sqlOffer": "[concat(variables(parameters('sqlVersion')),parameters('sqlBYOL'))]",
+        "sqlStandardEncryption": "[variables('templateLinkSQLKeyVault')]",
+        "sqlStandardVM": {
+            "publisher": "MicrosoftSQLServer",
+            "offer": "[variables('sqlOffer')]",
+            "sku": "Standard",
+            "version": "latest",
+            "size": "[parameters('sqlVMSize')]"
+        },
+        "sqlExpressEncryption": "[variables('templateLinkSQLKeyVault')]",
+        "sqlExpressVM": {
+            "publisher": "MicrosoftSQLServer",
+            "offer": "[variables('sqlOffer')]",
+            "sku": "Express",
+            "version": "latest",
+            "size": "[parameters('sqlVMSize')]"
+        },
+        "sqlNoneEncryption": "[variables('templateLinkSQLKeyVaultNull')]",
+        "sqlNoneVM": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "[parameters('windowsOSVersion')]",
+            "version": "latest",
+            "size": "[parameters('sqlVMSize')]"
+        },
+        "templateLinkCheckPoint": "[variables(concat('templateLinkCheckPoint', parameters('implementationPhase')))]",
+        "templateLinkCheckPoint1": "[uri(deployment().properties.templateLink.uri, 'nested/checkPointNull.json')]",
+        "templateLinkCheckPoint2": "[uri(deployment().properties.templateLink.uri, 'nested/checkPointNull.json')]",
+        "templateLinkCheckPoint3": "[uri(deployment().properties.templateLink.uri, 'nested/checkPointNull.json')]",
+        "templateLinkCheckPoint4": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
+        "templateLinkEnvironment": "[variables(concat('templateLinkEnvironment', parameters('implementationPhase')))]",
+        "templateLinkEnvironment1": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
+        "templateLinkEnvironment2": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
+        "templateLinkEnvironment3": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
+        "templateLinkEnvironment4": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
+        "templateLinkSQLKeyVault": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVault.json')]",
+        "templateLinkSQLKeyVaultNull": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVaultNull.json')]"
+    },
+    "resources": [
+        {
+            "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('globals').apiVersion.deployment]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('sharedResourcesTemplateURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[variables('globals')]"
+                    },
+                    "domainAdminPassword": {
+                        "value": "[parameters('domainAdminPassword')]"
+                    },
+                    "localAdminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    },
+                    "sicKey": {
+                        "value": "[parameters('sicKey')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "[concat('environmentSetup', parameters('implementationPhase'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('globals').apiVersion.deployment]",
+            "dependsOn": [
+                "[concat('sharedResourcesSetup', parameters('implementationPhase'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('templateLinkEnvironment')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[variables('globals')]"
+                    },
+                    "domainAdminPassword": {
+                        "value": "[parameters('domainAdminPassword')]"
+                    },
+                    "localAdminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    }
+                }
+            }
         }
-      },
-      "environment": {
-        "name": "[parameters('environmentName')]",
-        "shortname": "[variables(concat('environmentShortName', parameters('environmentName')))]",
-        "acronym": "[parameters('environmentAcronym')]",
-        "droneCount": "[parameters('droneCount')]",
-        "desktopCount": "[parameters('desktopCount')]",
-        "c1ServerCount": "[parameters('c1ServerCount')]",
-        "pushPullCount": "[parameters('pushPullCount')]",
-        "webCount": "[parameters('webCount')]",
-      },
-      "localAdminUsername": "[parameters('localAdminUsername')]",
-      "networkSettings": {
-        "name": "[concat('vn', variables('baseName'))]",
-        "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
-        "vnetV2addressSpace": "[parameters('vnetV2addressSpace')]",
-        "addressSpace": "10.200.0.0/20",
-        "azureDNS": "168.63.129.16",
-        "dc01IPAddress": "10.200.1.4",
-        "dc02IPAddress": "10.200.1.5",
-        "gatewayExternalIPAddress": "10.200.0.4",
-        "gatewayInternalIPAddress": "10.200.9.4",
-        "rdgatewayIPAddress": "10.200.6.4",
-        "ftpIPAddress": "10.200.6.5",
-        "subnet0": {
-          "id": 0,
-          "name": "gateway",
-          "prefix": "10.200.0.0/24"
-        },
-        "subnet1": {
-          "id": 1,
-          "name": "admin",
-          "prefix": "10.200.1.0/24"
-        },
-        "subnet2": {
-          "id": 2,
-          "name": "database",
-          "prefix": "10.200.2.0/24"
-        },
-        "subnet3": {
-          "id": 3,
-          "name": "backend",
-          "prefix": "10.200.3.0/24"
-        },
-        "subnet4": {
-          "id": 4,
-          "name": "frontend",
-          "prefix": "10.200.4.0/24"
-        },
-        "subnet5": {
-          "id": 5,
-          "name": "user",
-          "prefix": "10.200.5.0/24"
-        },
-        "subnet6": {
-          "id": 6,
-          "name": "public",
-          "prefix": "10.200.6.0/24"
-        },
-        "subnet7": {
-          "id": 7,
-          "name": "dmz",
-          "prefix": "10.200.7.0/24"
-        },
-        "subnet8": {
-          "id": 8,
-          "name": "GatewaySubnet",
-          "prefix": "10.200.8.0/24"
-        },
-        "subnet9": {
-          "id": 9,
-          "name": "FirewallInternal",
-          "prefix": "10.200.9.0/24"
-        }
-      },
-      "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
-      "networkVnetV2TemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json')]",
-      "networkVnetV2WithRoutesTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json')]",
-      "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
-      "ou": {
-        "serverRoles": "OU=Coric Computers;",
-        "sql": "OU=SQL;",
-        "drone": "OU=Drone;",
-        "domainControllers": "OU=Domain Controllers;",
-        "desktop": "OU=Desktop;",
-        "iis": "OU=IIS;",
-        "c1": "OU=IIS;",
-        "rdg": "OU=RDG;OU=Admin;",
-        "ftp": "OU=FTP;OU=Admin;",
-        "pushPull": "OU=PushPull;"
-      },
-      "sqlEncryption": {
-        "keyVaultURL": "[concat('https://', parameters('sqlKeyVaultName'), '.vault.azure.net/')]",
-        "servicePrincipalName": "[parameters('sqlServicePrincipalName')]",
-        "servicePrincipalSecret": "[parameters('sqlServicePrincipalSecret')]",
-        "sqlCredentialName": "[parameters('sqlCredentialName')]"
-      },
-      "sqlVM": "[variables(concat('sql',parameters('sqlSKU'),'VM'))]",
-      "sqlEncryptionTemplate": "[variables(concat('sql',parameters('sqlSKU'),'Encryption'))]",
-      "storageAccountAdmin": "[concat('sa', variables('baseName'), 'admin')]",
-      "storageAccountDiagnostics": "[concat('sa', variables('baseName'), 'diagnostics')]",
-      "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
-      "storageType": "Standard_RAGRS",
-      "templateLinkDataDisk": "[uri(deployment().properties.templateLink.uri, 'nested/dataDisk.json')]",
-      "templateLinkDataDiskNull": "[uri(deployment().properties.templateLink.uri, 'nested/dataDiskNull.json')]",
-      "templateLinkDiskEncryption": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]",
-      "templateLinkDiskEncryptionNull": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryptionNull.json')]",
-      "templateLinkDomainJoin": "[uri(deployment().properties.templateLink.uri, 'nested/domainJoin.json')]",
-      "templateLinkDomainJoinNull": "[uri(deployment().properties.templateLink.uri, 'nested/domainJoinNull.json')]",
-      "templateLinkExtensions": "[uri(deployment().properties.templateLink.uri, 'nested/extensions.json')]",
-      "templateLinkPublicIP": "[uri(deployment().properties.templateLink.uri, 'nested/publicIP.json')]",
-      "templateLinkPublicIPNull": "[uri(deployment().properties.templateLink.uri, 'nested/publicIPNull.json')]",
-      "templateLinkSQLKeyVault": "[variables('templateLinkSQLKeyVault')]",
-      "templateLinkSQLKeyVaultNull": "[variables('templateLinkSQLKeyVaultNull')]",
-      "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
-      "test": "[parameters('drTest')]",
-      "vhdContainerName": "vhds",
-      "webReporter": "[parameters('webReporter')]",
-      "windowsVM": {
-        "publisher": "MicrosoftWindowsServer",
-        "offer": "WindowsServer",
-        "sku": "[parameters('windowsOSVersion')]",
-        "version": "latest",
-        "size": "[parameters('windowsVMSize')]"
-      }
-    },
-    "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
-    "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, concat('nested/sharedResources', parameters('implementationPhase'), '.json'))]",
-    "SQL2012SP2": "SQL2012SP2-WS2012R2",
-    "SQL2012SP3": "SQL2012SP3-WS2012R2",
-    "SQL2012SP4": "SQL2012SP4-WS2012R2",
-    "SQL2014SP1": "SQL2014SP1-WS2012R2",
-    "SQL2014SP2": "SQL2014SP2-WS2012R2",
-    "SQL2014SP3": "SQL2014SP3-WS2012R2",
-    "SQL2016": "SQL2016-WS2012R2",
-    "SQL2016SP1": "SQL2016SP1-WS2012R2",
-    "SQL2016SP2": "SQL2016SP2-WS2016",
-    "SQL2017": "SQL2017-WS2016",
-    "SQL2019": "SQL2019-WS2016",
-    "sqlEnterpriseEncryption": "[variables('templateLinkSQLKeyVault')]",
-    "sqlEnterpriseVM": {
-      "publisher": "MicrosoftSQLServer",
-      "offer": "[variables('sqlOffer')]",
-      "sku": "Enterprise",
-      "version": "latest",
-      "size": "[parameters('sqlVMSize')]"
-    },
-    "sqlOffer": "[concat(variables(parameters('sqlVersion')),parameters('sqlBYOL'))]",
-    "sqlStandardEncryption": "[variables('templateLinkSQLKeyVaultNull')]",
-    "sqlStandardVM": {
-      "publisher": "MicrosoftSQLServer",
-      "offer": "[variables('sqlOffer')]",
-      "sku": "Standard",
-      "version": "latest",
-      "size": "[parameters('sqlVMSize')]"
-    },
-    "sqlExpressVM": {
-      "publisher": "MicrosoftSQLServer",
-      "offer": "[variables('sqlOffer')]",
-      "sku": "Express",
-      "version": "latest",
-      "size": "[parameters('sqlVMSize')]"
-    },
-    "sqlNoneVM": {
-      "publisher": "MicrosoftWindowsServer",
-      "offer": "WindowsServer",
-      "sku": "[parameters('windowsOSVersion')]",
-      "version": "latest",
-      "size": "[parameters('sqlVMSize')]"
-    },
-    "templateLinkCheckPoint": "[variables(concat('templateLinkCheckPoint', parameters('implementationPhase')))]",
-    "templateLinkCheckPoint1": "[uri(deployment().properties.templateLink.uri, 'nested/checkPointNull.json')]",
-    "templateLinkCheckPoint2": "[uri(deployment().properties.templateLink.uri, 'nested/checkPointNull.json')]",
-    "templateLinkCheckPoint3": "[uri(deployment().properties.templateLink.uri, 'nested/checkPointNull.json')]",
-    "templateLinkCheckPoint4": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
-    "templateLinkEnvironment": "[variables(concat('templateLinkEnvironment', parameters('implementationPhase')))]",
-    "templateLinkEnvironment1": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
-    "templateLinkEnvironment2": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
-    "templateLinkEnvironment3": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
-    "templateLinkEnvironment4": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
-    "templateLinkSQLKeyVault": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVault.json')]",
-    "templateLinkSQLKeyVaultNull": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVaultNull.json')]"
-  },
-
-  "resources": [
-    {
-      "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'))]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('globals').apiVersion.deployment]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('sharedResourcesTemplateURL')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[variables('globals')]"
-          },
-
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          },
-
-          "localAdminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-
-          "sicKey": {
-            "value": "[parameters('sicKey')]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "[concat('environmentSetup', parameters('implementationPhase'))]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('sharedResourcesSetup', parameters('implementationPhase'))]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('templateLinkEnvironment')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[variables('globals')]"
-          },
-
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          },
-
-          "localAdminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          }
-        }
-      }
-    }
-
-  ]
+    ]
 }
