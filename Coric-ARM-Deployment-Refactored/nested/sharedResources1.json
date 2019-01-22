@@ -1,39 +1,301 @@
-Install-Module -Repository 'PSGallery' -Name 'xNetworking'
-Install-Module -Repository 'PSGallery' -Name 'xActiveDirectory'
-Install-Module -Repository 'PSGallery' -Name 'xPendingReboot'
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
 
-$dscPublishSettings = @{
-    ConfigurationPath = "C:\Users\BNRS\source\Workspaces\Client Services\Configurations\ARM\Coric-ARM-Deployment-Refactored\DSC\CreateADPDC.ps1\CreateADPDC.ps1"
-    OutputArchivePath = ".\CreateADPDC.ps1.zip"
-    Force = $True
-}
+  "parameters": {
+    "globals": {
+      "type": "object",
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      }
+    },
 
-Publish-AzureRmVMDscConfiguration @dscPublishSettings
+    "domainAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Domain admin password"
+      }
+    },
 
-$dscPublishSettings = @{
-    ResourceGroupName = $vm.ResourceGroupName
-    StorageAccountName = 'sacor0021admin'
-    ConfigurationPath = "C:\Users\BNRS\source\Workspaces\Client Services\Configurations\ARM\Coric-ARM-Deployment-Refactored\DSC\CreateADPDC.ps1\CreateADPDC.ps1"
-    Force = $True
-}
+    "localAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Local admin password"
+      }
+    },
 
-Publish-AzureRmVMDscConfiguration @dscPublishSettings
-
-$vm = Get-AzureRMVM | Where Name -eq 'vmcor0021-dc01'
-
-if (-not $adminCreds) { $adminCreds = Get-Credential }
-
-$dscSettings = @{
-    ResourceGroupName     = $vm.ResourceGroupName
-    VMName                = $vm.Name
-    ArchiveStorageAccountName = 'sacor0021admin'
-    ArchiveBlobName       = 'CreateADPDC.ps1.zip'
-    ConfigurationName     = 'CreateADForest'
-    ConfigurationArgument = @{
-        adminCreds = $adminCreds
-        domainName = 'cor0021.Hosted'
+    "sicKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
+      }
     }
-    Version = '2.76'
-}
+  },
 
-Set-AzureRmVMDscExtension @dscSettings
+  "variables": {
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
+    "dcBasename": "[concat(parameters('globals').baseName, '-dc')]",
+
+    "primaryDomainController": {
+      "adminUsername": "[parameters('globals').domainAdminUsername]",
+      "basename": "[variables('dcBasename')]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('dcBasename'), '01-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.ftp]",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dcBasename'), '01-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoinNull]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Static",
+            "privateIPAddress": "[parameters('globals').networkSettings.dc01IPAddress]",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet1.name)]"
+            }
+          }
+        }
+      ],
+      "dnsServers": [
+        "[parameters('globals').networkSettings.azureDNS]"
+      ],
+      "finalDnsServers": [
+        "[parameters('globals').networkSettings.dc01IPAddress]",
+        "[parameters('globals').networkSettings.dc02IPAddress]",
+        "[parameters('globals').networkSettings.azureDNS]"
+      ],
+      "numberOfVMs": 1,
+      "ouPath": "",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+      "storageAccount": "[parameters('globals').storageAccountAdmin]"
+    },
+
+    "backupDomainController": {
+      "adminUsername": "[parameters('globals').domainAdminUsername]",
+      "basename": "[concat(parameters('globals').baseName, '-dc')]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('dcBasename'), '02-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.dc]",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dcBasename'), '02-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Static",
+            "privateIPAddress": "[parameters('globals').networkSettings.dc02IPAddress]",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet1.name)]"
+            }
+          }
+        }
+      ],
+      "dnsServers": [
+        "[parameters('globals').networkSettings.dc01IPAddress]",
+        "[parameters('globals').networkSettings.dc02IPAddress]",
+        "[parameters('globals').networkSettings.azureDNS]"
+      ],
+      "numberOfVMs": 1,
+      "ouPath": "[parameters('globals').ou.domainControllers]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+      "sizeOfDataDiskInGB": 1023,
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+      "storageAccount": "[parameters('globals').storageAccountAdmin]"
+    },
+
+    "rdsBasename": "[concat(parameters('globals').baseName, '-rdg')]",
+    "rdsGateway": {
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[variables('rdsBasename')]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('rdsBasename'), '01-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.rdg]",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('rdsBasename'), '01-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Static",
+            "privateIPAddress": "[parameters('globals').networkSettings.rdgatewayIPAddress]",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet6.name)]"
+            }
+          }
+        }
+      ],
+      "dnsServers": [
+        "[parameters('globals').networkSettings.dc01IPAddress]",
+        "[parameters('globals').networkSettings.dc02IPAddress]"
+      ],
+      "numberOfVMs": 1,
+      "ouPath": "[concat(parameters('globals').ou.rdg, parameters('globals').ou.serverRoles)]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIP]",
+      "sizeOfDataDiskInGB": 1023,
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+      "storageAccount": "[parameters('globals').storageAccountAdmin]"
+    },
+
+    "ftpBasename": "[concat(parameters('globals').baseName, '-ftp')]",
+    "ftp": {
+      "adminUsername": "[parameters('globals').localAdminUsername]",
+      "basename": "[variables('ftpBasename')]",
+      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+      "dataDisks": [
+        {
+          "name": "[concat(variables('ftpBasename'), '01-datadisk-0')]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.ftp]",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('ftpBasename'), '01-Data0.vhd')]"
+          },
+          "createOption": "Empty"
+        }
+      ],
+      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+      "imageReference": "[parameters('globals').windowsVM]",
+      "ipConfigurations": [
+        {
+          "name": "ipconfig",
+          "properties": {
+            "privateIPAllocationMethod": "Static",
+            "privateIPAddress": "[parameters('globals').networkSettings.ftpIPAddress]",
+            "subnet": {
+              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet6.name)]"
+            }
+          }
+        }
+      ],
+      "dnsServers": [
+        "[parameters('globals').networkSettings.dc01IPAddress]",
+        "[parameters('globals').networkSettings.dc02IPAddress]"
+      ],
+      "numberOfVMs": 1,
+      "ouPath": "[concat(parameters('globals').ou.ftp, parameters('globals').ou.serverRoles)]",
+      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+      "sizeOfDataDiskInGB": "[parameters('globals').dataDiskSizes.ftp]",
+      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+      "storageAccount": "[parameters('globals').storageAccountAdmin]"
+    }
+
+  },
+
+  "resources": [
+    {
+      "name": "secondDCSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('backupDomainController')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
+          },
+          "copyIndexOffset": {
+            "value": 2
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "rdsGatewaySetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('rdsGateway')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('localAdminPassword')]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "ftpSetup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[parameters('globals').apiVersion.deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('globals').templateLinkVirtualMachine]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "globals": {
+            "value": "[parameters('globals')]"
+          },
+          "machineSettings": {
+            "value": "[variables('ftp')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('localAdminPassword')]"
+          },
+          "domainAdminPassword": {
+            "value": "[parameters('domainAdminPassword')]"
+          }
+        }
+      }
+    }
+
+  ]
+}
