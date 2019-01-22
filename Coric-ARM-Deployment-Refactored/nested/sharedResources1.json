@@ -36,51 +36,6 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
     "dcBasename": "[concat(parameters('globals').baseName, '-dc')]",
 
-    "primaryDomainController": {
-      "adminUsername": "[parameters('globals').domainAdminUsername]",
-      "basename": "[variables('dcBasename')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-      "dataDisks": [
-        {
-          "name": "[concat(variables('dcBasename'), '01-datadisk-0')]",
-          "diskSizeGB": "[parameters('globals').dataDiskSizes.ftp]",
-          "lun": 0,
-          "vhd": {
-            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dcBasename'), '01-Data0.vhd')]"
-          },
-          "createOption": "Empty"
-        }
-      ],
-      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoinNull]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-      "imageReference": "[parameters('globals').windowsVM]",
-      "ipConfigurations": [
-        {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Static",
-            "privateIPAddress": "[parameters('globals').networkSettings.dc01IPAddress]",
-            "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet1.name)]"
-            }
-          }
-        }
-      ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.azureDNS]"
-      ],
-      "finalDnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]",
-        "[parameters('globals').networkSettings.azureDNS]"
-      ],
-      "numberOfVMs": 1,
-      "ouPath": "",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
-      "storageAccount": "[parameters('globals').storageAccountAdmin]"
-    },
-
     "backupDomainController": {
       "adminUsername": "[parameters('globals').domainAdminUsername]",
       "basename": "[concat(parameters('globals').baseName, '-dc')]",
@@ -213,6 +168,110 @@
   },
 
   "resources": [
+    {
+        "name": "adminStorage",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "[parameters('globals').apiVersion.deployment]",
+        "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+                "uri": "[parameters('globals').storageAccountTemplateLink]",
+                "contentVersion": "1.0.0.0"
+            },
+            "parameters": {
+                "globals": {
+                    "value": "[parameters('globals')]"
+                },
+                "Name": {
+                    "value": "[parameters('globals').storageAccountAdmin]"
+                }
+            }
+        }
+    },
+    {
+        "name": "diagnosticsStorage",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "[parameters('globals').apiVersion.deployment]",
+        "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+                "uri": "[parameters('globals').storageAccountTemplateLink]",
+                "contentVersion": "1.0.0.0"
+            },
+            "parameters": {
+                "globals": {
+                    "value": "[parameters('globals')]"
+                },
+                "Name": {
+                    "value": "[parameters('globals').storageAccountDiagnostics]"
+                }
+            }
+        }
+    },
+
+    {
+        "name": "networkSetup",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "[parameters('globals').apiVersion.deployment]",
+        "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+                "uri": "[parameters('globals').networkTemplateLink]",
+                "contentVersion": "1.0.0.0"
+            },
+            "parameters": {
+                "globals": {
+                    "value": "[parameters('globals')]"
+                }
+            }
+        }
+    },
+    {
+        "name": "networkVnetV2Setup",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "[parameters('globals').apiVersion.deployment]",
+        "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+                "uri": "[parameters('globals').networkVnetV2TemplateLink]",
+                "contentVersion": "1.0.0.0"
+            },
+            "parameters": {
+                "globals": {
+                    "value": "[parameters('globals')]"
+                }
+            }
+        },
+        "dependsOn": [
+            "[concat('Microsoft.Resources/deployments/', 'networkSetup')]"
+        ]
+    },
+
+    {
+        "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
+        "name": "[concat(parameters('globals').networkSettings.name, '/', 'vnp', parameters('globals').networkSettings.name, '-', parameters('globals').networkSettings.vnetV2name)]",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "properties": {
+            "peeringState": "Connected",
+            "remoteVirtualNetwork": {
+                "id": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.vnetV2name)]"
+            },
+            "allowVirtualNetworkAccess": true,
+            "allowForwardedTraffic": true,
+            "allowGatewayTransit": false,
+            "useRemoteGateways": false,
+            "remoteAddressSpace": {
+                "addressPrefixes": [
+                    "[parameters('globals').networkSettings.vnetV2addressSpace]"
+                ]
+            }
+        },
+        "dependsOn": [
+            "[concat('Microsoft.Resources/deployments/', 'networkSetup')]",
+            "[concat('Microsoft.Resources/deployments/', 'networkVnetV2Setup')]"
+        ]
+    },
+
     {
       "name": "secondDCSetup",
       "type": "Microsoft.Resources/deployments",
