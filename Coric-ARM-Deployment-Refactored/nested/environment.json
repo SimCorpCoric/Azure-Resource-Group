@@ -65,7 +65,7 @@
       "dataDisks": [
         {
           "name": "[concat(variables('dmzBasename'), '01-datadisk-0')]",
-          "diskSizeGB": "[parameters('globals').dataDiskSizes.c1]",
+          "diskSizeGB": "[parameters('globals').dataDiskSizes.dmz]",
           "lun": 0,
           "vhd": {
             "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dmzBasename'), '01-Data0.vhd')]"
@@ -92,7 +92,7 @@
         "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
       "numberOfVMs": "[parameters('globals').environment.dmzServerCount]",
-      "ouPath": "[concat(parameters('globals').ou.c1, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
+      "ouPath": "[concat(parameters('globals').ou.dmz, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
       "storageAccount": "[variables('storageAccountName')]"
