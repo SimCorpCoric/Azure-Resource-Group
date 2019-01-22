@@ -189,12 +189,23 @@
                 "Description": "The number of Desktops to build for this environment"
             }
         },
-        "c1ServerCount": {
+        "dmzServerCount": {
             "type": "int",
             "minValue": 0,
             "defaultValue": 0,
             "metadata": {
-                "Description": "The number of public-facing C1 servers to build for this environment, in the DMZ"
+                "Description": "The number of public-facing dmz servers to build for this environment."
+            }
+        },
+        "dmzServerSubnet": {
+            "type": "string",
+            "allowedValues": [
+                "web",
+                "dmz"
+            ],
+            "defaultValue": "web",
+            "metadata": {
+                "Description": "The network subnet to install the 'dmz' server(s) (usually just the C1 server) into; 'web' or 'dmz'"
             }
         },
         "webReporter": {
@@ -206,6 +217,17 @@
             "defaultValue": "No",
             "metadata": {
                 "Description": "Whether or not Web Reporter is part of the deployment"
+            }
+        },
+        "webReporterSubnet": {
+            "type": "string",
+            "allowedValues": [
+                "web",
+                "dmz"
+            ],
+            "defaultValue": "web",
+            "metadata": {
+                "Description": "The network subnet to install the 'webReporter' server into; 'web' or 'dmz'"
             }
         },
         "pushPullCount": {
@@ -364,7 +386,7 @@
                 }
             },
             "dataDiskSizes": {
-                "c1": 1023,
+                "dmz": 1023,
                 "dc": 1023,
                 "ftp": 1023,
                 "sql": 1023,
@@ -381,6 +403,7 @@
                 "sequenceVersion": "[parameters('sequenceVersion')]",
                 "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]"
             },
+            "dmzServerSubnet": "[parameters('dmzServerSubnet')]",
             "domainAdminUsername": "[parameters('domainAdminUsername')]",
             "domainName": "[concat(variables('baseName'), '.', variables('domainSuffix'))]",
             "domainNameLDAP": "[concat('DC=', variables('baseName'), '; DC=', variables('domainSuffix'))]",
@@ -400,7 +423,7 @@
                 "acronym": "[parameters('environmentAcronym')]",
                 "droneCount": "[parameters('droneCount')]",
                 "desktopCount": "[parameters('desktopCount')]",
-                "c1ServerCount": "[parameters('c1ServerCount')]",
+                "dmzServerCount": "[parameters('dmzServerCount')]",
                 "pushPullCount": "[parameters('pushPullCount')]",
                 "webCount": "[parameters('webCount')]",
             },
@@ -479,7 +502,7 @@
                 "domainControllers": "OU=Domain Controllers;",
                 "desktop": "OU=Desktop;",
                 "iis": "OU=IIS;",
-                "c1": "OU=IIS;",
+                "dmz": "OU=IIS;",
                 "rdg": "OU=RDG;OU=Admin;",
                 "ftp": "OU=FTP;OU=Admin;",
                 "pushPull": "OU=PushPull;"
@@ -511,6 +534,7 @@
             "test": "[parameters('drTest')]",
             "vhdContainerName": "vhds",
             "webReporter": "[parameters('webReporter')]",
+            "webReporterSubnet": "[parameters('webReporterSubnet')]",
             "windowsVM": {
                 "publisher": "MicrosoftWindowsServer",
                 "offer": "WindowsServer",
