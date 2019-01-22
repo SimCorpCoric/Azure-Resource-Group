@@ -57,18 +57,18 @@
       "storageAccount": "[variables('storageAccountName')]"
     },
 
-    "c1Basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-c1')]",
-    "c1Server": {
+    "dmzBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dmz')]",
+    "dmzServer": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
-      "basename": "[variables('c1Basename')]",
+      "basename": "[variables('dmzBasename')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "dataDisks": [
         {
-          "name": "[concat(variables('c1Basename'), '01-datadisk-0')]",
+          "name": "[concat(variables('dmzBasename'), '01-datadisk-0')]",
           "diskSizeGB": "[parameters('globals').dataDiskSizes.c1]",
           "lun": 0,
           "vhd": {
-            "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('c1Basename'), '01-Data0.vhd')]"
+            "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dmzBasename'), '01-Data0.vhd')]"
           },
           "createOption": "Empty"
         }
@@ -82,7 +82,7 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-dmz'))]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-', parameters('globals').dmzServerSubnet))]"
             }
           }
         }
@@ -91,7 +91,7 @@
         "[parameters('globals').networkSettings.dc01IPAddress]",
         "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
-      "numberOfVMs": "[parameters('globals').environment.c1ServerCount]",
+      "numberOfVMs": "[parameters('globals').environment.dmzServerCount]",
       "ouPath": "[concat(parameters('globals').ou.c1, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
       "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
@@ -258,7 +258,7 @@
           "properties": {
             "privateIPAllocationMethod": "Dynamic",
             "subnet": {
-              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-web'))]"
+              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-', parameters('globals').webReporterSubnet))]"
             }
           }
         }
@@ -507,8 +507,8 @@
     },
 
     {
-      "condition": "[if(equals(parameters('globals').environment.c1ServerCount, 0), bool('false'), bool('true'))]",
-      "name": "c1ServerSetup",
+      "condition": "[if(equals(parameters('globals').environment.dmzServerCount, 0), bool('false'), bool('true'))]",
+      "name": "dmzServerSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
@@ -525,7 +525,7 @@
             "value": "[parameters('globals')]"
           },
           "machineSettings": {
-            "value": "[variables('c1Server')]"
+            "value": "[variables('dmzServer')]"
           },
           "adminPassword": {
             "value": "[parameters('localAdminPassword')]"
