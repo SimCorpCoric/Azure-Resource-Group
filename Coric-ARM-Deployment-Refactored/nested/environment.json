@@ -417,6 +417,7 @@
     },
 
     {
+      "condition": "[if(equals(parameters('globals').environment.desktopCount, 0), bool('false'), bool('true'))]",
       "name": "desktopSetup",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
