@@ -183,7 +183,7 @@
         },
         "desktopCount": {
             "type": "int",
-            "minValue": 1,
+            "minValue": 0,
             "defaultValue": 1,
             "metadata": {
                 "Description": "The number of Desktops to build for this environment"
