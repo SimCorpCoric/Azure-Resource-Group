@@ -349,6 +349,17 @@
         },
         "sequenceVersion": {
             "type": "int"
+        },
+        "checkPointOffer": {
+            "type": "string",
+            "allowedValues": [
+                "check-point-r77-10",
+                "check-point-cg-r8020-blink-v2"
+            ],
+            "defaultValue": "check-point-r77-10",
+            "metadata": {
+                "description": "The version of Check Point firewall/vpn gateway to install; r77.10 or r80.20"
+            }
         }
     },
     "variables": {
@@ -377,6 +388,7 @@
                 "virtualMachine": "2018-06-01"
             },
             "baseName": "[variables('baseName')]",
+            "checkPointOffer": "[parameters('checkPointOffer')]",
             "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
             "clientID": "[parameters('clientID')]",
             "customScript": {
