@@ -799,7 +799,7 @@
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-domain'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security'))]"
                             },
                             "serviceEndpoints": [
                                 {
