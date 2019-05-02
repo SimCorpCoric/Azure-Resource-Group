@@ -1328,6 +1328,23 @@
                                 }
                             ]
                         }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-dmz-local'))]"
+                            },
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
+                        }
                     }
                 ]
             },
@@ -1806,6 +1823,28 @@
                 "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.64/26')]",
                 "routeTable": {
                     "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-dmz-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-dev-dmz')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-dmz-local'))]"
                 },
                 "serviceEndpoints": [
                     {
