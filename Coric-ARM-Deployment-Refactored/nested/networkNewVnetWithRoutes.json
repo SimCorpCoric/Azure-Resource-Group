@@ -1,818 +1,954 @@
 {
-  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "globals": {
-      "type": "object",
-      "metadata": {
-        "Description": "Global complex object passed to nested templates"
-      }
-    },
-    "dnsServers": {
-      "defaultValue": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
-      ],
-      "type": "array",
-      "metadata": {
-        "description": "DNS address(es) of the DNS Server(s) used by the VNET"
-      }
-    }
-  },
-  "variables": {
-    "vnetV2name": "[parameters('globals').networkSettings.vnetV2name]",
-    "oct3plus1": 1,
-    "oct3plus2": 2,
-    "oct3plus3": 3,
-    "oct3plus4": 4,
-    "octetsArr": "[split(parameters('globals').networkSettings.vnetV2addressSpace,'.')]"
-  },
-  "resources": [
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-admin')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-admin-dmz-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.128/26')]",
-              "nextHopType": "VnetLocal"
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "globals": {
+            "type": "object",
+            "metadata": {
+                "Description": "Global complex object passed to nested templates"
             }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-admin-domain-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.192/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-prod-desktop-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-prod-desktop-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.0/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-prod-web-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-prod-web-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.64/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-prod-application-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-prod-application-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.128/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-prod-database-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-prod-database-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.192/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-uat-desktop-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-uat-desktop-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.0/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-uat-web-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-uat-web-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.64/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-uat-application-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-uat-application-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.128/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-uat-database-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-uat-database-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.192/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-dev-desktop-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-dev-desktop-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.0/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-dev-web-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-dev-web-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.64/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-dev-application-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-dev-application-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.128/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-dev-database-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-dev-database-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.192/26')]",
-              "nextHopType": "VnetLocal"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-prod-dmz-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-prod-dmz-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.0/26')]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-uat-dmz-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-uat-dmz-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.64/26')]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-      "name": "[concat('rt', variables('vnetV2name'), '-dev-dmz-local')]",
-      "type": "Microsoft.Network/routeTables",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "disableBgpRoutePropagation": false,
-        "routes": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz-local')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "default-to-checkpoint",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          },
-          {
-            "name": "vnet-to-checkpoint",
-            "properties": {
-              "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-            }
-          }
-        ]
-      }
-    },
-
-    {
-      "apiVersion": "[parameters('globals').apiVersion.network]",
-      "type": "Microsoft.Network/virtualNetworks",
-      "name": "[variables('vnetV2name')]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[parameters('globals').networkSettings.vnetV2addressSpace]"
-          ]
         },
-        "dhcpOptions": {
-          "dnsServers": "[parameters('dnsServers')]"
-        },
-        "subnets": [
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-admin-external')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.0/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin'))]"
-              }
+        "dnsServers": {
+            "defaultValue": [
+                "[parameters('globals').networkSettings.dc01IPAddress]",
+                "[parameters('globals').networkSettings.dc02IPAddress]"
+            ],
+            "type": "array",
+            "metadata": {
+                "description": "DNS address(es) of the DNS Server(s) used by the VNET"
             }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-admin-internalgateway')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.64/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-admin-dmz')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.128/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-admin-domain')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.192/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-prod-desktop')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.0/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-prod-web')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.64/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-prod-application')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.128/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-application-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-prod-database')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.192/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-database-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-uat-desktop')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.0/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-desktop-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-uat-web')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.64/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-web-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-uat-application')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.128/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-application-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-uat-database')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.192/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-database-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-dev-desktop')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.0/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-desktop-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-dev-web')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.64/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-web-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-dev-application')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.128/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-application-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-dev-database')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.192/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-prod-dmz')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.0/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-dmz-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-uat-dmz')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.64/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-dmz-local'))]"
-              }
-            }
-          },
-          {
-            "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz')]",
-            "properties": {
-              "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-dmz-local'))]"
-              }
-            }
-          }
-        ]
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-application-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-database-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-desktop-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-web-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-application-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-database-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-desktop-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-web-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-application-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-dmz-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-dmz-local'))]",
-        "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-dmz-local'))]"
-      ]
-    },
-
-    {
-      "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
-      "name": "[concat(variables('vnetV2name'), '/', 'vnp', variables('vnetV2name'), '-', parameters('globals').networkSettings.name)]",
-      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-      "properties": {
-        "peeringState": "Connected",
-        "remoteVirtualNetwork": {
-          "id": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]"
-        },
-        "allowVirtualNetworkAccess": true,
-        "allowForwardedTraffic": true,
-        "allowGatewayTransit": false,
-        "useRemoteGateways": false,
-        "remoteAddressSpace": {
-          "addressPrefixes": [
-            "[parameters('globals').networkSettings.addressSpace]"
-          ]
         }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
-      ]
-    }
-  ]
+    },
+    "variables": {
+        "vnetV2name": "[parameters('globals').networkSettings.vnetV2name]",
+        "oct3plus1": 1,
+        "oct3plus2": 2,
+        "oct3plus3": 3,
+        "oct3plus4": 4,
+        "octetsArr": "[split(parameters('globals').networkSettings.vnetV2addressSpace,'.')]"
+    },
+    "resources": [
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-admin-external')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-external')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.0/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-admin-internalgateway')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-internalgateway')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.64/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-admin-dmz')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-dmz')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.128/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-admin-domain')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-domain')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.192/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-admin-security')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-security')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-prod-desktop-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-prod-desktop-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.0/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-prod-web-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-prod-web-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.64/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-prod-application-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-prod-application-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.128/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-prod-database-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-prod-database-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.192/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-uat-desktop-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-uat-desktop-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.0/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-uat-web-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-uat-web-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.64/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-uat-application-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-uat-application-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.128/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-uat-database-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-uat-database-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.192/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-dev-desktop-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-dev-desktop-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.0/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-dev-web-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-dev-web-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.64/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-dev-application-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-dev-application-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.128/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-dev-database-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-dev-database-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.192/26')]",
+                            "nextHopType": "VnetLocal"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-prod-dmz-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-prod-dmz-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.0/26')]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-uat-dmz-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-uat-dmz-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.64/26')]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.routeTables]",
+            "name": "[concat('rt', variables('vnetV2name'), '-dev-dmz-local')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz-local')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "default-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    },
+                    {
+                        "name": "vnet-to-checkpoint",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.network]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('vnetV2name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('globals').networkSettings.vnetV2addressSpace]"
+                    ]
+                },
+                "dhcpOptions": {
+                    "dnsServers": "[parameters('dnsServers')]"
+                },
+                "subnets": [
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-external')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.0/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-external'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-internalgateway')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.64/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-internalgateway'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-dmz')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.128/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-domain')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.192/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-domain'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-security')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-domain'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-prod-desktop')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.0/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-prod-web')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.64/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-prod-application')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.128/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-application-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-prod-database')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.192/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-database-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-uat-desktop')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.0/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-desktop-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-uat-web')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.64/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-web-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-uat-application')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.128/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-application-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-uat-database')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.192/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-database-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-dev-desktop')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.0/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-desktop-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-dev-web')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.64/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-web-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-dev-application')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.128/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-application-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-dev-database')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.192/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-prod-dmz')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.0/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-dmz-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-uat-dmz')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.64/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-dmz-local'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz')]",
+                        "properties": {
+                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-dmz-local'))]"
+                            }
+                        }
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-application-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-database-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-desktop-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-web-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-application-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-database-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-desktop-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-web-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-application-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-dmz-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-dmz-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-dmz-local'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
+            "name": "[concat(variables('vnetV2name'), '/', 'vnp', variables('vnetV2name'), '-', parameters('globals').networkSettings.name)]",
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "properties": {
+                "peeringState": "Connected",
+                "remoteVirtualNetwork": {
+                    "id": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]"
+                },
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": true,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": false,
+                "remoteAddressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('globals').networkSettings.addressSpace]"
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        }
+    ]
 }
