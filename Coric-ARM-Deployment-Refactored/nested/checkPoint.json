@@ -1420,27 +1420,443 @@
             ]
         },
         {
-            "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
-            "name": "[variables('vnetV2MgmtNetworkPeeringName')]",
-            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-admin-external')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
             "properties": {
-                "peeringState": "Connected",
-                "remoteVirtualNetwork": {
-                    "id": "[variables('mgmtNetworkID')]"
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.0/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-external-local'))]"
                 },
-                "allowVirtualNetworkAccess": true,
-                "allowForwardedTraffic": true,
-                "allowGatewayTransit": false,
-                "useRemoteGateways": false,
-                "remoteAddressSpace": {
-                    "addressPrefixes": [
-                        "[variables('mgmtNetworkAddressSpace')]"
-                    ]
-                }
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
             },
             "dependsOn": [
-                "[variables('vnetId')]",
-                "[variables('vnetV2Id')]"
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-admin-internalgateway')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.64/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-internalgateway-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-admin-dmz')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.128/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-admin-domain')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.192/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-domain-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-admin-security')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-prod-desktop')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.0/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-prod-web')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.64/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-prod-application')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.128/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-application-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-prod-database')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.192/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-database-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-uat-desktop')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.0/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-desktop-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-uat-web')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.64/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-web-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-uat-application')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.128/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-application-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-uat-database')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.192/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-database-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-dev-desktop')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.0/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-desktop-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-dev-web')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.64/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-web-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-dev-application')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.128/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-application-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-dev-database')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.192/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-prod-dmz')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.0/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-dmz-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-uat-dmz')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.64/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-dmz-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.subnets]",
+            "name": "[concat(variables('vnetV2name'), '/sn', variables('vnetV2name'), '-dev-dmz')]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "properties": {
+                "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-dmz-local'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
             ]
         },
         {
