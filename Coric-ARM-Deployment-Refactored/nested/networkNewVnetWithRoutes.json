@@ -731,7 +731,7 @@
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.0/26')]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-external'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-external-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -748,7 +748,7 @@
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.64/26')]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-internalgateway'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-internalgateway-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -765,7 +765,7 @@
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.128/26')]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -782,7 +782,7 @@
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.192/26')]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-domain'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-domain-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -799,7 +799,7 @@
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -1069,10 +1069,10 @@
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-external'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-internalgateway'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-external-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-internalgateway-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security-local'))]",
                 "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]",
                 "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]",
                 "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-application-local'))]",
