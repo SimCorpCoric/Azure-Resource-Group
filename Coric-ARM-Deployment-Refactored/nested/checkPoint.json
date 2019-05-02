@@ -386,14 +386,6 @@
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-admin-security-local')]",
-                        "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
-                            "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
-                        }
-                    },
-                    {
                         "name": "default-to-checkpoint",
                         "properties": {
                             "addressPrefix": "0.0.0.0/0",
