@@ -310,14 +310,14 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-admin-external')]",
+            "name": "[concat('rt', variables('vnetV2name'), '-admin-external-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-admin-external')]",
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-external-local')]",
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.0/26')]",
                             "nextHopType": "VnetLocal"
@@ -344,14 +344,14 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-admin-internalgateway')]",
+            "name": "[concat('rt', variables('vnetV2name'), '-admin-internalgateway-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-admin-internalgateway')]",
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-internalgateway-local')]",
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.64/26')]",
                             "nextHopType": "VnetLocal"
@@ -378,14 +378,14 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-admin-dmz')]",
+            "name": "[concat('rt', variables('vnetV2name'), '-admin-dmz-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-admin-dmz')]",
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-dmz-local')]",
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.128/26')]",
                             "nextHopType": "VnetLocal"
@@ -412,14 +412,14 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-admin-domain')]",
+            "name": "[concat('rt', variables('vnetV2name'), '-admin-domain-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-admin-domain')]",
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-domain-local')]",
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.192/26')]",
                             "nextHopType": "VnetLocal"
@@ -446,14 +446,14 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-admin-security')]",
+            "name": "[concat('rt', variables('vnetV2name'), '-admin-security-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-admin-security')]",
+                        "name": "[concat('sn', variables('vnetV2name'), '-admin-security-local')]",
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
                             "nextHopType": "VnetLocal"
@@ -1011,7 +1011,7 @@
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.0/26')]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-external'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-external-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -1028,7 +1028,7 @@
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.64/26')]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-internalgateway'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-internalgateway-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -1045,7 +1045,7 @@
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.128/26')]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -1062,7 +1062,7 @@
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.192/26')]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-domain'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-domain-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -1079,7 +1079,7 @@
                         "properties": {
                             "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -1349,10 +1349,10 @@
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-external'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-internalgateway'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-external-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-internalgateway-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security-local'))]",
                 "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]",
                 "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]",
                 "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-application-local'))]",
