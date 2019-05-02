@@ -385,6 +385,7 @@
                 "pip": "2018-07-01",
                 "routeTables": "2018-02-01",
                 "storage": "2018-02-01",
+                "subnets": "2018-12-01",
                 "virtualMachine": "2018-06-01"
             },
             "baseName": "[variables('baseName')]",
