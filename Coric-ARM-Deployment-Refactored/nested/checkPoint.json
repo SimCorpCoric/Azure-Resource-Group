@@ -1297,6 +1297,29 @@
             ]
         },
         {
+            "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
+            "name": "[concat(variables('vnetV2name'), '/', variables('vnetV2name'), '-vnMgmtNetwork)')]",
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "properties": {
+                "peeringState": "Connected",
+                "remoteVirtualNetwork": {
+                    "id": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork"
+                },
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": true,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": false,
+                "remoteAddressSpace": {
+                    "addressPrefixes": [
+                        "10.100.0.0/23"
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+            ]
+        },
+        {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
