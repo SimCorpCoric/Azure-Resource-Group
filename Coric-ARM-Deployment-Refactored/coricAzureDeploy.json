@@ -370,8 +370,6 @@
         "environmentShortNameProduction": "Prod",
         "environmentShortNameUAT": "UAT",
         "environmentShortNameWeb": "Web",
-        "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
-        "octetsArr": "[split(parameters('vnetV2addressSpace'),'.')]",
         "globals": {
             "adminResourceGroupName": "[variables('baseName')]",
             "apiVersion": {
@@ -445,9 +443,8 @@
             "localAdminUsername": "[parameters('localAdminUsername')]",
             "networkSettings": {
                 "name": "[concat('vn', variables('baseName'), '-v2')]",
-                "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
+                "vnetV2name": "[variables('vnetV2name')]",
                 "vnetV2addressSpace": "[parameters('vnetV2addressSpace')]",
-                "octetsArr": "[variables('octetsArr')]",
                 "addressSpace": "10.200.0.0/20",
                 "azureDNS": "168.63.129.16",
                 "dc01IPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.196')]",
@@ -662,6 +659,7 @@
                 "size": "[parameters('windowsVMSize')]"
             }
         },
+        "octetsArr": "[split(parameters('vnetV2addressSpace'),'.')]",
         "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
         "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, concat('nested/sharedResources', parameters('implementationPhase'), '.json'))]",
         "SQL2012SP2": "SQL2012SP2-WS2012R2",
@@ -727,7 +725,8 @@
         "templateLinkEnvironment3": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
         "templateLinkEnvironment4": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
         "templateLinkSQLKeyVault": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVault.json')]",
-        "templateLinkSQLKeyVaultNull": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVaultNull.json')]"
+        "templateLinkSQLKeyVaultNull": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVaultNull.json')]",
+        "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]"
     },
     "resources": [
         {
