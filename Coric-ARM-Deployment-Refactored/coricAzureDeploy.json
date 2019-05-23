@@ -370,6 +370,8 @@
         "environmentShortNameProduction": "Prod",
         "environmentShortNameUAT": "UAT",
         "environmentShortNameWeb": "Web",
+        "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
+        "octetsArr": "[split(parameters('vnetV2addressSpace'),'.')]",
         "globals": {
             "adminResourceGroupName": "[variables('baseName')]",
             "apiVersion": {
@@ -442,17 +444,21 @@
             },
             "localAdminUsername": "[parameters('localAdminUsername')]",
             "networkSettings": {
-                "name": "[concat('vn', variables('baseName'))]",
+                "name": "[concat('vn', variables('baseName'), '-v2')]",
                 "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
                 "vnetV2addressSpace": "[parameters('vnetV2addressSpace')]",
+                "octetsArr": "[variables('octetsArr')]",
                 "addressSpace": "10.200.0.0/20",
                 "azureDNS": "168.63.129.16",
-                "dc01IPAddress": "10.200.1.4",
-                "dc02IPAddress": "10.200.1.5",
-                "gatewayExternalIPAddress": "10.200.0.4",
-                "gatewayInternalIPAddress": "10.200.9.4",
-                "rdgatewayIPAddress": "10.200.6.4",
-                "ftpIPAddress": "10.200.6.5",
+                "dc01IPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.196')]",
+                "dc02IPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.197')]",
+                "gatewayExternalIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.4')]",
+                "azureGatewayInternalIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.65')]",
+                "gatewayInternalIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.68')]",
+                "rdgatewayIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.132')]",
+                "ftpIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.133')]",
+                "mgmtNetworkID": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork",
+                "mgmtNetworkAddressSpace": "10.100.0.0/23",
                 "subnet0": {
                     "id": 0,
                     "name": "gateway",
@@ -502,6 +508,106 @@
                     "id": 9,
                     "name": "FirewallInternal",
                     "prefix": "10.200.9.0/24"
+                },
+                "subnetadminexternal": {
+                    "id": 10,
+                    "name": "[concat('sn', variables('vnetV2name'), '-admin-external')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.0/26')]"
+                },
+                "subnetadmininternalGateway": {
+                    "id": 11,
+                    "name": "[concat('sn', variables('vnetV2name'), '-admin-internalgateway')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.64/26')]"
+                },
+                "subnetadmindmz": {
+                    "id": 12,
+                    "name": "[concat('sn', variables('vnetV2name'), '-admin-dmz')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.128/26')]"
+                },
+                "subnetadmindomain": {
+                    "id": 13,
+                    "name": "[concat('sn', variables('vnetV2name'), '-admin-domain')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.192/26')]"
+                },
+                "subnetadminsecurity": {
+                    "id": 14,
+                    "name": "[concat('sn', variables('vnetV2name'), '-admin-security')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.128/26')]"
+                },
+                "subnetproddesktop": {
+                    "id": 15,
+                    "name": "[concat('sn', variables('vnetV2name'), '-prod-desktop')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),1),'.0/26')]"
+                },
+                "subnetprodweb": {
+                    "id": 16,
+                    "name": "[concat('sn', variables('vnetV2name'), '-prod-web')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),1),'.64/26')]"
+                },
+                "subnetprodapplication": {
+                    "id": 17,
+                    "name": "[concat('sn', variables('vnetV2name'), '-prod-application')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),1),'.128/26')]"
+                },
+                "subnetproddatabase": {
+                    "id": 18,
+                    "name": "[concat('sn', variables('vnetV2name'), '-prod-database')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),1),'.192/26')]"
+                },
+                "subnetuatdesktop": {
+                    "id": 19,
+                    "name": "[concat('sn', variables('vnetV2name'), '-uat-desktop')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),2),'.0/26')]"
+                },
+                "subnetuatweb": {
+                    "id": 20,
+                    "name": "[concat('sn', variables('vnetV2name'), '-uat-web')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),2),'.64/26')]"
+                },
+                "subnetuatapplication": {
+                    "id": 21,
+                    "name": "[concat('sn', variables('vnetV2name'), '-uat-application')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),2),'.128/26')]"
+                },
+                "subnetuatdatabase": {
+                    "id": 22,
+                    "name": "[concat('sn', variables('vnetV2name'), '-uat-database')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),2),'.192/26')]"
+                },
+                "subnetdevdesktop": {
+                    "id": 23,
+                    "name": "[concat('sn', variables('vnetV2name'), '-dev-desktop')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),3),'.0/26')]"
+                },
+                "subnetdevweb": {
+                    "id": 24,
+                    "name": "[concat('sn', variables('vnetV2name'), '-dev-web')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),3),'.64/26')]"
+                },
+                "subnetdevapplication": {
+                    "id": 25,
+                    "name": "[concat('sn', variables('vnetV2name'), '-dev-application')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),3),'.128/26')]"
+                },
+                "subnetdevdatabase": {
+                    "id": 26,
+                    "name": "[concat('sn', variables('vnetV2name'), '-dev-database')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),3),'.192/26')]"
+                },
+                "subnetproddmz": {
+                    "id": 27,
+                    "name": "[concat('sn', variables('vnetV2name'), '-prod-dmz')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),3),'.0/26')]"
+                },
+                "subnetuatdmz": {
+                    "id": 28,
+                    "name": "[concat('sn', variables('vnetV2name'), '-uat-dmz')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.64/26')]"
+                },
+                "subnetdevdmz": {
+                    "id": 28,
+                    "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.192/26')]"
                 }
             },
             "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
