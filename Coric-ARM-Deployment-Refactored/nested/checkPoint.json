@@ -103,7 +103,7 @@
         "vnetV2addressSpace": "[parameters('globals').networkSettings.vnetV2addressSpace]",
         "vnetPeeringName": "[concat(variables('vnetName'), '/', 'vnp', variables('vnetName'), '-', variables('vnetV2name'))]",
         "vnetV2PeeringName": "[concat(variables('vnetV2name'), '/', 'vnp', variables('vnetV2name'), '-', variables('vnetName'))]",
-        "vnetV2MgmtNetworkPeeringName": "[concat(variables('vnetV2name'), '/', 'vnp', variables('vnetV2name'), '-vnMgmtNetwork)')]",
+        "vnetV2MgmtNetworkPeeringName": "[concat(variables('vnetV2name'), '/', variables('vnetName'), '-vnMgmtNetwork')]",
         "mgmtNetworkID": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork",
         "mgmtNetworkAddressSpace": "10.100.0.0/23",
         "oct3plus1": 1,
@@ -1298,12 +1298,12 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
-            "name": "[concat(variables('vnetV2name'), '/', variables('vnetV2name'), '-vnMgmtNetwork)')]",
+            "name": "[variables('vnetV2MgmtNetworkPeeringName')]",
             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
             "properties": {
                 "peeringState": "Connected",
                 "remoteVirtualNetwork": {
-                    "id": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork"
+                    "id": "[variables('mgmtNetworkID')]"
                 },
                 "allowVirtualNetworkAccess": true,
                 "allowForwardedTraffic": true,
@@ -1311,7 +1311,7 @@
                 "useRemoteGateways": false,
                 "remoteAddressSpace": {
                     "addressPrefixes": [
-                        "10.100.0.0/23"
+                        "[variables('mgmtNetworkAddressSpace')]"
                     ]
                 }
             },
