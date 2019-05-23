@@ -442,7 +442,7 @@
             },
             "localAdminUsername": "[parameters('localAdminUsername')]",
             "networkSettings": {
-                "name": "[concat('vn', variables('baseName'), '-v2')]",
+                "name": "[concat('vn', variables('baseName'))]",
                 "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
                 "vnetV2addressSpace": "[parameters('vnetV2addressSpace')]",
                 "addressSpace": "10.200.0.0/20",
@@ -508,102 +508,102 @@
                 },
                 "subnetadminexternal": {
                     "id": 10,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-admin-external')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-admin-external')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.0/26')]"
                 },
                 "subnetadmininternalGateway": {
                     "id": 11,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-admin-internalgateway')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-admin-internalgateway')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.64/26')]"
                 },
                 "subnetadmindmz": {
                     "id": 12,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-admin-dmz')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-admin-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.128/26')]"
                 },
                 "subnetadmindomain": {
                     "id": 13,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-admin-domain')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-admin-domain')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.192/26')]"
                 },
                 "subnetadminsecurity": {
                     "id": 14,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-admin-security')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-admin-security')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.128/26')]"
                 },
                 "subnetproddesktop": {
                     "id": 15,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-prod-desktop')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-prod-desktop')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),1),'.0/26')]"
                 },
                 "subnetprodweb": {
                     "id": 16,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-prod-web')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-prod-web')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),1),'.64/26')]"
                 },
                 "subnetprodapplication": {
                     "id": 17,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-prod-application')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-prod-application')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),1),'.128/26')]"
                 },
                 "subnetproddatabase": {
                     "id": 18,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-prod-database')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-prod-database')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),1),'.192/26')]"
                 },
                 "subnetuatdesktop": {
                     "id": 19,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-uat-desktop')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-uat-desktop')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),2),'.0/26')]"
                 },
                 "subnetuatweb": {
                     "id": 20,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-uat-web')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-uat-web')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),2),'.64/26')]"
                 },
                 "subnetuatapplication": {
                     "id": 21,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-uat-application')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-uat-application')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),2),'.128/26')]"
                 },
                 "subnetuatdatabase": {
                     "id": 22,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-uat-database')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-uat-database')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),2),'.192/26')]"
                 },
                 "subnetdevdesktop": {
                     "id": 23,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-dev-desktop')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-dev-desktop')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),3),'.0/26')]"
                 },
                 "subnetdevweb": {
                     "id": 24,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-dev-web')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-dev-web')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),3),'.64/26')]"
                 },
                 "subnetdevapplication": {
                     "id": 25,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-dev-application')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-dev-application')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),3),'.128/26')]"
                 },
                 "subnetdevdatabase": {
                     "id": 26,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-dev-database')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-dev-database')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),3),'.192/26')]"
                 },
                 "subnetproddmz": {
                     "id": 27,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-prod-dmz')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-prod-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),3),'.0/26')]"
                 },
                 "subnetuatdmz": {
                     "id": 28,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-uat-dmz')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-uat-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.64/26')]"
                 },
                 "subnetdevdmz": {
                     "id": 28,
-                    "name": "[concat('sn', variables('vnetV2nameRef'), '-dev-dmz')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.192/26')]"
                 }
             },
@@ -726,7 +726,7 @@
         "templateLinkEnvironment4": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
         "templateLinkSQLKeyVault": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVault.json')]",
         "templateLinkSQLKeyVaultNull": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVaultNull.json')]",
-        "vnetV2nameRef": "[concat('vn', variables('baseName'), '-v2')]"
+        "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]"
     },
     "resources": [
         {

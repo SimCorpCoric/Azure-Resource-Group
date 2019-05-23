@@ -34,7 +34,6 @@
 
   "variables": {
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]"
-
   },
 
   "resources": [

@@ -59,6 +59,8 @@
         "lbId": "[resourceId('Microsoft.Network/loadBalancers', variables('lbName'))]",
         "lbName": "lbCheckPointGateway",
         "managementGUIClientNetwork": "0.0.0.0/0",
+        "mgmtNetworkID": "[parameters('globals').networkSettings.mgmtNetworkID]",
+        "mgmtNetworkAddressSpace": "[parameters('globals').networkSettings.mgmtNetworkAddressSpace]",
         "nic1Name": "[concat(variables('nicName'), '-Gateway')]",
         "nic2Name": "[concat(variables('nicName'), '-FWInternal')]",
         "nicName": "[concat('nic', variables('basename'))]",
@@ -104,9 +106,7 @@
         "vnetV2addressSpace": "[parameters('globals').networkSettings.vnetV2addressSpace]",
         "vnetPeeringName": "[concat(variables('vnetName'), '/', 'vnp', variables('vnetName'), '-', variables('vnetV2name'))]",
         "vnetV2PeeringName": "[concat(variables('vnetV2name'), '/', 'vnp', variables('vnetV2name'), '-', variables('vnetName'))]",
-        "vnetV2MgmtNetworkPeeringName": "[concat(variables('vnetV2name'), '/', variables('vnetName'), '-vnMgmtNetwork')]",
-        "mgmtNetworkID": "[parameters('globals').networkSettings.mgmtNetworkID]",
-        "mgmtNetworkAddressSpace": "[parameters('globals').networkSettings.mgmtNetworkAddressSpace]"
+        "vnetV2MgmtNetworkPeeringName": "[concat(variables('vnetV2name'), '/', variables('vnetName'), '-vnMgmtNetwork')]"
     },
     "resources": [
         {
