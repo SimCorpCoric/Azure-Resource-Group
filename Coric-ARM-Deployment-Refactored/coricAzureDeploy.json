@@ -601,7 +601,7 @@
                 "subnetproddmz": {
                     "id": 27,
                     "name": "[concat('sn', variables('vnetV2name'), '-prod-dmz')]",
-                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),3),'.0/26')]"
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.0/26')]"
                 },
                 "subnetuatdmz": {
                     "id": 28,
