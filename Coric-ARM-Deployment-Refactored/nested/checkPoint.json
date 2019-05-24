@@ -95,9 +95,11 @@
             ]
         },
         "routeTableName": "[concat('rt', variables('basename'))]",
-        "subnetadminexternalID": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnetadminexternal.name)]",
-        "subnetadmininternalGatewayID": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnetadmininternalGateway.name)]",
-        "vmNamePortal": "[concat('vm', variables('basename'))]",
+		"subnetadminexternalID": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnet0.name)]",
+        "subnetadmininternalGatewayID": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnet9.name)]",
+        "subnetadminexternalIDNew": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnetadminexternal.name)]",
+        "subnetadmininternalGatewayIDNew": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnetadmininternalGateway.name)]",        
+		"vmNamePortal": "[concat('vm', variables('basename'))]",
         "vnetName": "[parameters('globals').networkSettings.name]",
         "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
         "vnetAddressSpace": "[parameters('globals').networkSettings.addressSpace]",
@@ -927,9 +929,9 @@
                         }
                     },
                     {
-                        "name": "[parameters('globals').networkSettings.subnetadmininternalGateway.name]",
+                        "name": "[parameters('globals').networkSettings.subnetadmininternalgateway.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetadmininternalGateway.prefix]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetadmininternalgateway.prefix]"
                         }
                     },
                     {
