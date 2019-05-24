@@ -398,6 +398,8 @@
         "dc01IPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.196')]",
         "dc02IPAddressOld": "10.200.1.5",
         "dc02IPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.197')]",
+        "ftpIPAddressOld": "10.200.6.5",
+        "ftpIPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.133')]",
         "gatewayExternalIPAddressOld": "10.200.0.4",
         "gatewayExternalIPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.4')]",
         "gatewayInternalIPAddressOld": "10.200.9.4",
@@ -493,8 +495,6 @@
                 "dmzSubnetID": "[variables(concat('dmzSubnetID', parameters('adminVnetVersion')))]",
                 "rdgatewayIPAddress": "[variables(concat('rdgatewayIPAddress', parameters('adminVnetVersion')))]",
                 "ftpIPAddress": "[variables(concat('ftpIPAddress', parameters('adminVnetVersion')))]",
-                "ftpIPAddressOld": "10.200.6.5",
-                "ftpIPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.133')]",
                 "mgmtNetworkID": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork",
                 "mgmtNetworkAddressSpace": "10.100.0.0/23",
                 "subnet0": {
