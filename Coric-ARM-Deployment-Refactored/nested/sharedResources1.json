@@ -33,8 +33,6 @@
   },
 
   "variables": {
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
-    "vnet2ID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.vnetV2name)]",
     "dcBasename": "[concat(parameters('globals').baseName, '-dc')]",
 
     "primaryDomainController": {
@@ -62,7 +60,7 @@
             "privateIPAllocationMethod": "Static",
             "privateIPAddress": "[parameters('globals').networkSettings.dc01IPAddress]",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet1.name)]"
+              "id": "[parameters('globals').networkSettings.domainSubnetID]"
             }
           }
         }
@@ -107,7 +105,7 @@
             "privateIPAllocationMethod": "Static",
             "privateIPAddress": "[parameters('globals').networkSettings.dc02IPAddress]",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet1.name)]"
+              "id": "[parameters('globals').networkSettings.domainSubnetID]"
             }
           }
         }
@@ -151,7 +149,7 @@
             "privateIPAllocationMethod": "Static",
             "privateIPAddress": "[parameters('globals').networkSettings.rdgatewayIPAddress]",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet6.name)]"
+              "id": "[parameters('globals').networkSettings.dmzSubnetID]"
             }
           }
         }
@@ -194,7 +192,7 @@
             "privateIPAllocationMethod": "Static",
             "privateIPAddress": "[parameters('globals').networkSettings.ftpIPAddress]",
             "subnet": {
-              "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet6.name)]"
+              "id": "[parameters('globals').networkSettings.dmzSubnetID]"
             }
           }
         }

@@ -88,17 +88,13 @@
                         "privateIPAllocationMethod": "Static",
                         "privateIPAddress": "[parameters('globals').networkSettings.rdgatewayIPAddress]",
                         "subnet": {
-                            "id": "[concat(variables('vnetID'),'/subnets/', parameters('globals').networkSettings.subnet6.name)]"
+                            "id": "[parameters('globals').networkSettings.dmzSubnetID]"
                         }
                     }
                 }
             ]
         },
         "routeTableName": "[concat('rt', variables('basename'))]",
-		"subnetadminexternalID": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnet0.name)]",
-        "subnetadmininternalGatewayID": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnet9.name)]",
-        "subnetadminexternalIDNew": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnetadminexternal.name)]",
-        "subnetadmininternalGatewayIDNew": "[concat(variables('vnetId'), '/subnets/', parameters('globals').networkSettings.subnetadmininternalGateway.name)]",
 		"vmNamePortal": "[concat('vm', variables('basename'))]",
         "vnetName": "[parameters('globals').networkSettings.name]",
         "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]",
@@ -1435,7 +1431,7 @@
                                 "Id": "[variables('publicIPAddressId')]"
                             },
                             "subnet": {
-                                "id": "[variables('subnetadminexternalID')]"
+                                "id": "[parameters('globals').networkSettings.gatewayExternalSubnetID]"
                             },
                             "loadBalancerInboundNatRules": [
                                 {
@@ -1467,7 +1463,7 @@
                             "privateIPAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[variables('subnetadmininternalGatewayID')]"
+                                "id": "[parameters('globals').networkSettings.gatewayInternalSubnetID]"
                             }
                         }
                     }
