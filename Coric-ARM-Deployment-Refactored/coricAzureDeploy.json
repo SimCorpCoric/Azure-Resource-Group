@@ -407,7 +407,7 @@
         "rdgatewayIPAddressOld": "10.200.6.4",
         "rdgatewayIPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.132')]",
         "globals": {
-            "adminResourceGroupName": "[variables('baseName')]",
+            "adminVnetVersion": "[parameters('adminVnetVersion')]",
             "apiVersion": {
                 "availabilitySets": "2018-06-01",
                 "deployment": "2018-05-01",
