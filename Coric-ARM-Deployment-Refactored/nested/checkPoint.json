@@ -120,7 +120,7 @@
             "properties": {
                 "ipConfigurations": [
                     {
-                        "name": "ipconfig",
+                        "name": "ipconfig1",
                         "properties": {
                             "privateIPAllocationMethod": "[variables('rdsGateway').ipConfigurations[0].properties.privateIPAllocationMethod]",
                             "privateIPAddress": "[variables('rdsGateway').ipConfigurations[0].properties.privateIPAddress]",
