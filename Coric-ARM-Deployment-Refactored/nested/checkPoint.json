@@ -1337,7 +1337,7 @@
             "location": "[resourceGroup().location]",
             "name": "[concat('pip', variables('incomingTraffic')[0].name)]",
             "dependsOn": [
-                "[concat('nic', variables('rdsGateway').basename, '01')]"
+                "[variables('rdsGatewayNicName')]",
             ],
             "properties": {
                 "dnsSettings": {
