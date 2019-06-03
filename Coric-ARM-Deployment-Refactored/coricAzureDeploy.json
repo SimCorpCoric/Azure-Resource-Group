@@ -17,7 +17,6 @@
         },
         "vnetV2addressSpace": {
             "type": "string",
-            "defaultValue": "",
             "metadata": {
                 "description": "VNET v2 Address space for the specific client, e.g., '10.11.16.0/21' ."
             }
