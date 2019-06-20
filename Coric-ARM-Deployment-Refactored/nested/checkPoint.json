@@ -44,7 +44,7 @@
         },
         "incomingTraffic": [
             {
-                "name": "[concat(parameters('globals').baseName,'-rds', parameters('globals').test)]",
+                "name": "[concat(parameters('globals').baseName,'-rdg01', parameters('globals').test)]",
                 "frontendPort": 443,
                 "backendPort": 8443
             },
