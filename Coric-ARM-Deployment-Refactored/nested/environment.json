@@ -30,6 +30,7 @@
 
     "desktop": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
+      "appID": "dt",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
@@ -57,6 +58,7 @@
     "dmzBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dmz')]",
     "dmzServer": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
+      "appID": "dmz",
       "basename": "[variables('dmzBasename')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "dataDisks": [
@@ -94,6 +96,7 @@
 
     "drone": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
+      "appID": "dr",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
@@ -120,6 +123,7 @@
 
     "pushPull": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
+      "appID": "pp",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-pp')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
@@ -147,6 +151,7 @@
     "sqlBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
     "sql": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
+      "appID": "sql",
       "basename": "[variables('sqlBasename')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "dataDisks": [
@@ -192,6 +197,7 @@
     "warehouseBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
     "warehouse": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
+      "appID": "iis",
       "basename": "[variables('warehouseBasename')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
       "dataDisks": [
@@ -229,6 +235,7 @@
 
     "web": {
       "adminUsername": "[parameters('globals').localAdminUsername]",
+      "appID": "web",
       "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-web')]",
       "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
       "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
