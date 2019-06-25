@@ -42,9 +42,11 @@
   },
 
   "variables": {
+    "vmNameEnd": "[last(split(parameters('machineSettings').basename,'-'))]",
+    "vmFunctionID": "[substring(variables('vmNameEnd'), 0, sub(length(variables('vmNameEnd')), 2))]",
     "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
     "nicName": "[toLower(concat('nic', parameters('machineSettings').basename))]",
-    "asName": "[toLower(concat('as', parameters('machineSettings').basename))]",
+    "asName": "[toUpper(concat('as', parameters('globals').basename, '-', parameters('globals').environment.shortname, '-', variables('vmFunctionID')))]",
     "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
     "vmName": "[parameters('machineSettings').basename]",
     "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
