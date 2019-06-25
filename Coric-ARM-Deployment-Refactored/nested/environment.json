@@ -46,10 +46,6 @@
           }
         }
       ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
-      ],
       "numberOfVMs": "[parameters('globals').environment.desktopCount]",
       "ouPath": "[concat(parameters('globals').ou.desktop, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
@@ -87,10 +83,6 @@
           }
         }
       ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
-      ],
       "numberOfVMs": "[parameters('globals').environment.dmzServerCount]",
       "ouPath": "[concat(parameters('globals').ou.dmz, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
@@ -116,10 +108,6 @@
           }
         }
       ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
-      ],
       "numberOfVMs": "[parameters('globals').environment.droneCount]",
       "ouPath": "[concat(parameters('globals').ou.drone, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
@@ -144,10 +132,6 @@
             }
           }
         }
-      ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
       "numberOfVMs": "[parameters('globals').environment.pushPullCount]",
       "ouPath": "[concat(parameters('globals').ou.pushPull, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
@@ -185,10 +169,6 @@
             }
           }
         }
-      ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.sql, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
@@ -234,10 +214,6 @@
           }
         }
       ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
-      ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
@@ -262,10 +238,6 @@
             }
           }
         }
-      ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
       "numberOfVMs": "[parameters('globals').environment.webCount]",
       "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",

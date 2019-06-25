@@ -154,10 +154,6 @@
           }
         }
       ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
-      ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.rdg, parameters('globals').ou.serverRoles)]",
       "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIP]",
@@ -196,10 +192,6 @@
             }
           }
         }
-      ],
-      "dnsServers": [
-        "[parameters('globals').networkSettings.dc01IPAddress]",
-        "[parameters('globals').networkSettings.dc02IPAddress]"
       ],
       "numberOfVMs": 1,
       "ouPath": "[concat(parameters('globals').ou.ftp, parameters('globals').ou.serverRoles)]",
