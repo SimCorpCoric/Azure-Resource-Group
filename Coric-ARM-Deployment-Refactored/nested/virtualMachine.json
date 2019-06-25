@@ -43,9 +43,8 @@
 
   "variables": {
     "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
-    "nicName": "[toLower(concat('nic', parameters('machineSettings').basename))]",
-    "asName": "[toUpper(concat('as', parameters('globals').basename, '-', parameters('globals').environment.shortname, '-', parameters('machineSettings').appID))]",
-    "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
+    "nicName": "[concat('nic', parameters('machineSettings').basename)]",
+    "pipName": "[concat('pip', parameters('machineSettings').basename)]",
     "vmName": "[parameters('machineSettings').basename]",
     "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
   },
@@ -63,7 +62,10 @@
       "properties": {
         "ipConfigurations": "[parameters('machineSettings').ipConfigurations]",
         "dnsSettings": {
-          "dnsServers": "[parameters('machineSettings').dnsServers]"
+          "dnsServers": [
+            "[parameters('globals').networkSettings.dc01IPAddress]",
+            "[parameters('globals').networkSettings.dc02IPAddress]"
+          ]
         }
       }
     },
@@ -103,19 +105,9 @@
           },
           "ipConfigurations": {
             "value": "[parameters('machineSettings').ipConfigurations]"
-          },
-          "dnsServers": {
-            "value": "[parameters('machineSettings').dnsServers]"
           }
         }
       }
-    },
-
-    {
-      "apiVersion": "[parameters('globals').apiVersion.availabilitySets]",
-      "type": "Microsoft.Compute/availabilitySets",
-      "name": "[concat(variables('asName'))]",
-      "location": "[resourceGroup().location]"
     },
 
     {
@@ -128,13 +120,9 @@
         "count": "[parameters('machineSettings').numberOfVMs]"
       },
       "dependsOn": [
-        "[concat(variables('pipName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-        "[variables('asName')]"
+        "[concat(variables('pipName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
       ],
       "properties": {
-        "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(variables('asName')))]"
-        },
         "hardwareProfile": {
           "vmSize": "[parameters('machineSettings').imageReference.size]"
         },
