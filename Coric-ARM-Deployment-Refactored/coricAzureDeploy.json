@@ -362,6 +362,7 @@
         }
     },
     "variables": {
+        "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2'))]",
         "asrSuffix": "-asr",
         "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
         "domainSuffix": "Hosted",
