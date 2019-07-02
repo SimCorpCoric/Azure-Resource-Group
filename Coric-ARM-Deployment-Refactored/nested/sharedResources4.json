@@ -1,72 +1,71 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-
-  "parameters": {
-    "globals": {
-      "type": "object",
-      "metadata": {
-        "Description": "Global complex object passed to nested templates"
-      }
-    },
-
-    "domainAdminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Domain admin password"
-      }
-    },
-
-    "localAdminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Local admin password"
-      }
-    },
-
-    "sicKey": {
-      "type": "securestring",
-      "metadata": {
-        "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
-      }
-    }
-  },
-
-  "variables": {
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]"
-
-  },
-
-  "resources": [
-    {
-      "name": "checkPointSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').checkPointTemplateLink]",
-          "contentVersion": "1.0.0.0"
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "globals": {
+            "type": "object",
+            "metadata": {
+                "Description": "Global complex object passed to nested templates"
+            }
         },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "dnsServers": {
-            "value": [
-              "[parameters('globals').networkSettings.dc01IPAddress]",
-              "[parameters('globals').networkSettings.dc02IPAddress]"
-            ]
-          },
-          "adminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-          "sicKey": {
-            "value": "[parameters('sicKey')]"
-          }
+        "domainAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Domain admin password"
+            }
+        },
+        "localAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Local admin password"
+            }
+        },
+        "sicKey": {
+            "type": "securestring",
+            "metadata": {
+                "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
+            }
+        },
+        "asrSuffix": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "If not blank, indicates an ASR deployment should occur, as well as the naming suffix for the deployment."
+            }
         }
-      }
-    }
-
-  ]
+    },
+    "resources": [
+        {
+            "name": "checkPointSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').checkPointTemplateLink]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "dnsServers": {
+                        "value": [
+                            "[parameters('globals').networkSettings.dc01IPAddress]",
+                            "[parameters('globals').networkSettings.dc02IPAddress]"
+                        ]
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    },
+                    "sicKey": {
+                        "value": "[parameters('sicKey')]"
+                    },
+                    "asrSuffix": {
+                        "value": "[parameters('asrSuffix')]"
+                    }
+                }
+            }
+        }
+    ]
 }

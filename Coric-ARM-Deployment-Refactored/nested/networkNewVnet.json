@@ -17,21 +17,19 @@
             "metadata": {
                 "description": "DNS address(es) of the DNS Server(s) used by the VNET"
             }
+        },
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the network to be created."
+            }
         }
-    },
-    "variables": {
-        "vnetV2name": "[parameters('globals').networkSettings.vnetV2name]",
-        "oct3plus1": 1,
-        "oct3plus2": 2,
-        "oct3plus3": 3,
-        "oct3plus4": 4,
-        "octetsArr": "[split(parameters('globals').networkSettings.vnetV2addressSpace,'.')]"
     },
     "resources": [
         {
             "apiVersion": "[parameters('globals').apiVersion.network]",
             "type": "Microsoft.Network/virtualNetworks",
-            "name": "[variables('vnetV2name')]",
+            "name": "[parameters('name')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "addressSpace": {
@@ -44,123 +42,253 @@
                 },
                 "subnets": [
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-admin-external')]",
+                        "name": "[parameters('globals').networkSettings.subnetadminexternal.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.0/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetadminexternal.prefix]"
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-admin-internalgateway')]",
+                        "name": "[parameters('globals').networkSettings.subnetadmininternalgateway.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.64/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetadmininternalgateway.prefix]"
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-admin-dmz')]",
+                        "name": "[parameters('globals').networkSettings.subnetadmindmz.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.128/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetadmindmz.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-admin-domain')]",
+                        "name": "[parameters('globals').networkSettings.subnetadmindomain.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.192/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetadmindomain.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-admin-security')]",
+                        "name": "[parameters('globals').networkSettings.subnetadminsecurity.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetadminsecurity.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-prod-desktop')]",
+                        "name": "[parameters('globals').networkSettings.subnetproddesktop.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.0/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetproddesktop.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-prod-web')]",
+                        "name": "[parameters('globals').networkSettings.subnetprodweb.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.64/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetprodweb.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-prod-application')]",
+                        "name": "[parameters('globals').networkSettings.subnetprodapplication.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.128/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetprodapplication.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-prod-database')]",
+                        "name": "[parameters('globals').networkSettings.subnetproddatabase.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus1')),'.192/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetproddatabase.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-uat-desktop')]",
+                        "name": "[parameters('globals').networkSettings.subnetuatdesktop.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.0/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetuatdesktop.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-uat-web')]",
+                        "name": "[parameters('globals').networkSettings.subnetuatweb.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.64/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetuatweb.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-uat-application')]",
+                        "name": "[parameters('globals').networkSettings.subnetuatapplication.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.128/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetuatapplication.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-uat-database')]",
+                        "name": "[parameters('globals').networkSettings.subnetuatdatabase.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus2')),'.192/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetuatdatabase.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-dev-desktop')]",
+                        "name": "[parameters('globals').networkSettings.subnetdevdesktop.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.0/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetdevdesktop.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-dev-web')]",
+                        "name": "[parameters('globals').networkSettings.subnetdevweb.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.64/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetdevweb.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-dev-application')]",
+                        "name": "[parameters('globals').networkSettings.subnetdevapplication.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.128/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetdevapplication.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-dev-database')]",
+                        "name": "[parameters('globals').networkSettings.subnetdevdatabase.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus3')),'.192/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetdevdatabase.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-prod-dmz')]",
+                        "name": "[parameters('globals').networkSettings.subnetproddmz.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.0/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetproddmz.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     {
-                        "name": "[concat('sn', variables('vnetV2name'), '-uat-dmz')]",
+                        "name": "[parameters('globals').networkSettings.subnetuatdmz.name]",
                         "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.64/26')]"
-                        }
-                    },
-                    {
-                        "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz')]",
-                        "properties": {
-                            "addressPrefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),variables('oct3plus4')),'.128/26')]"
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetuatdmz.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
                         }
                     }
                 ]
@@ -168,12 +296,12 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
-            "name": "[concat(variables('vnetV2name'), '/', 'vnp', variables('vnetV2name'), '-', parameters('globals').networkSettings.name)]",
+            "name": "[concat(parameters('name'), '/', parameters('name'), '-vnMgmtNetwork')]",
             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
             "properties": {
                 "peeringState": "Connected",
                 "remoteVirtualNetwork": {
-                    "id": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.name)]"
+                    "id": "[parameters('globals').networkSettings.mgmtNetworkID]"
                 },
                 "allowVirtualNetworkAccess": true,
                 "allowForwardedTraffic": true,
@@ -181,35 +309,12 @@
                 "useRemoteGateways": false,
                 "remoteAddressSpace": {
                     "addressPrefixes": [
-                        "[parameters('globals').networkSettings.addressSpace]"
+                        "[parameters('globals').networkSettings.mgmtNetworkAddressSpace]"
                     ]
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
-            ]
-        },
-        {
-            "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
-            "name": "[concat(variables('vnetV2name'), '/', 'vnp', variables('vnetV2name'), '-vnMgmtNetwork)')]",
-            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-            "properties": {
-                "peeringState": "Connected",
-                "remoteVirtualNetwork": {
-                    "id": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork"
-                },
-                "allowVirtualNetworkAccess": true,
-                "allowForwardedTraffic": true,
-                "allowGatewayTransit": false,
-                "useRemoteGateways": false,
-                "remoteAddressSpace": {
-                    "addressPrefixes": [
-                        "10.100.0.0/23"
-                    ]
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('name'))]"
             ]
         }
     ]

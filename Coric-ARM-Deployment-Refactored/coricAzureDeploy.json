@@ -346,17 +346,6 @@
                 "description": "One time key for Check Point Secure Internal Communication (certificate to connect Gateway to Management Server)"
             }
         },
-        "drTest": {
-            "defaultValue": "",
-            "type": "string",
-            "allowedValues": [
-                "",
-                "-test"
-            ],
-            "metadata": {
-                "description": "Denotes DR test deployment"
-            }
-        },
         "sequenceVersion": {
             "type": "int"
         },
@@ -373,6 +362,7 @@
         }
     },
     "variables": {
+        "asrSuffix": "-asr",
         "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
         "domainSuffix": "Hosted",
         "environmentShortNameAdmin": "Admin",
@@ -380,34 +370,9 @@
         "environmentShortNameProduction": "Prod",
         "environmentShortNameUAT": "UAT",
         "environmentShortNameWeb": "Web",
-        "adminVnetID": "[variables(concat('adminVnetID', parameters('adminVnetVersion')))]",
-        "adminVnetIDOld": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName')))]",
-        "adminVnetIDNew": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2'))]",
-        "gatewayExternalSubnetIDOld": "[concat(variables('adminVnetID'), '/subnets/gateway')]",
-        "gatewayExternalSubnetIDNew": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-external')]",
-        "gatewayInternalSubnetIDOld": "[concat(variables('adminVnetID'), '/subnets/FirewallInternal')]",
-        "gatewayInternalSubnetIDNew": "[concat(variables('adminVnetID'), '/subnets/','sn', variables('vnetV2name'), '-admin-internalgateway')]",
-        "domainSubnetIDOld": "[concat(variables('adminVnetID'), '/subnets/admin')]",
-        "domainSubnetIDNew": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-domain')]",
-        "dmzSubnetIDOld": "[concat(variables('adminVnetID'), '/subnets/public')]",
-        "dmzSubnetIDNew": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-dmz')]",
-        "azureGatewayInternalIPAddressOld": "10.200.9.1",
-        "azureGatewayInternalIPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.65')]",
-        "dc01IPAddressOld": "10.200.1.4",
-        "dc01IPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.196')]",
-        "dc02IPAddressOld": "10.200.1.5",
-        "dc02IPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.197')]",
-        "ftpIPAddressOld": "10.200.6.5",
-        "ftpIPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.133')]",
-        "gatewayExternalIPAddressOld": "10.200.0.4",
-        "gatewayExternalIPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.4')]",
-        "gatewayInternalIPAddressOld": "10.200.9.4",
-        "gatewayInternalIPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.68')]",
-        "rdgatewayIPAddressOld": "10.200.6.4",
-        "rdgatewayIPAddressNew": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.132')]",
         "globals": {
             "adminResourceGroupName": "[variables('baseName')]",
-			"adminVnetVersion": "[parameters('adminVnetVersion')]",
+            "adminVnetVersion": "[parameters('adminVnetVersion')]",
             "apiVersion": {
                 "availabilitySets": "2018-06-01",
                 "deployment": "2018-05-01",
@@ -479,74 +444,24 @@
             "localAdminUsername": "[parameters('localAdminUsername')]",
             "networkSettings": {
                 "name": "[concat('vn', variables('baseName'))]",
-                "adminVnetID": "[variables('adminVnetID')]",
+                "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2'))]",
                 "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
                 "vnetV2addressSpace": "[parameters('vnetV2addressSpace')]",
                 "addressSpace": "10.200.0.0/20",
                 "azureDNS": "168.63.129.16",
-                "azureGatewayInternalIPAddress": "[variables(concat('azureGatewayInternalIPAddress', parameters('adminVnetVersion')))]",
-                "dc01IPAddress": "[variables(concat('dc01IPAddress', parameters('adminVnetVersion')))]",
-                "dc02IPAddress": "[variables(concat('dc02IPAddress', parameters('adminVnetVersion')))]",
-                "gatewayExternalSubnetID": "[variables(concat('gatewayExternalSubnetID', parameters('adminVnetVersion')))]",
-                "gatewayExternalIPAddress": "[variables(concat('gatewayExternalIPAddress', parameters('adminVnetVersion')))]",
-                "gatewayInternalSubnetID": "[variables(concat('gatewayInternalSubnetID', parameters('adminVnetVersion')))]",
-                "gatewayInternalIPAddress": "[variables(concat('gatewayInternalIPAddress', parameters('adminVnetVersion')))]",
-                "domainSubnetID": "[variables(concat('domainSubnetID', parameters('adminVnetVersion')))]",
-                "dmzSubnetID": "[variables(concat('dmzSubnetID', parameters('adminVnetVersion')))]",
-                "rdgatewayIPAddress": "[variables(concat('rdgatewayIPAddress', parameters('adminVnetVersion')))]",
-                "ftpIPAddress": "[variables(concat('ftpIPAddress', parameters('adminVnetVersion')))]",
+                "azureGatewayInternalIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.65')]",
+                "dc01IPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.196')]",
+                "dc02IPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.197')]",
+                "gatewayExternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-external')]",
+                "gatewayExternalIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.4')]",
+                "gatewayInternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/','sn', variables('vnetV2name'), '-admin-internalgateway')]",
+                "gatewayInternalIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.68')]",
+                "domainSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-domain')]",
+                "dmzSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-dmz')]",
+                "rdgatewayIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.132')]",
+                "ftpIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.133')]",
                 "mgmtNetworkID": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork",
                 "mgmtNetworkAddressSpace": "10.100.0.0/23",
-                "subnet0": {
-                    "id": 0,
-                    "name": "gateway",
-                    "prefix": "10.200.0.0/24"
-                },
-                "subnet1": {
-                    "id": 1,
-                    "name": "admin",
-                    "prefix": "10.200.1.0/24"
-                },
-                "subnet2": {
-                    "id": 2,
-                    "name": "database",
-                    "prefix": "10.200.2.0/24"
-                },
-                "subnet3": {
-                    "id": 3,
-                    "name": "backend",
-                    "prefix": "10.200.3.0/24"
-                },
-                "subnet4": {
-                    "id": 4,
-                    "name": "frontend",
-                    "prefix": "10.200.4.0/24"
-                },
-                "subnet5": {
-                    "id": 5,
-                    "name": "user",
-                    "prefix": "10.200.5.0/24"
-                },
-                "subnet6": {
-                    "id": 6,
-                    "name": "public",
-                    "prefix": "10.200.6.0/24"
-                },
-                "subnet7": {
-                    "id": 7,
-                    "name": "dmz",
-                    "prefix": "10.200.7.0/24"
-                },
-                "subnet8": {
-                    "id": 8,
-                    "name": "GatewaySubnet",
-                    "prefix": "10.200.8.0/24"
-                },
-                "subnet9": {
-                    "id": 9,
-                    "name": "FirewallInternal",
-                    "prefix": "10.200.9.0/24"
-                },
                 "subnetadminexternal": {
                     "id": 10,
                     "name": "[concat('sn', variables('vnetV2name'), '-admin-external')]",
@@ -688,7 +603,6 @@
             "templateLinkSQLKeyVault": "[variables('templateLinkSQLKeyVault')]",
             "templateLinkSQLKeyVaultNull": "[variables('templateLinkSQLKeyVaultNull')]",
             "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
-            "test": "[parameters('drTest')]",
             "vhdContainerName": "vhds",
             "webReporter": "[parameters('webReporter')]",
             "webReporterSubnet": "[parameters('webReporterSubnet')]",
@@ -755,16 +669,7 @@
             "version": "latest",
             "size": "[parameters('sqlVMSize')]"
         },
-        "templateLinkCheckPoint": "[variables(concat('templateLinkCheckPoint', parameters('implementationPhase')))]",
-        "templateLinkCheckPoint1": "[uri(deployment().properties.templateLink.uri, 'nested/checkPointNull.json')]",
-        "templateLinkCheckPoint2": "[uri(deployment().properties.templateLink.uri, 'nested/checkPointNull.json')]",
-        "templateLinkCheckPoint3": "[uri(deployment().properties.templateLink.uri, 'nested/checkPointNull.json')]",
-        "templateLinkCheckPoint4": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
-        "templateLinkEnvironment": "[variables(concat('templateLinkEnvironment', parameters('implementationPhase')))]",
-        "templateLinkEnvironment1": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
-        "templateLinkEnvironment2": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
-        "templateLinkEnvironment3": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
-        "templateLinkEnvironment4": "[uri(deployment().properties.templateLink.uri, 'nested/environmentNull.json')]",
+        "templateLinkEnvironment": "[uri(deployment().properties.templateLink.uri, 'nested/environment.json')]",
         "templateLinkSQLKeyVault": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVault.json')]",
         "templateLinkSQLKeyVaultNull": "[uri(deployment().properties.templateLink.uri, 'nested/sqlKeyVaultNull.json')]",
         "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]"
@@ -772,6 +677,7 @@
     "resources": [
         {
             "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'))]",
+            "condition": "[or(equals(parameters('implementationPhase'), 1), equals(parameters('implementationPhase'), 4))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('globals').apiVersion.deployment]",
             "properties": {
@@ -792,12 +698,47 @@
                     },
                     "sicKey": {
                         "value": "[parameters('sicKey')]"
+                    },
+                    "asrSuffix": {
+                        "value": ""
+                    }
+                }
+            }
+        },
+        {
+            "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'))]",
+            "condition": "[or(equals(parameters('implementationPhase'), 1), equals(parameters('implementationPhase'), 4))]",
+            "resourceGroup": "[concat(resourcegroup().name, variables('asrSuffix'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('globals').apiVersion.deployment]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('sharedResourcesTemplateURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[variables('globals')]"
+                    },
+                    "domainAdminPassword": {
+                        "value": "[parameters('domainAdminPassword')]"
+                    },
+                    "localAdminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    },
+                    "sicKey": {
+                        "value": "[parameters('sicKey')]"
+                    },
+                    "asrSuffix": {
+                        "value": "[variables('asrSuffix')]"
                     }
                 }
             }
         },
         {
             "name": "[concat('environmentSetup', parameters('implementationPhase'))]",
+            "condition": "[equals(parameters('implementationPhase'), 3)]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('globals').apiVersion.deployment]",
             "dependsOn": [
