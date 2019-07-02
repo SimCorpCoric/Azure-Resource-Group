@@ -299,7 +299,7 @@
             }
         },
         {
-            "name": "[concat('nic', variables('primaryDomainController').basename, '01')]",
+            "name": "[concat('nic', parameters('globals').environment.shortname, '-vm', variables('primaryDomainController').basename, '01')]",
             "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "[parameters('globals').apiVersion.nic]",

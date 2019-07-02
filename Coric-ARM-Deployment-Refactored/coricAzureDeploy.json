@@ -21,15 +21,15 @@
                 "description": "VNET v2 Address space for the specific client, e.g., '10.11.16.0/21' ."
             }
         },
-        "adminVnetVersion": {
+        "nicNamingVersion": {
             "type": "string",
-            "defaultValue": "Old",
+            "defaultValue": "2",
             "allowedValues": [
-                "Old",
-                "New"
+                "1",
+                "2"
             ],
             "metadata": {
-                "description": "Whether to deploy into the VNETv2 admin subnets or not."
+                "description": "BNP and Candriam's NICs were built with a different naming convention--use '1' for those environments only."
             }
         },
         "storageAccountType": {
@@ -373,7 +373,6 @@
         "environmentShortNameWeb": "Web",
         "globals": {
             "adminResourceGroupName": "[variables('baseName')]",
-            "adminVnetVersion": "[parameters('adminVnetVersion')]",
             "apiVersion": {
                 "availabilitySets": "2018-06-01",
                 "deployment": "2018-05-01",
@@ -465,6 +464,7 @@
                 "mgmtNetworkResourceGroup": "rgMgmtNetwork",
                 "mgmtNetworkID": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork",
                 "mgmtNetworkAddressSpace": "10.100.0.0/23",
+                "nicNamingVersion": "[parameters('nicNamingVersion')]",
                 "subnetadminexternal": {
                     "id": 10,
                     "name": "[concat('sn', variables('vnetV2name'), '-admin-external')]",

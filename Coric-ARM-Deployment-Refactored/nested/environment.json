@@ -1,527 +1,506 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-
-  "parameters": {
-    "globals": {
-      "metadata": {
-        "Description": "Global complex object passed to nested templates"
-      },
-      "type": "object"
-    },
-
-    "domainAdminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Domain admin password"
-      }
-    },
-
-    "localAdminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Local admin password"
-      }
-    }
-  },
-
-  "variables": {
-    "acronym": "[toLower(parameters('globals').environment.acronym)]",
-
-    "desktop": {
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "appID": "dt",
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
-      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-      "imageReference": "[parameters('globals').windowsVM]",
-      "ipConfigurations": [
-        {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "subnet": {
-              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-desktop'))]"
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "globals": {
+            "metadata": {
+                "Description": "Global complex object passed to nested templates"
+            },
+            "type": "object"
+        },
+        "domainAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Domain admin password"
             }
-          }
-        }
-      ],
-      "dnsServers": [ ],
-      "numberOfVMs": "[parameters('globals').environment.desktopCount]",
-      "ouPath": "[concat(parameters('globals').ou.desktop, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
-      "storageAccount": "[variables('storageAccountName')]"
-    },
-
-    "dmzBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dmz')]",
-    "dmzServer": {
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "appID": "dmz",
-      "basename": "[variables('dmzBasename')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-      "dataDisks": [
-        {
-          "name": "[concat(variables('dmzBasename'), '01-datadisk-0')]",
-          "diskSizeGB": "[parameters('globals').dataDiskSizes.dmz]",
-          "lun": 0,
-          "vhd": {
-            "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dmzBasename'), '01-Data0.vhd')]"
-          },
-          "createOption": "Empty"
-        }
-      ],
-      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-      "imageReference": "[parameters('globals').windowsVM]",
-      "ipConfigurations": [
-        {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "subnet": {
-              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-', parameters('globals').dmzServerSubnet))]"
+        },
+        "localAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Local admin password"
             }
-          }
         }
-      ],
-      "dnsServers": [ ],
-      "numberOfVMs": "[parameters('globals').environment.dmzServerCount]",
-      "ouPath": "[concat(parameters('globals').ou.dmz, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
-      "storageAccount": "[variables('storageAccountName')]"
     },
-
-    "drone": {
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "appID": "dr",
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
-      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-      "imageReference": "[parameters('globals').windowsVM]",
-      "ipConfigurations": [
+    "variables": {
+        "acronym": "[toLower(parameters('globals').environment.acronym)]",
+        "desktop": {
+            "adminUsername": "[parameters('globals').localAdminUsername]",
+            "appID": "dt",
+            "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dt')]",
+            "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
+            "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+            "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+            "imageReference": "[parameters('globals').windowsVM]",
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig",
+                    "properties": {
+                        "privateIPAllocationMethod": "Dynamic",
+                        "subnet": {
+                            "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-desktop'))]"
+                        }
+                    }
+                }
+            ],
+            "dnsServers": [],
+            "numberOfVMs": "[parameters('globals').environment.desktopCount]",
+            "ouPath": "[concat(parameters('globals').ou.desktop, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
+            "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+            "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+            "storageAccount": "[variables('storageAccountName')]"
+        },
+        "dmzBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dmz')]",
+        "dmzServer": {
+            "adminUsername": "[parameters('globals').localAdminUsername]",
+            "appID": "dmz",
+            "basename": "[variables('dmzBasename')]",
+            "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+            "dataDisks": [
+                {
+                    "name": "[concat(variables('dmzBasename'), '01-datadisk-0')]",
+                    "diskSizeGB": "[parameters('globals').dataDiskSizes.dmz]",
+                    "lun": 0,
+                    "vhd": {
+                        "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dmzBasename'), '01-Data0.vhd')]"
+                    },
+                    "createOption": "Empty"
+                }
+            ],
+            "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+            "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+            "imageReference": "[parameters('globals').windowsVM]",
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig",
+                    "properties": {
+                        "privateIPAllocationMethod": "Dynamic",
+                        "subnet": {
+                            "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-', parameters('globals').dmzServerSubnet))]"
+                        }
+                    }
+                }
+            ],
+            "dnsServers": [],
+            "numberOfVMs": "[parameters('globals').environment.dmzServerCount]",
+            "ouPath": "[concat(parameters('globals').ou.dmz, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
+            "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+            "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+            "storageAccount": "[variables('storageAccountName')]"
+        },
+        "drone": {
+            "adminUsername": "[parameters('globals').localAdminUsername]",
+            "appID": "dr",
+            "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-dr')]",
+            "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
+            "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+            "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+            "imageReference": "[parameters('globals').windowsVM]",
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig",
+                    "properties": {
+                        "privateIPAllocationMethod": "Dynamic",
+                        "subnet": {
+                            "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-application'))]"
+                        }
+                    }
+                }
+            ],
+            "dnsServers": [],
+            "numberOfVMs": "[parameters('globals').environment.droneCount]",
+            "ouPath": "[concat(parameters('globals').ou.drone, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
+            "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+            "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+            "storageAccount": "[variables('storageAccountName')]"
+        },
+        "pushPull": {
+            "adminUsername": "[parameters('globals').localAdminUsername]",
+            "appID": "pp",
+            "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-pp')]",
+            "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
+            "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+            "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+            "imageReference": "[parameters('globals').windowsVM]",
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig",
+                    "properties": {
+                        "privateIPAllocationMethod": "Dynamic",
+                        "subnet": {
+                            "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-application'))]"
+                        }
+                    }
+                }
+            ],
+            "dnsServers": [],
+            "numberOfVMs": "[parameters('globals').environment.pushPullCount]",
+            "ouPath": "[concat(parameters('globals').ou.pushPull, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
+            "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+            "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+            "storageAccount": "[variables('storageAccountName')]"
+        },
+        "sqlBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
+        "sql": {
+            "adminUsername": "[parameters('globals').localAdminUsername]",
+            "appID": "sql",
+            "basename": "[variables('sqlBasename')]",
+            "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+            "dataDisks": [
+                {
+                    "name": "[concat(variables('sqlBasename'), '01-datadisk-0')]",
+                    "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
+                    "lun": 0,
+                    "vhd": {
+                        "uri": "[concat('http://', variables('storageAccountNamePremium'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'), '01-Data0.vhd')]"
+                    },
+                    "createOption": "Empty"
+                }
+            ],
+            "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+            "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+            "imageReference": "[parameters('globals').sqlVM]",
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig",
+                    "properties": {
+                        "privateIPAllocationMethod": "Dynamic",
+                        "subnet": {
+                            "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-database'))]"
+                        }
+                    }
+                }
+            ],
+            "dnsServers": [],
+            "numberOfVMs": 1,
+            "ouPath": "[concat(parameters('globals').ou.sql, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
+            "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+            "sizeOfDataDiskInGB": 1023,
+            "sqlKeyVaultTemplateLink": "[parameters('globals').sqlEncryptionTemplate]",
+            "storageAccount": "[variables('storageAccountNamePremium')]"
+        },
+        "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname))]",
+        "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
+        "storageAccountNamePremiumType": "Premium_LRS",
+        "webReporterVMTemplate": "[replace(concat(split(parameters('globals').templateLinkVirtualMachine,'.json')[0], parameters('globals').webReporter,'.json'),'Yes','')]",
+        "vnetID": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.vnetV2name)]",
+        "warehouseBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
+        "warehouse": {
+            "adminUsername": "[parameters('globals').localAdminUsername]",
+            "appID": "iis",
+            "basename": "[variables('warehouseBasename')]",
+            "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+            "dataDisks": [
+                {
+                    "name": "[concat(variables('warehouseBasename'), '01-datadisk-0')]",
+                    "diskSizeGB": "[parameters('globals').dataDiskSizes.warehouse]",
+                    "lun": 0,
+                    "vhd": {
+                        "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('warehouseBasename'), '01-Data0.vhd')]"
+                    },
+                    "createOption": "Empty"
+                }
+            ],
+            "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+            "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+            "imageReference": "[parameters('globals').windowsVM]",
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig",
+                    "properties": {
+                        "privateIPAllocationMethod": "Dynamic",
+                        "subnet": {
+                            "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-web'))]"
+                        }
+                    }
+                }
+            ],
+            "dnsServers": [],
+            "numberOfVMs": 1,
+            "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
+            "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+            "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+            "storageAccount": "[variables('storageAccountName')]"
+        },
+        "web": {
+            "adminUsername": "[parameters('globals').localAdminUsername]",
+            "appID": "web",
+            "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-web')]",
+            "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
+            "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+            "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+            "imageReference": "[parameters('globals').windowsVM]",
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig",
+                    "properties": {
+                        "privateIPAllocationMethod": "Dynamic",
+                        "subnet": {
+                            "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-', parameters('globals').webReporterSubnet))]"
+                        }
+                    }
+                }
+            ],
+            "dnsServers": [],
+            "numberOfVMs": "[parameters('globals').environment.webCount]",
+            "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
+            "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+            "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+            "storageAccount": "[variables('storageAccountName')]"
+        }
+    },
+    "resources": [
         {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "subnet": {
-              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-application'))]"
+            "name": "environmentStorage",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('globals').adminResourceGroupName]",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').storageAccountTemplateLink]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "Name": {
+                        "value": "[variables('storageAccountName')]"
+                    },
+                    "accountType": {
+                        "value": "[parameters('globals').storageType]"
+                    }
+                }
             }
-          }
-        }
-      ],
-      "dnsServers": [ ],
-      "numberOfVMs": "[parameters('globals').environment.droneCount]",
-      "ouPath": "[concat(parameters('globals').ou.drone, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
-      "storageAccount": "[variables('storageAccountName')]"
-    },
-
-    "pushPull": {
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "appID": "pp",
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-pp')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
-      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-      "imageReference": "[parameters('globals').windowsVM]",
-      "ipConfigurations": [
+        },
         {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "subnet": {
-              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-application'))]"
+            "name": "environmentStoragePremium",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('globals').adminResourceGroupName]",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').storageAccountTemplateLink]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "Name": {
+                        "value": "[variables('storageAccountNamePremium')]"
+                    },
+                    "accountType": {
+                        "value": "[variables('storageAccountNamePremiumType')]"
+                    }
+                }
             }
-          }
-        }
-      ],
-      "dnsServers": [ ],
-      "numberOfVMs": "[parameters('globals').environment.pushPullCount]",
-      "ouPath": "[concat(parameters('globals').ou.pushPull, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
-      "storageAccount": "[variables('storageAccountName')]"
-    },
-
-    "sqlBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-sql')]",
-    "sql": {
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "appID": "sql",
-      "basename": "[variables('sqlBasename')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-      "dataDisks": [
+        },
         {
-          "name": "[concat(variables('sqlBasename'), '01-datadisk-0')]",
-          "diskSizeGB": "[parameters('globals').dataDiskSizes.sql]",
-          "lun": 0,
-          "vhd": {
-            "uri": "[concat('http://', variables('storageAccountNamePremium'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'), '01-Data0.vhd')]"
-          },
-          "createOption": "Empty"
-        }
-      ],
-      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-      "imageReference": "[parameters('globals').sqlVM]",
-      "ipConfigurations": [
-        {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "subnet": {
-              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-database'))]"
+            "name": "sqlSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'environmentStoragePremium')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').templateLinkVirtualMachine]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "machineSettings": {
+                        "value": "[variables('sql')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    },
+                    "domainAdminPassword": {
+                        "value": "[parameters('domainAdminPassword')]"
+                    }
+                }
             }
-          }
-        }
-      ],
-      "dnsServers": [ ],
-      "numberOfVMs": 1,
-      "ouPath": "[concat(parameters('globals').ou.sql, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sizeOfDataDiskInGB": 1023,
-      "sqlKeyVaultTemplateLink": "[parameters('globals').sqlEncryptionTemplate]",
-      "storageAccount": "[variables('storageAccountNamePremium')]"
-    },
-
-    "storageAccountName": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname))]",
-    "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
-    "storageAccountNamePremiumType": "Premium_LRS",
-    "webReporterVMTemplate": "[replace(concat(split(parameters('globals').templateLinkVirtualMachine,'.json')[0], parameters('globals').webReporter,'.json'),'Yes','')]",
-    "vnetID": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.vnetV2name)]",
-
-    "warehouseBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
-    "warehouse": {
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "appID": "iis",
-      "basename": "[variables('warehouseBasename')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-      "dataDisks": [
+        },
         {
-          "name": "[concat(variables('warehouseBasename'), '01-datadisk-0')]",
-          "diskSizeGB": "[parameters('globals').dataDiskSizes.warehouse]",
-          "lun": 0,
-          "vhd": {
-            "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('warehouseBasename'), '01-Data0.vhd')]"
-          },
-          "createOption": "Empty"
-        }
-      ],
-      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-      "imageReference": "[parameters('globals').windowsVM]",
-      "ipConfigurations": [
-        {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "subnet": {
-              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-web'))]"
+            "name": "warehouseSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').templateLinkVirtualMachine]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "machineSettings": {
+                        "value": "[variables('warehouse')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    },
+                    "domainAdminPassword": {
+                        "value": "[parameters('domainAdminPassword')]"
+                    }
+                }
             }
-          }
-        }
-      ],
-      "dnsServers": [ ],
-      "numberOfVMs": 1,
-      "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
-      "storageAccount": "[variables('storageAccountName')]"
-    },
-
-    "web": {
-      "adminUsername": "[parameters('globals').localAdminUsername]",
-      "appID": "web",
-      "basename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-web')]",
-      "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
-      "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
-      "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-      "imageReference": "[parameters('globals').windowsVM]",
-      "ipConfigurations": [
+        },
         {
-          "name": "ipconfig",
-          "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "subnet": {
-              "id": "[toLower(concat(variables('vnetID'),'/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-', parameters('globals').environment.shortname, '-', parameters('globals').webReporterSubnet))]"
+            "name": "droneSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').templateLinkVirtualMachine]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "machineSettings": {
+                        "value": "[variables('drone')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    },
+                    "domainAdminPassword": {
+                        "value": "[parameters('domainAdminPassword')]"
+                    }
+                }
             }
-          }
-        }
-      ],
-      "dnsServers": [ ],
-      "numberOfVMs": "[parameters('globals').environment.webCount]",
-      "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-      "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
-      "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
-      "storageAccount": "[variables('storageAccountName')]"
-    }
-  },
-
-  "resources": [
-    {
-      "name": "environmentStorage",
-      "type": "Microsoft.Resources/deployments",
-      "resourceGroup": "[parameters('globals').adminResourceGroupName]",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').storageAccountTemplateLink]",
-          "contentVersion": "1.0.0.0"
         },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "Name": {
-            "value": "[variables('storageAccountName')]"
-          },
-          "accountType": {
-            "value": "[parameters('globals').storageType]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "environmentStoragePremium",
-      "type": "Microsoft.Resources/deployments",
-      "resourceGroup": "[parameters('globals').adminResourceGroupName]",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').storageAccountTemplateLink]",
-          "contentVersion": "1.0.0.0"
+        {
+            "condition": "[if(equals(parameters('globals').environment.desktopCount, 0), bool('false'), bool('true'))]",
+            "name": "desktopSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').templateLinkVirtualMachine]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "machineSettings": {
+                        "value": "[variables('desktop')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    },
+                    "domainAdminPassword": {
+                        "value": "[parameters('domainAdminPassword')]"
+                    }
+                }
+            }
         },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "Name": {
-            "value": "[variables('storageAccountNamePremium')]"
-          },
-          "accountType": {
-            "value": "[variables('storageAccountNamePremiumType')]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "sqlSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStoragePremium')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').templateLinkVirtualMachine]",
-          "contentVersion": "1.0.0.0"
+        {
+            "name": "webSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('webReporterVMTemplate')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "machineSettings": {
+                        "value": "[variables('web')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    },
+                    "domainAdminPassword": {
+                        "value": "[parameters('domainAdminPassword')]"
+                    }
+                }
+            }
         },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('sql')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "warehouseSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').templateLinkVirtualMachine]",
-          "contentVersion": "1.0.0.0"
+        {
+            "name": "pushPullSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('webReporterVMTemplate')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "machineSettings": {
+                        "value": "[variables('pushPull')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    },
+                    "domainAdminPassword": {
+                        "value": "[parameters('domainAdminPassword')]"
+                    }
+                }
+            }
         },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('warehouse')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          }
+        {
+            "condition": "[if(equals(parameters('globals').environment.dmzServerCount, 0), bool('false'), bool('true'))]",
+            "name": "dmzServerSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').templateLinkVirtualMachine]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "machineSettings": {
+                        "value": "[variables('dmzServer')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    },
+                    "domainAdminPassword": {
+                        "value": "[parameters('domainAdminPassword')]"
+                    }
+                }
+            }
         }
-      }
-    },
-
-    {
-      "name": "droneSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').templateLinkVirtualMachine]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('drone')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          }
-        }
-      }
-    },
-
-    {
-      "condition": "[if(equals(parameters('globals').environment.desktopCount, 0), bool('false'), bool('true'))]",
-      "name": "desktopSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').templateLinkVirtualMachine]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('desktop')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "webSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('webReporterVMTemplate')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('web')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          }
-        }
-      }
-    },
-
-    {
-      "name": "pushPullSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('webReporterVMTemplate')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('pushPull')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          }
-        }
-      }
-    },
-
-    {
-      "condition": "[if(equals(parameters('globals').environment.dmzServerCount, 0), bool('false'), bool('true'))]",
-      "name": "dmzServerSetup",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[parameters('globals').apiVersion.deployment]",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'environmentStorage')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[parameters('globals').templateLinkVirtualMachine]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "globals": {
-            "value": "[parameters('globals')]"
-          },
-          "machineSettings": {
-            "value": "[variables('dmzServer')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('localAdminPassword')]"
-          },
-          "domainAdminPassword": {
-            "value": "[parameters('domainAdminPassword')]"
-          }
-        }
-      }
-    }
-  ]
+    ]
 }
