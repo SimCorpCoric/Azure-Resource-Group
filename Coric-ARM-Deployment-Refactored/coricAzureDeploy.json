@@ -461,6 +461,8 @@
                 "dmzSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-dmz')]",
                 "rdgatewayIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.132')]",
                 "ftpIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.133')]",
+                "mgmtNetworkSubscriptionID": "7f656f31-ece7-4425-8ef7-e597e1b2eac7",
+                "mgmtNetworkResourceGroup": "rgMgmtNetwork",
                 "mgmtNetworkID": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork",
                 "mgmtNetworkAddressSpace": "10.100.0.0/23",
                 "subnetadminexternal": {
