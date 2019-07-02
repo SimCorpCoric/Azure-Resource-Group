@@ -316,31 +316,6 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('name'))]"
             ]
-        },
-        {
-            "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
-            "name": "[concat('vnMgmtNetwork', '/', 'vnMgmtNetwork-', parameters('name'))]",
-            "subscriptionId": "[parameters('globals').networkSettings.mgmtNetworkSubscriptionID]",
-            "resourceGroup": "[parameters('globals').networkSettings.mgmtNetworkResourceGroup]",
-            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-            "properties": {
-                "peeringState": "Connected",
-                "remoteVirtualNetwork": {
-                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('name'))]"
-                },
-                "allowVirtualNetworkAccess": true,
-                "allowForwardedTraffic": true,
-                "allowGatewayTransit": false,
-                "useRemoteGateways": false,
-                "remoteAddressSpace": {
-                    "addressPrefixes": [
-                        "[parameters('globals').networkSettings.vnetV2addressSpace]"
-                    ]
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('name'))]"
-            ]
         }
     ]
 }
