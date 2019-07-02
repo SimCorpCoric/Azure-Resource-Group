@@ -21,6 +21,17 @@
                 "description": "VNET v2 Address space for the specific client, e.g., '10.11.16.0/21' ."
             }
         },
+        "adminVnetVersion": {
+            "type": "string",
+            "defaultValue": "Old",
+            "allowedValues": [
+                "Old",
+                "New"
+            ],
+            "metadata": {
+                "description": "Defunct - left in for backwards compatibility."
+            }
+        },
         "nicNamingVersion": {
             "type": "string",
             "defaultValue": "2",
