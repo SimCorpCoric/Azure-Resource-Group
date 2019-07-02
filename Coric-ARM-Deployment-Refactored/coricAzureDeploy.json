@@ -33,11 +33,11 @@
             }
         },
         "nicNamingVersion": {
-            "type": "string",
-            "defaultValue": "2",
+            "type": "int",
+            "defaultValue": 2,
             "allowedValues": [
-                "1",
-                "2"
+                1,
+                2
             ],
             "metadata": {
                 "description": "BNP and Candriam's NICs were built with a different naming convention--use '1' for those environments only."
