@@ -49,12 +49,12 @@
         },
         "incomingTraffic": [
             {
-                "name": "[concat(parameters('globals').baseName,'-rdg01', parameters('globals').test)]",
+                "name": "[concat(parameters('globals').baseName,'-rdg01')]",
                 "frontendPort": 443,
                 "backendPort": 8443
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-rdp', parameters('globals').test)]",
+                "name": "[concat(parameters('globals').baseName,'-rdp')]",
                 "frontendPort": 3389,
                 "backendPort": 53389
             }
@@ -158,7 +158,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[concat(toLower(variables('basename')),parameters('globals').test)]"
+                    "domainNameLabel": "[concat(toLower(variables('basename')))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
