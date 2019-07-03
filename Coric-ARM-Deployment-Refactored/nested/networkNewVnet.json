@@ -11,7 +11,8 @@
         "dnsServers": {
             "defaultValue": [
                 "[parameters('globals').networkSettings.dc01IPAddress]",
-                "[parameters('globals').networkSettings.dc02IPAddress]"
+                "[parameters('globals').networkSettings.dc02IPAddress]",
+                "[parameters('globals').networkSettings.azureDNS]"
             ],
             "type": "array",
             "metadata": {

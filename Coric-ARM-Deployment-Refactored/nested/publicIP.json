@@ -94,9 +94,8 @@
         ],
         "dnsSettings": {
           "dnsServers": "[parameters('dnsServers')]"
-        }        
+        }
       }
     }
-
   ]
 }

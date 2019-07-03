@@ -67,9 +67,7 @@
                     }
                 }
             ],
-            "dnsServers": [
-                "[parameters('globals').networkSettings.azureDNS]"
-            ],
+            "dnsServers": [],
             "finalDnsServers": [
                 "[parameters('globals').networkSettings.dc01IPAddress]",
                 "[parameters('globals').networkSettings.dc02IPAddress]",
@@ -260,6 +258,11 @@
                     "globals": {
                         "value": "[parameters('globals')]"
                     },
+                    "dnsServers": {
+                        "value": [
+                            "[parameters('globals').networkSettings.azureDNS]"
+                        ]
+                    },
                     "name": {
                         "value": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('asrSuffix'))]"
                     }
@@ -321,7 +324,7 @@
             "apiVersion": "[parameters('globals').apiVersion.dsc]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('nic', variables('primaryDomainController').basename, '01')]"
+                "[concat('nic', parameters('globals').environment.shortname, '-vm', variables('primaryDomainController').basename, '01')]",
             ],
             "properties": {
                 "publisher": "Microsoft.Powershell",
@@ -358,7 +361,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[parameters('globals').networkWithDNSTemplateLink]",
+                    "uri": "[parameters('globals').networkVnetV2TemplateLink]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -368,8 +371,12 @@
                     "dnsServers": {
                         "value": [
                             "[parameters('globals').networkSettings.dc01IPAddress]",
-                            "[parameters('globals').networkSettings.dc02IPAddress]"
+                            "[parameters('globals').networkSettings.dc02IPAddress]",
+                            "[parameters('globals').networkSettings.azureDNS]"
                         ]
+                    },
+                    "name": {
+                        "value": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('asrSuffix'))]"
                     }
                 }
             }

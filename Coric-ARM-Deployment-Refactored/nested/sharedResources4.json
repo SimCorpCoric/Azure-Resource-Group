@@ -52,7 +52,8 @@
                     "dnsServers": {
                         "value": [
                             "[parameters('globals').networkSettings.dc01IPAddress]",
-                            "[parameters('globals').networkSettings.dc02IPAddress]"
+                            "[parameters('globals').networkSettings.dc02IPAddress]",
+                            "[parameters('globals').networkSettings.azureDNS]"
                         ]
                     },
                     "adminPassword": {
