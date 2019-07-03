@@ -115,8 +115,9 @@
             "metadata": {
                 "Description": "Name of the environment being built"
             },
-            "defaultValue": "Production",
+            "defaultValue": "Admin",
             "allowedValues": [
+                "Admin",
                 "Production",
                 "UAT",
                 "Development",
@@ -377,11 +378,11 @@
         "asrSuffix": "-asr",
         "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
         "domainSuffix": "Hosted",
-        "environmentShortNameAdmin": "Admin",
-        "environmentShortNameDevelopment": "Dev",
-        "environmentShortNameProduction": "Prod",
-        "environmentShortNameUAT": "UAT",
-        "environmentShortNameWeb": "Web",
+        "environmentShortNameAdmin": "admin",
+        "environmentShortNameDevelopment": "dev",
+        "environmentShortNameProduction": "prod",
+        "environmentShortNameUAT": "uat",
+        "environmentShortNameWeb": "web",
         "globals": {
             "adminResourceGroupName": "[variables('baseName')]",
             "apiVersion": {
