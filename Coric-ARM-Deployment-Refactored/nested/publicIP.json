@@ -81,7 +81,7 @@
       "properties": {
         "ipConfigurations": [
           {
-            "name": "ipconfig",
+            "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "[parameters('ipConfigurations')[0].properties.privateIPAllocationMethod]",
               "privateIPAddress": "[parameters('ipConfigurations')[0].properties.privateIPAddress]",

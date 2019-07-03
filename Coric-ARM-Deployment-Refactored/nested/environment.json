@@ -33,7 +33,7 @@
             "imageReference": "[parameters('globals').windowsVM]",
             "ipConfigurations": [
                 {
-                    "name": "ipconfig",
+                    "name": "ipconfig1",
                     "properties": {
                         "privateIPAllocationMethod": "Dynamic",
                         "subnet": {
@@ -71,7 +71,7 @@
             "imageReference": "[parameters('globals').windowsVM]",
             "ipConfigurations": [
                 {
-                    "name": "ipconfig",
+                    "name": "ipconfig1",
                     "properties": {
                         "privateIPAllocationMethod": "Dynamic",
                         "subnet": {
@@ -97,7 +97,7 @@
             "imageReference": "[parameters('globals').windowsVM]",
             "ipConfigurations": [
                 {
-                    "name": "ipconfig",
+                    "name": "ipconfig1",
                     "properties": {
                         "privateIPAllocationMethod": "Dynamic",
                         "subnet": {
@@ -123,7 +123,7 @@
             "imageReference": "[parameters('globals').windowsVM]",
             "ipConfigurations": [
                 {
-                    "name": "ipconfig",
+                    "name": "ipconfig1",
                     "properties": {
                         "privateIPAllocationMethod": "Dynamic",
                         "subnet": {
@@ -161,7 +161,7 @@
             "imageReference": "[parameters('globals').sqlVM]",
             "ipConfigurations": [
                 {
-                    "name": "ipconfig",
+                    "name": "ipconfig1",
                     "properties": {
                         "privateIPAllocationMethod": "Dynamic",
                         "subnet": {
@@ -205,7 +205,7 @@
             "imageReference": "[parameters('globals').windowsVM]",
             "ipConfigurations": [
                 {
-                    "name": "ipconfig",
+                    "name": "ipconfig1",
                     "properties": {
                         "privateIPAllocationMethod": "Dynamic",
                         "subnet": {
