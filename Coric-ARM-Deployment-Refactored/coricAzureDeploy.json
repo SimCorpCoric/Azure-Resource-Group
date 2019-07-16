@@ -83,6 +83,13 @@
                 "description": "The implementation build phase. 1 = Network infrastructure, admin VMs, and AD domain setup; 2 = Full Network infrastructure (run after Checkpoint);  3 = Environment supplied in 'environmentName (Dev/UAT/Prod);  4 = Check Point"
             }
         },
+        "asrBuild": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "If this is a DR/ASR build, pass the naming suffix (such as '-asr') to add to resource naming scheme."
+            }
+        },
         "domainAdminUsername": {
             "type": "string",
             "defaultValue": "DomainAdmin",
@@ -401,6 +408,7 @@
                 "subnets": "2018-12-01",
                 "virtualMachine": "2018-06-01"
             },
+            "asrBuild": "[parameters('asrBuild')]",
             "baseName": "[variables('baseName')]",
             "checkPointOffer": "[parameters('checkPointOffer')]",
             "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
@@ -456,7 +464,7 @@
             "localAdminUsername": "[parameters('localAdminUsername')]",
             "networkSettings": {
                 "name": "[concat('vn', variables('baseName'))]",
-                "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2'))]",
+                "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2', parameters('asrBuild')))]",
                 "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
                 "vnetV2addressSpace": "[parameters('vnetV2addressSpace')]",
                 "addressSpace": "10.200.0.0/20",
@@ -722,7 +730,7 @@
         },
         {
             "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'))]",
-            "condition": "[or(equals(parameters('implementationPhase'), 1), equals(parameters('implementationPhase'), 4))]",
+            "condition": "[and(or(equals(parameters('implementationPhase'), 1), equals(parameters('implementationPhase'), 4)), empty(parameters('asrBuild')))]",
             "resourceGroup": "[concat(resourcegroup().name, variables('asrSuffix'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('globals').apiVersion.deployment]",
