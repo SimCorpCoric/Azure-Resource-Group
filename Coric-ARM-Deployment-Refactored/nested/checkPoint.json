@@ -127,7 +127,7 @@
                         ]
                     },
                     "name": {
-                        "value": "[concat(parameters('globals').networkSettings.vnetV2name)]"
+                        "value": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('globals').asrBuild)]"
                     }
                 }
             }
