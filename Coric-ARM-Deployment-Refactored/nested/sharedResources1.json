@@ -327,7 +327,7 @@
             "properties": {
                 "publisher": "Microsoft.Powershell",
                 "type": "DSC",
-                "typeHandlerVersion": "2.14",
+                "typeHandlerVersion": "2.76",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "ConfigurationFunction": "[parameters('globals').dsc.adConfiguration.function]",
@@ -339,7 +339,7 @@
                             "Password": "PrivateSettingsRef:AdminPassword"
                         }
                     },
-                    "WmfVersion": "5.0"
+                    "WmfVersion": "5.1"
                 },
                 "protectedSettings": {
                     "Items": {
