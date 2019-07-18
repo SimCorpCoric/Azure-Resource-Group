@@ -317,7 +317,7 @@
         },
         {
             "name": "[concat('vm', parameters('globals').baseName, '-dc01', '/CreateADForest')]",
-            "condition": "[parameters('asrSuffix')]",
+            "condition": "[not(empty(parameters('asrSuffix')))]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "[parameters('globals').apiVersion.dsc]",
             "location": "[resourceGroup().location]",
