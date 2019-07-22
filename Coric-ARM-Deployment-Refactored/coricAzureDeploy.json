@@ -701,6 +701,7 @@
         {
             "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'))]",
             "condition": "[or(equals(parameters('implementationPhase'), 1), equals(parameters('implementationPhase'), 4))]",
+            "resourceGroup": "[concat(resourcegroup().name, parameters('asrBuild'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('globals').apiVersion.deployment]",
             "properties": {
