@@ -381,7 +381,7 @@
         }
     },
     "variables": {
-        "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2'))]",
+        "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2', parameters('asrBuild')))]",
         "asrSuffix": "-asr",
         "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
         "domainSuffix": "Hosted",
@@ -464,7 +464,7 @@
             "localAdminUsername": "[parameters('localAdminUsername')]",
             "networkSettings": {
                 "name": "[concat('vn', variables('baseName'))]",
-                "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2', parameters('asrBuild')))]",
+                "adminVnetID": "[variables('adminVnetID')]",
                 "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
                 "vnetV2addressSpace": "[parameters('vnetV2addressSpace')]",
                 "addressSpace": "10.200.0.0/20",
@@ -701,7 +701,7 @@
         {
             "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'))]",
             "condition": "[or(equals(parameters('implementationPhase'), 1), equals(parameters('implementationPhase'), 4))]",
-            "resourceGroup": "[concat(resourcegroup().name, parameters('asrBuild'))]",
+            "resourceGroup": "[concat(resourcegroup().name)]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('globals').apiVersion.deployment]",
             "properties": {
@@ -730,7 +730,7 @@
             }
         },
         {
-            "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'))]",
+            "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'), variables('asrSuffix'))]",
             "condition": "[and(or(equals(parameters('implementationPhase'), 1), equals(parameters('implementationPhase'), 4)), empty(parameters('asrBuild')))]",
             "resourceGroup": "[concat(resourcegroup().name, variables('asrSuffix'))]",
             "type": "Microsoft.Resources/deployments",
