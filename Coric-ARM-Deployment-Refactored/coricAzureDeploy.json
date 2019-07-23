@@ -610,7 +610,7 @@
                 "ftp": "OU=FTP;OU=Admin;",
                 "pushPull": "OU=PushPull;"
             },
-            "vmRebuild": "parameters('vmRebuild')",
+            "vmRebuild": "[parameters('vmRebuild')]",
             "sqlEncryption": {
                 "keyVaultURL": "[concat('https://', parameters('sqlKeyVaultName'), '.vault.azure.net/')]",
                 "servicePrincipalName": "[parameters('sqlServicePrincipalName')]",
