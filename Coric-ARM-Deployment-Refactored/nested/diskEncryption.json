@@ -70,7 +70,7 @@
                     "SequenceVersion": "[parameters('globals').diskEncryption.sequenceVersion]"
                 }
             }
-        },
+        }
     ],
     "outputs": {
         "BitLockerKey": {
