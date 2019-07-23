@@ -242,26 +242,6 @@
                             "vmSize": "[parameters('machineSettings').imageReference.size]"
                         }
                     },
-                    "osProfile": {
-                        "value": {
-                            "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-                            "adminUsername": "[parameters('machineSettings').adminUsername]",
-                            "adminPassword": "[parameters('adminPassword')]",
-                            "secrets": [
-                                {
-                                    "sourceVault": {
-                                        "id": "[variables('keyVaultResourceId')]"
-                                    },
-                                    "vaultCertificates": [
-                                        {
-                                            "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
-                                            "certificateStore": "My"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    },
                     "storageProfile": {
                         "value": {
                             "osDisk": {
