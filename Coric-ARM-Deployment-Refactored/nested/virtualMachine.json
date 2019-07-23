@@ -42,6 +42,7 @@
         "nicName1": "[toLower(concat('nic', parameters('machineSettings').basename))]",
         "nicName2": "[toLower(concat('nic', parameters('globals').environment.shortname, '-vm', parameters('machineSettings').basename))]",
         "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
+        "ppgName": "[toUpper(concat('ppg', parameters('globals').basename, '-', parameters('globals').environment.shortname))]",
         "vmName": "[parameters('machineSettings').basename]",
         "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
     },
@@ -108,7 +109,13 @@
         {
             "apiVersion": "[parameters('globals').apiVersion.availabilitySets]",
             "type": "Microsoft.Compute/availabilitySets",
-            "name": "[concat(variables('asName'))]",
+            "name": "[variables('asName')]",
+            "location": "[resourceGroup().location]"
+        },
+        {
+            "apiVersion": "[parameters('globals').apiVersion.proximityPlacementGroups]",
+            "type": "Microsoft.Compute/proximityPlacementGroups",
+            "name": "[variables('ppgName')]",
             "location": "[resourceGroup().location]"
         },
         {
@@ -122,6 +129,7 @@
             },
             "dependsOn": [
                 "[concat(variables('pipName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                "[variables('ppgName')]",
                 "[variables('asName')]"
             ],
             "properties": {
@@ -130,6 +138,9 @@
                 },
                 "hardwareProfile": {
                     "vmSize": "[parameters('machineSettings').imageReference.size]"
+                },
+                "proximityPlacementGroup": {
+                    "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
                 },
                 "osProfile": {
                     "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
