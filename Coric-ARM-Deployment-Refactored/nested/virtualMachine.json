@@ -124,7 +124,6 @@
             "condition": "[equals(parameters('globals').vmRebuild, 'false')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[parameters('globals').apiVersion.deployment]",
-            "location": "[resourceGroup().location]",
             "copy": {
                 "name": "vmLoop",
                 "count": "[parameters('machineSettings').numberOfVMs]"
@@ -211,7 +210,6 @@
             "condition": "[equals(parameters('globals').vmRebuild, 'true')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[parameters('globals').apiVersion.deployment]",
-            "location": "[resourceGroup().location]",
             "copy": {
                 "name": "vmLoop",
                 "count": "[parameters('machineSettings').numberOfVMs]"
