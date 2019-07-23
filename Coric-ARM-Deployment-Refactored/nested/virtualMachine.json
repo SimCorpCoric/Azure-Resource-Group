@@ -36,7 +36,6 @@
         }
     },
     "variables": {
-        "keyVaultURL": "[concat('https://', parameters('globals').diskEncryption.keyVaultName, '.vault.azure.net/')]",
         "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
         "asName": "[toUpper(concat('as', parameters('globals').basename, '-', parameters('globals').environment.shortname, '-', parameters('machineSettings').appID))]",
         "nicName": "[variables(concat('nicName', parameters('globals').networkSettings.nicNamingVersion))]",
@@ -44,7 +43,9 @@
         "nicName2": "[toLower(concat('nic', parameters('globals').environment.shortname, '-vm', parameters('machineSettings').basename))]",
         "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
         "vmName": "[parameters('machineSettings').basename]",
-        "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
+        "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
+        "templateLinkVMNew": "[parameters('globals').templateLinkVMNew]",
+        "templateLinkVMRebuild": "[parameters('globals').templateLinkVMRebuild]",
     },
     "resources": [
         {
@@ -128,7 +129,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[parameters('globals').templateLinkVMNew]",
+                    "uri": "[variables('templateLinkVMNew')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -222,7 +223,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[parameters('globals').templateLinkVMRebuild]",
+                    "uri": "[variables('templateLinkVMRebuild')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -251,21 +252,7 @@
                                     "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
                                 },
                                 "caching": "ReadWrite",
-                                "createOption": "Attach",
-                                "encryptionSettings": {
-                                    "diskEncryptionKey": {
-                                        "sourceVault": {
-                                            "id": "[variables('keyVaultResourceID')]"
-                                        },
-                                        "secretUrl": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')), 'BitLocker')).instanceView.statuses[0].message]"
-                                    },
-                                    "keyEncryptionKey": {
-                                        "sourceVault": {
-                                            "id": "[variables('keyVaultResourceID')]"
-                                        },
-                                        "keyUrl": "[parameters('globals').diskEncryption.keyVaultKEKURL]"
-                                    }
-                                }
+                                "createOption": "Attach"
                             }
                         }
                     },
@@ -298,7 +285,7 @@
                 "count": "[parameters('machineSettings').numberOfVMs]"
             },
             "dependsOn": [
-                "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
                 "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-Rebuild')]"
             ],
             "properties": {
