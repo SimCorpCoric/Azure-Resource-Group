@@ -45,6 +45,7 @@
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('vmName'), '/DiskInitialize')]",
       "apiVersion": "[parameters('globals').apiVersion.extension]",
+      "condition": "[equals(parameters('globals').vmRebuild, 'false')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[parameters('vmName')]"
