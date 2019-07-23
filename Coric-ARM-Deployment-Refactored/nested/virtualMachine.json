@@ -147,88 +147,74 @@
                         "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
                     },
                     "availabilitySet": {
-                        "value": [
-                            {
-                                "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('asName'))]"
-                            }
-                        ]
+                        "value": {
+                            "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('asName'))]"
+                        }
                     },
                     "hardwareProfile": {
-                        "value": [
-                            {
-                                "vmSize": "[parameters('machineSettings').imageReference.size]"
-                            }
-                        ]
+                        "value": {
+                            "vmSize": "[parameters('machineSettings').imageReference.size]"
+                        }
                     },
                     "proximityPlacementGroup": {
-                        "value": [
-                            {
-                                "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
-                            }
-                        ]
+                        "value": {
+                            "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
+                        }
                     },
                     "osProfile": {
-                        "value": [
-                            {
-                                "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-                                "adminUsername": "[parameters('machineSettings').adminUsername]",
-                                "adminPassword": "[parameters('adminPassword')]",
-                                "secrets": [
-                                    {
-                                        "sourceVault": {
-                                            "id": "[variables('keyVaultResourceId')]"
-                                        },
-                                        "vaultCertificates": [
-                                            {
-                                                "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
-                                                "certificateStore": "My"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
+                        "value": {
+                            "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                            "adminUsername": "[parameters('machineSettings').adminUsername]",
+                            "adminPassword": "[parameters('adminPassword')]",
+                            "secrets": [
+                                {
+                                    "sourceVault": {
+                                        "id": "[variables('keyVaultResourceId')]"
+                                    },
+                                    "vaultCertificates": [
+                                        {
+                                            "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
+                                            "certificateStore": "My"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
                     },
                     "storageProfile": {
-                        "value": [
-                            {
-                                "imageReference": {
-                                    "publisher": "[parameters('machineSettings').imageReference.publisher]",
-                                    "offer": "[parameters('machineSettings').imageReference.offer]",
-                                    "sku": "[parameters('machineSettings').imageReference.sku]",
-                                    "version": "[parameters('machineSettings').imageReference.version]"
+                        "value": {
+                            "imageReference": {
+                                "publisher": "[parameters('machineSettings').imageReference.publisher]",
+                                "offer": "[parameters('machineSettings').imageReference.offer]",
+                                "sku": "[parameters('machineSettings').imageReference.sku]",
+                                "version": "[parameters('machineSettings').imageReference.version]"
+                            },
+                            "osDisk": {
+                                "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                                "vhd": {
+                                    "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
                                 },
-                                "osDisk": {
-                                    "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-                                    "vhd": {
-                                        "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
-                                    },
-                                    "caching": "ReadWrite",
-                                    "createOption": "FromImage"
-                                }
+                                "caching": "ReadWrite",
+                                "createOption": "FromImage"
                             }
-                        ]
+                        }
                     },
                     "networkProfile": {
-                        "value": [
-                            {
-                                "networkInterfaces": [
-                                    {
-                                        "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')))]"
-                                    }
-                                ]
-                            }
-                        ]
+                        "value": {
+                            "networkInterfaces": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')))]"
+                                }
+                            ]
+                        }
                     },
                     "diagnosticsProfile": {
-                        "value": [
-                            {
-                                "bootDiagnostics": {
-                                    "enabled": "true",
-                                    "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
-                                }
+                        "value": {
+                            "bootDiagnostics": {
+                                "enabled": "true",
+                                "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
                             }
-                        ]
+                        }
                     }
                 }
             }
@@ -261,82 +247,68 @@
                         "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
                     },
                     "availabilitySet": {
-                        "value": [
-                            {
-                                "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('asName'))]"
-                            }
-                        ]
+                        "value": {
+                            "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('asName'))]"
+                        }
                     },
                     "hardwareProfile": {
-                        "value": [
-                            {
-                                "vmSize": "[parameters('machineSettings').imageReference.size]"
-                            }
-                        ]
+                        "value": {
+                            "vmSize": "[parameters('machineSettings').imageReference.size]"
+                        }
                     },
-                    "proximityPlacementGroup": {
-                        "value": [
-                            {
-                                "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
-                            }
-                        ]
+                    "proximityPlacementGroupID": {
+                        "value": {
+                            "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
+                        }
                     },
                     "osProfile": {
-                        "value": [
-                            {
-                                "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-                                "adminUsername": "[parameters('machineSettings').adminUsername]",
-                                "adminPassword": "[parameters('adminPassword')]",
-                                "secrets": [
-                                    {
-                                        "sourceVault": {
-                                            "id": "[variables('keyVaultResourceId')]"
-                                        },
-                                        "vaultCertificates": [
-                                            {
-                                                "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
-                                                "certificateStore": "My"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
+                        "value": {
+                            "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                            "adminUsername": "[parameters('machineSettings').adminUsername]",
+                            "adminPassword": "[parameters('adminPassword')]",
+                            "secrets": [
+                                {
+                                    "sourceVault": {
+                                        "id": "[variables('keyVaultResourceId')]"
+                                    },
+                                    "vaultCertificates": [
+                                        {
+                                            "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
+                                            "certificateStore": "My"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
                     },
                     "storageProfile": {
-                        "value": [
-                            {
-                                "osDisk": {
-                                    "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-                                    "vhd": {
-                                        "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
-                                    },
-                                    "caching": "ReadWrite",
-                                    "createOption": "Attach"
-                                }
+                        "value": {
+                            "osDisk": {
+                                "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                                "vhd": {
+                                    "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
+                                },
+                                "caching": "ReadWrite",
+                                "createOption": "Attach"
                             }
-                        ]
+                        }
                     },
                     "networkProfile": {
-                        "value": [
-                            {
-                                "networkInterfaces": [
-                                    {
-                                        "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')))]"
-                                    }
-                                ]
-                            }
-                        ]
+                        "value": {
+                            "networkInterfaces": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')))]"
+                                }
+                            ]
+                        }
                     },
                     "diagnosticsProfile": {
-                        "value": [
-                            {
-                                "bootDiagnostics": {
-                                    "enabled": "true",
-                                    "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
-                                }
+                        "value": {
+                            "bootDiagnostics": {
+                                "enabled": "true",
+                                "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
                             }
-                        ]
+                        }
                     }
                 }
             }

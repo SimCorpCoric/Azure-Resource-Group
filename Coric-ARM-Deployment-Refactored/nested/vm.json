@@ -65,7 +65,7 @@
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
             "properties": {
-                "availabilitySet": "[parameters('availabilitySet')]",
+                "availabilitySet":  "[parameters('availabilitySet')]",
                 "hardwareProfile": "[parameters('hardwareProfile')]",
                 "proximityPlacementGroup": "[parameters('proximityPlacementGroup')]",
                 "osProfile": "[parameters('osProfile')]",
