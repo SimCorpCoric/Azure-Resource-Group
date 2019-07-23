@@ -257,7 +257,7 @@
                                         "sourceVault": {
                                             "id": "[variables('keyVaultResourceID')]"
                                         },
-                                        "secretUrl": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'BitLocker')).instanceView.statuses[0].message]"
+                                        "secretUrl": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')), 'BitLocker')).instanceView.statuses[0].message]"
                                     },
                                     "keyEncryptionKey": {
                                         "sourceVault": {
