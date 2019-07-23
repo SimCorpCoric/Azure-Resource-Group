@@ -45,7 +45,7 @@
         "vmName": "[parameters('machineSettings').basename]",
         "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
         "templateLinkVMNew": "[parameters('globals').templateLinkVMNew]",
-        "templateLinkVMRebuild": "[parameters('globals').templateLinkVMRebuild]",
+        "templateLinkVMRebuild": "[parameters('globals').templateLinkVMRebuild]"
     },
     "resources": [
         {
