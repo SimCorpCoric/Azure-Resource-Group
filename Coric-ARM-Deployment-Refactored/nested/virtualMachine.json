@@ -120,7 +120,7 @@
         },
         {
             "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-            "condition": "[not(parameters('globals').vmRebuild)]",
+            "condition": "[equals(parameters('globals').vmRebuild, 'false')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
@@ -194,7 +194,7 @@
         },
         {
             "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-            "condition": "[parameters('globals').vmRebuild]",
+            "condition": "[equals(parameters('globals').vmRebuild, 'true')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
@@ -242,7 +242,7 @@
                             "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
                         },
                         "caching": "ReadWrite",
-                        "createOption": "attach"
+                        "createOption": "Attach"
                     }
                 },
                 "networkProfile": {

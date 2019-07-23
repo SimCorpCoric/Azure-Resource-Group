@@ -44,8 +44,8 @@
             }
         },
         "vmRebuild": {
-            "type": "bool",
-            "defaultValue": false,
+            "type": "string",
+            "defaultValue": "false",
             "metadata": {
                 "description": "Set to true if VMs are being rebuilt and not created for the first time."
             }
