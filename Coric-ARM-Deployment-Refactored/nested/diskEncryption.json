@@ -52,9 +52,6 @@
             "name": "[concat(parameters('vmName'), '/BitLocker')]",
             "apiVersion": "[parameters('globals').apiVersion.extension]",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[parameters('vmName')]"
-            ],
             "properties": {
                 "type": "AzureDiskEncryption",
                 "typeHandlerVersion": "1.0",
