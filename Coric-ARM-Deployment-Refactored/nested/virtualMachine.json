@@ -36,6 +36,7 @@
         }
     },
     "variables": {
+        "keyVaultURL": "[concat('https://', parameters('globals').diskEncryption.keyVaultName, '.vault.azure.net/')]",
         "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
         "asName": "[toUpper(concat('as', parameters('globals').basename, '-', parameters('globals').environment.shortname, '-', parameters('machineSettings').appID))]",
         "nicName": "[variables(concat('nicName', parameters('globals').networkSettings.nicNamingVersion))]",
@@ -250,7 +251,21 @@
                                     "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
                                 },
                                 "caching": "ReadWrite",
-                                "createOption": "Attach"
+                                "createOption": "Attach",
+                                "encryptionSettings": {
+                                    "diskEncryptionKey": {
+                                        "sourceVault": {
+                                            "id": "[variables('keyVaultResourceID')]"
+                                        },
+                                        "secretUrl": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'BitLocker')).instanceView.statuses[0].message]"
+                                    },
+                                    "keyEncryptionKey": {
+                                        "sourceVault": {
+                                            "id": "[variables('keyVaultResourceID')]"
+                                        },
+                                        "keyUrl": "[parameters('globals').diskEncryption.keyVaultKEKURL]"
+                                    }
+                                }
                             }
                         }
                     },
