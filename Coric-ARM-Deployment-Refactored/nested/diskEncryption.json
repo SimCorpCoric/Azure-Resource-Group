@@ -1,78 +1,85 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "globals": {
-            "type": "object",
-            "metadata": {
-                "Description": "Global complex object passed to nested templates"
-            }
-        },
-        "vmName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Virtual Machine"
-            }
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "globals": {
+      "type": "object",
+      "metadata": {
+        "Description": "Global complex object passed to nested templates"
+      }
     },
-    "variables": {
-        "keyVaultURL": "[concat('https://', parameters('globals').diskEncryption.keyVaultName, '.vault.azure.net/')]",
-        "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]"
-    },
-    "resources": [
-        {
-            "name": "[parameters('vmName')]",
-            "condition": "[equals(parameters('globals').vmRebuild, 'false')]",
-            "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "storageProfile": {
-                    "osDisk": {
-                        "encryptionSettings": {
-                            "diskEncryptionKey": {
-                                "sourceVault": {
-                                    "id": "[variables('keyVaultResourceID')]"
-                                },
-                                "secretUrl": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'BitLocker')).instanceView.statuses[0].message]"
-                            },
-                            "keyEncryptionKey": {
-                                "sourceVault": {
-                                    "id": "[variables('keyVaultResourceID')]"
-                                },
-                                "keyUrl": "[parameters('globals').diskEncryption.keyVaultKEKURL]"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('vmName'), '/BitLocker')]",
-            "apiVersion": "[parameters('globals').apiVersion.extension]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "type": "AzureDiskEncryption",
-                "typeHandlerVersion": "1.0",
-                "publisher": "Microsoft.Azure.Security",
-                "settings": {
-                    "AADClientID": "[parameters('globals').diskEncryption.aadClientID]",
-                    "AADClientCertThumbprint": "[parameters('globals').diskEncryption.aadClientCertThumbprint]",
-                    "KeyVaultURL": "[variables('keyVaultURL')]",
-                    "KeyEncryptionKeyURL": "[parameters('globals').diskEncryption.keyVaultKEKURL]",
-                    "KeyEncryptionAlgorithm": "RSA-OAEP",
-                    "VolumeType": "All",
-                    "EncryptionOperation": "EnableEncryption",
-                    "SequenceVersion": "[parameters('globals').diskEncryption.sequenceVersion]"
-                }
-            }
-        }
-    ],
-    "outputs": {
-        "BitLockerKey": {
-            "type": "string",
-            "value": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions',  parameters('vmName'), 'BitLocker')).instanceView.statuses[0].message]"
-        }
+
+    "vmName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Virtual Machine"
+      }
     }
+  },
+
+  "variables": {
+    "keyVaultURL": "[concat('https://', parameters('globals').diskEncryption.keyVaultName, '.vault.azure.net/')]",
+    "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]"
+  },
+
+  "resources": [
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmName'), '/BitLocker')]",
+      "apiVersion": "[parameters('globals').apiVersion.extension]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "type": "AzureDiskEncryption",
+        "typeHandlerVersion": "1.0",
+        "publisher": "Microsoft.Azure.Security",
+        "settings": {
+          "AADClientID": "[parameters('globals').diskEncryption.aadClientID]",
+          "AADClientCertThumbprint": "[parameters('globals').diskEncryption.aadClientCertThumbprint]",
+          "KeyVaultURL": "[variables('keyVaultURL')]",
+          "KeyEncryptionKeyURL": "[parameters('globals').diskEncryption.keyVaultKEKURL]",
+          "KeyEncryptionAlgorithm": "RSA-OAEP",
+          "VolumeType": "All",
+          "EncryptionOperation": "EnableEncryption",
+          "SequenceVersion": "[parameters('globals').diskEncryption.sequenceVersion]"
+        }
+      }
+    },
+
+    {
+      "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), '/extensions/BitLocker')]"
+      ],
+      "name": "[parameters('vmName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "storageProfile": {
+          "osDisk": {
+            "encryptionSettings": {
+              "diskEncryptionKey": {
+                "sourceVault": {
+                  "id": "[variables('keyVaultResourceID')]"
+                },
+                "secretUrl": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'BitLocker')).instanceView.statuses[0].message]"
+              },
+              "keyEncryptionKey": {
+                "sourceVault": {
+                  "id": "[variables('keyVaultResourceID')]"
+                },
+                "keyUrl": "[parameters('globals').diskEncryption.keyVaultKEKURL]"
+              }
+            }
+          }
+        }
+      }
+    }
+
+  ],
+  "outputs": {
+    "BitLockerKey": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions',  parameters('vmName'), 'BitLocker')).instanceView.statuses[0].message]"
+    }
+  }
 }
