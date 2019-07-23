@@ -48,7 +48,7 @@
             "name": "[concat(parameters('vmName'),'/AntiMalwareExt')]",
             "apiVersion": "[parameters('globals').apiVersion.extension]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), '/extensions/BitLocker')]"
+                "[concat(parameters('vmName'), '-Encryption')]",
             ],
             "location": "[resourceGroup().location]",
             "properties": {
