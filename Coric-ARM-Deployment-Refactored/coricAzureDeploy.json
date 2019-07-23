@@ -610,6 +610,7 @@
                 "ftp": "OU=FTP;OU=Admin;",
                 "pushPull": "OU=PushPull;"
             },
+            "vmRebuild": "parameters('vmRebuild')",
             "sqlEncryption": {
                 "keyVaultURL": "[concat('https://', parameters('sqlKeyVaultName'), '.vault.azure.net/')]",
                 "servicePrincipalName": "[parameters('sqlServicePrincipalName')]",
@@ -634,10 +635,8 @@
             "templateLinkSQLKeyVault": "[variables('templateLinkSQLKeyVault')]",
             "templateLinkSQLKeyVaultNull": "[variables('templateLinkSQLKeyVaultNull')]",
             "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
-            "templateLinkVMNew": "[uri(deployment().properties.templateLink.uri, 'nested/vmNew.json')]",
-            "templateLinkVMRebuild": "[uri(deployment().properties.templateLink.uri, 'nested/vmRebuild.json')]",
+            "templateLinkVM": "[uri(deployment().properties.templateLink.uri, 'nested/vm.json')]",
             "vhdContainerName": "vhds",
-            "vmRebuild": "[parameters('vmRebuild')]",
             "webReporter": "[parameters('webReporter')]",
             "webReporterSubnet": "[parameters('webReporterSubnet')]",
             "windowsVM": {
