@@ -43,9 +43,7 @@
         "nicName2": "[toLower(concat('nic', parameters('globals').environment.shortname, '-vm', parameters('machineSettings').basename))]",
         "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
         "vmName": "[parameters('machineSettings').basename]",
-        "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
-        "templateLinkVMNew": "[parameters('globals').templateLinkVMNew]",
-        "templateLinkVMRebuild": "[parameters('globals').templateLinkVMRebuild]"
+        "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
     },
     "resources": [
         {
@@ -129,7 +127,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('templateLinkVMNew')]",
+                    "uri": "[parameters('globals').templateLinkVMNew]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -223,7 +221,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('templateLinkVMRebuild')]",
+                    "uri": "[parameters('globals').templateLinkVMRebuild]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
