@@ -296,7 +296,7 @@
                 "count": "[parameters('machineSettings').numberOfVMs]"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualMachines/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')))]"
+                "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
             ],
             "properties": {
                 "mode": "Incremental",
