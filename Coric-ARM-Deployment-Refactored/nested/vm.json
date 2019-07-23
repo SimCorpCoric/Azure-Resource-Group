@@ -26,12 +26,6 @@
                 "Description": "Machine settings object"
             }
         },
-        "proximityPlacementGroup": {
-            "type": "object",
-            "metadata": {
-                "Description": "Machine settings object"
-            }
-        },
         "osProfile": {
             "type": "object",
             "metadata": {
@@ -67,7 +61,6 @@
             "properties": {
                 "availabilitySet":  "[parameters('availabilitySet')]",
                 "hardwareProfile": "[parameters('hardwareProfile')]",
-                "proximityPlacementGroup": "[parameters('proximityPlacementGroup')]",
                 "osProfile": "[parameters('osProfile')]",
                 "storageProfile": "[parameters('storageProfile')]",
                 "networkProfile": "[parameters('networkProfile')]",

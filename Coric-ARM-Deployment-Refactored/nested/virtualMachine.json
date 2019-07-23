@@ -42,7 +42,6 @@
         "nicName1": "[toLower(concat('nic', parameters('machineSettings').basename))]",
         "nicName2": "[toLower(concat('nic', parameters('globals').environment.shortname, '-vm', parameters('machineSettings').basename))]",
         "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
-        "ppgName": "[toUpper(concat('ppg', parameters('globals').basename, '-', parameters('globals').environment.shortname))]",
         "vmName": "[parameters('machineSettings').basename]",
         "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
         "templateLinkVM": "[parameters('globals').templateLinkVM]"
@@ -114,12 +113,6 @@
             "location": "[resourceGroup().location]"
         },
         {
-            "apiVersion": "[parameters('globals').apiVersion.proximityPlacementGroups]",
-            "type": "Microsoft.Compute/proximityPlacementGroups",
-            "name": "[variables('ppgName')]",
-            "location": "[resourceGroup().location]"
-        },
-        {
             "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
             "condition": "[equals(parameters('globals').vmRebuild, 'false')]",
             "type": "Microsoft.Resources/deployments",
@@ -154,11 +147,6 @@
                     "hardwareProfile": {
                         "value": {
                             "vmSize": "[parameters('machineSettings').imageReference.size]"
-                        }
-                    },
-                    "proximityPlacementGroup": {
-                        "value": {
-                            "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
                         }
                     },
                     "osProfile": {
@@ -254,11 +242,6 @@
                     "hardwareProfile": {
                         "value": {
                             "vmSize": "[parameters('machineSettings').imageReference.size]"
-                        }
-                    },
-                    "proximityPlacementGroupID": {
-                        "value": {
-                            "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
                         }
                     },
                     "osProfile": {
