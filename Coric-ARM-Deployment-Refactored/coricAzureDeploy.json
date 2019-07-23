@@ -635,6 +635,7 @@
             "templateLinkSQLKeyVault": "[variables('templateLinkSQLKeyVault')]",
             "templateLinkSQLKeyVaultNull": "[variables('templateLinkSQLKeyVaultNull')]",
             "templateLinkVirtualMachine": "[uri(deployment().properties.templateLink.uri, 'nested/virtualMachine.json')]",
+            "templateLinkVM": "[uri(deployment().properties.templateLink.uri, 'nested/vm.json')]",
             "vhdContainerName": "vhds",
             "webReporter": "[parameters('webReporter')]",
             "webReporterSubnet": "[parameters('webReporterSubnet')]",

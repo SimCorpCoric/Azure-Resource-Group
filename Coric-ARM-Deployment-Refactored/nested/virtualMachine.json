@@ -44,7 +44,8 @@
         "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
         "ppgName": "[toUpper(concat('ppg', parameters('globals').basename, '-', parameters('globals').environment.shortname))]",
         "vmName": "[parameters('machineSettings').basename]",
-        "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
+        "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
+        "vmTemplateLink": "[parameters('globals').networkSettings.vmTemplateLink]"
     },
     "resources": [
         {
@@ -121,8 +122,8 @@
         {
             "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
             "condition": "[equals(parameters('globals').vmRebuild, 'false')]",
-            "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
             "location": "[resourceGroup().location]",
             "copy": {
                 "name": "vmLoop",
@@ -134,69 +135,82 @@
                 "[variables('asName')]"
             ],
             "properties": {
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(variables('asName')))]"
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('vmTemplateLink')]",
+                    "contentVersion": "1.0.0.0"
                 },
-                "hardwareProfile": {
-                    "vmSize": "[parameters('machineSettings').imageReference.size]"
-                },
-                "proximityPlacementGroup": {
-                    "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
-                },
-                "osProfile": {
-                    "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-                    "adminUsername": "[parameters('machineSettings').adminUsername]",
-                    "adminPassword": "[parameters('adminPassword')]",
-                    "secrets": [
-                        {
-                            "sourceVault": {
-                                "id": "[variables('keyVaultResourceId')]"
-                            },
-                            "vaultCertificates": [
-                                {
-                                    "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
-                                    "certificateStore": "My"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "storageProfile": {
-                    "imageReference": {
-                        "publisher": "[parameters('machineSettings').imageReference.publisher]",
-                        "offer": "[parameters('machineSettings').imageReference.offer]",
-                        "sku": "[parameters('machineSettings').imageReference.sku]",
-                        "version": "[parameters('machineSettings').imageReference.version]"
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
                     },
-                    "osDisk": {
-                        "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-                        "vhd": {
-                            "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
+                    "vmName": {
+                        "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+                    },
+                    "availabilitySet": {
+                        "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(variables('asName')))]"
+                    },
+                    "hardwareProfile": {
+                        "vmSize": "[parameters('machineSettings').imageReference.size]"
+                    },
+                    "proximityPlacementGroup": {
+                        "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
+                    },
+                    "osProfile": {
+                        "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                        "adminUsername": "[parameters('machineSettings').adminUsername]",
+                        "adminPassword": "[parameters('adminPassword')]",
+                        "secrets": [
+                            {
+                                "sourceVault": {
+                                    "id": "[variables('keyVaultResourceId')]"
+                                },
+                                "vaultCertificates": [
+                                    {
+                                        "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
+                                        "certificateStore": "My"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "storageProfile": {
+                        "imageReference": {
+                            "publisher": "[parameters('machineSettings').imageReference.publisher]",
+                            "offer": "[parameters('machineSettings').imageReference.offer]",
+                            "sku": "[parameters('machineSettings').imageReference.sku]",
+                            "version": "[parameters('machineSettings').imageReference.version]"
                         },
-                        "caching": "ReadWrite",
-                        "createOption": "FromImage"
-                    }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')))]"
+                        "osDisk": {
+                            "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                            "vhd": {
+                                "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
+                            },
+                            "caching": "ReadWrite",
+                            "createOption": "FromImage"
                         }
-                    ]
-                },
-                "diagnosticsProfile": {
-                    "bootDiagnostics": {
-                        "enabled": "true",
-                        "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
+                    },
+                    "networkProfile": {
+                        "networkInterfaces": [
+                            {
+                                "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')))]"
+                            }
+                        ]
+                    },
+                    "diagnosticsProfile": {
+                        "bootDiagnostics": {
+                            "enabled": "true",
+                            "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
+                        }
                     }
                 }
             }
         },
         {
-            "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+            "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-Rebuild')]",
             "condition": "[equals(parameters('globals').vmRebuild, 'true')]",
-            "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
             "location": "[resourceGroup().location]",
             "copy": {
                 "name": "vmLoop",
@@ -208,54 +222,67 @@
                 "[variables('asName')]"
             ],
             "properties": {
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(variables('asName')))]"
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('vmTemplateLink')]",
+                    "contentVersion": "1.0.0.0"
                 },
-                "hardwareProfile": {
-                    "vmSize": "[parameters('machineSettings').imageReference.size]"
-                },
-                "proximityPlacementGroup": {
-                    "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
-                },
-                "osProfile": {
-                    "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-                    "adminUsername": "[parameters('machineSettings').adminUsername]",
-                    "adminPassword": "[parameters('adminPassword')]",
-                    "secrets": [
-                        {
-                            "sourceVault": {
-                                "id": "[variables('keyVaultResourceId')]"
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "vmName": {
+                        "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+                    },
+                    "availabilitySet": {
+                        "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(variables('asName')))]"
+                    },
+                    "hardwareProfile": {
+                        "vmSize": "[parameters('machineSettings').imageReference.size]"
+                    },
+                    "proximityPlacementGroup": {
+                        "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
+                    },
+                    "osProfile": {
+                        "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                        "adminUsername": "[parameters('machineSettings').adminUsername]",
+                        "adminPassword": "[parameters('adminPassword')]",
+                        "secrets": [
+                            {
+                                "sourceVault": {
+                                    "id": "[variables('keyVaultResourceId')]"
+                                },
+                                "vaultCertificates": [
+                                    {
+                                        "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
+                                        "certificateStore": "My"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "storageProfile": {
+                        "osDisk": {
+                            "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                            "vhd": {
+                                "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
                             },
-                            "vaultCertificates": [
-                                {
-                                    "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
-                                    "certificateStore": "My"
-                                }
-                            ]
+                            "caching": "ReadWrite",
+                            "createOption": "Attach"
                         }
-                    ]
-                },
-                "storageProfile": {
-                    "osDisk": {
-                        "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
-                        "vhd": {
-                            "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
-                        },
-                        "caching": "ReadWrite",
-                        "createOption": "Attach"
-                    }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')))]"
+                    },
+                    "networkProfile": {
+                        "networkInterfaces": [
+                            {
+                                "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')))]"
+                            }
+                        ]
+                    },
+                    "diagnosticsProfile": {
+                        "bootDiagnostics": {
+                            "enabled": "true",
+                            "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
                         }
-                    ]
-                },
-                "diagnosticsProfile": {
-                    "bootDiagnostics": {
-                        "enabled": "true",
-                        "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
                     }
                 }
             }

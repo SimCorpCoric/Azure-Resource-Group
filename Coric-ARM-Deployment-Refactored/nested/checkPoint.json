@@ -356,7 +356,7 @@
                     "imageReference": "[variables('imageReference')]",
                     "osDisk": {
                         "caching": "ReadWrite",
-                        "createOption": "FromImage",
+                        "createOption": "[if(equals(parameters('globals').vmRebuild, 'true'), 'Attach', 'Empty')]"
                         "name": "osDisk",
                         "vhd": {
                             "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('vmNamePortal'), '-OS.vhd')]"

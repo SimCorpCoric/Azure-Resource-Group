@@ -49,7 +49,7 @@
                     "vhd": {
                         "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dcBasename'), '01-Data0.vhd')]"
                     },
-                    "createOption": "Empty"
+                    "createOption": "[if(equals(parameters('globals').vmRebuild, 'true'), 'Attach', 'Empty')]"
                 }
             ],
             "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoinNull]",
@@ -92,7 +92,7 @@
                     "vhd": {
                         "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dcBasename'), '02-Data0.vhd')]"
                     },
-                    "createOption": "Empty"
+                    "createOption": "[if(equals(parameters('globals').vmRebuild, 'true'), 'Attach', 'Empty')]"
                 }
             ],
             "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
@@ -136,7 +136,7 @@
                     "vhd": {
                         "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('rdsBasename'), '01-Data0.vhd')]"
                     },
-                    "createOption": "Empty"
+                    "createOption": "[if(equals(parameters('globals').vmRebuild, 'true'), 'Attach', 'Empty')]"
                 }
             ],
             "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
@@ -176,7 +176,7 @@
                     "vhd": {
                         "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('ftpBasename'), '01-Data0.vhd')]"
                     },
-                    "createOption": "Empty"
+                    "createOption": "[if(equals(parameters('globals').vmRebuild, 'true'), 'Attach', 'Empty')]"
                 }
             ],
             "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",

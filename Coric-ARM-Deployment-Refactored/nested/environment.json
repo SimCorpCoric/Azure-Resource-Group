@@ -63,7 +63,7 @@
                     "vhd": {
                         "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('dmzBasename'), '01-Data0.vhd')]"
                     },
-                    "createOption": "Empty"
+                    "createOption": "[if(equals(parameters('globals').vmRebuild, 'true'), 'Attach', 'Empty')]"
                 }
             ],
             "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
@@ -153,7 +153,7 @@
                     "vhd": {
                         "uri": "[concat('http://', variables('storageAccountNamePremium'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('sqlBasename'), '01-Data0.vhd')]"
                     },
-                    "createOption": "Empty"
+                    "createOption": "[if(equals(parameters('globals').vmRebuild, 'true'), 'Attach', 'Empty')]"
                 }
             ],
             "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
@@ -197,7 +197,7 @@
                     "vhd": {
                         "uri": "[concat('http://', variables('storageAccountName'), '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('warehouseBasename'), '01-Data0.vhd')]"
                     },
-                    "createOption": "Empty"
+                    "createOption": "[if(equals(parameters('globals').vmRebuild, 'true'), 'Attach', 'Empty')]"
                 }
             ],
             "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
@@ -473,8 +473,8 @@
             }
         },
         {
-            "condition": "[if(equals(parameters('globals').environment.dmzServerCount, 0), bool('false'), bool('true'))]",
             "name": "dmzServerSetup",
+            "condition": "[if(equals(parameters('globals').environment.dmzServerCount, 0), bool('false'), bool('true'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[parameters('globals').apiVersion.deployment]",
             "dependsOn": [
