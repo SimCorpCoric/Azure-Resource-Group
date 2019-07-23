@@ -100,7 +100,7 @@
         "diskEncryptionKeySecretURLs": {
             "type": "object",
             "metadata": {
-                "description": "Lookup table of existing disk encryption key secret URLs"
+                "description": "Lookup table of existing disk encryption key secret URLs, built dynamically at runtime."
             }
         },
         "domainAdminUsername": {
@@ -441,6 +441,7 @@
                 "warehouse": 1023,
                 "rdg": 1023
             },
+            "diskEncryptionKeySecretURLs": "[parameters('diskEncryptionKeySecretURLs')]",
             "diskEncryption": {
                 "aadClientID": "[parameters('aadClientID')]",
                 "aadClientCertThumbprint": "[parameters('aadClientCertThumbprint')]",

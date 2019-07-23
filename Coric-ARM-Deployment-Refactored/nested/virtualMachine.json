@@ -36,6 +36,8 @@
         }
     },
     "variables": {
+        "diskEncryptionKeySecretURLs": "[parameters('globals').diskEncryptionKeySecretURLs]",
+        "keyVaultURL": "[concat('https://', parameters('globals').diskEncryption.keyVaultName, '.vault.azure.net/')]",
         "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
         "asName": "[toUpper(concat('as', parameters('globals').basename, '-', parameters('globals').environment.shortname, '-', parameters('machineSettings').appID))]",
         "nicName": "[variables(concat('nicName', parameters('globals').networkSettings.nicNamingVersion))]",
@@ -43,9 +45,7 @@
         "nicName2": "[toLower(concat('nic', parameters('globals').environment.shortname, '-vm', parameters('machineSettings').basename))]",
         "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
         "vmName": "[parameters('machineSettings').basename]",
-        "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
-        "templateLinkVMNew": "[parameters('globals').templateLinkVMNew]",
-        "templateLinkVMRebuild": "[parameters('globals').templateLinkVMRebuild]"
+        "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
     },
     "resources": [
         {
@@ -129,7 +129,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('templateLinkVMNew')]",
+                    "uri": "[parameters('globals').templateLinkVMNew]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -223,7 +223,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('templateLinkVMRebuild')]",
+                    "uri": "[parameters('globals').templateLinkVMRebuild]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -252,7 +252,21 @@
                                     "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
                                 },
                                 "caching": "ReadWrite",
-                                "createOption": "Attach"
+                                "createOption": "Attach",
+                                "encryptionSettings": {
+                                    "diskEncryptionKey": {
+                                        "sourceVault": {
+                                            "id": "[variables('keyVaultResourceID')]"
+                                        },
+                                        "secretUrl": "[variables('diskEncryptionKeySecretURLs')[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]]"
+                                    },
+                                    "keyEncryptionKey": {
+                                        "sourceVault": {
+                                            "id": "[variables('keyVaultResourceID')]"
+                                        },
+                                        "keyUrl": "[parameters('globals').diskEncryption.keyVaultKEKURL]"
+                                    }
+                                }
                             }
                         }
                     },
