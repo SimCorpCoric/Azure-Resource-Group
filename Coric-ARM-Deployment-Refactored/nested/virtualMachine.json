@@ -147,7 +147,7 @@
                         "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
                     },
                     "availabilitySet": {
-                        "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(variables('asName')))]"
+                        "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('asName'))]"
                     },
                     "hardwareProfile": {
                         "vmSize": "[parameters('machineSettings').imageReference.size]"
@@ -233,7 +233,7 @@
                         "value": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
                     },
                     "availabilitySet": {
-                        "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(variables('asName')))]"
+                        "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('asName'))]"
                     },
                     "hardwareProfile": {
                         "vmSize": "[parameters('machineSettings').imageReference.size]"
