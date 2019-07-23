@@ -119,9 +119,10 @@
             "location": "[resourceGroup().location]"
         },
         {
-            "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
-            "type": "Microsoft.Compute/virtualMachines",
             "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+            "condition": "[not(parameters('globals').vmRebuild)]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
             "copy": {
                 "name": "vmLoop",
@@ -174,6 +175,74 @@
                         },
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": "true",
+                        "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+            "condition": "[parameters('globals').vmRebuild]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "vmLoop",
+                "count": "[parameters('machineSettings').numberOfVMs]"
+            },
+            "dependsOn": [
+                "[concat(variables('pipName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                "[variables('ppgName')]",
+                "[variables('asName')]"
+            ],
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(variables('asName')))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "[parameters('machineSettings').imageReference.size]"
+                },
+                "proximityPlacementGroup": {
+                    "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups', variables('ppgName'))]"
+                },
+                "osProfile": {
+                    "computerName": "[concat(variables('vmName'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                    "adminUsername": "[parameters('machineSettings').adminUsername]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "secrets": [
+                        {
+                            "sourceVault": {
+                                "id": "[variables('keyVaultResourceId')]"
+                            },
+                            "vaultCertificates": [
+                                {
+                                    "certificateUrl": "[parameters('globals').diskEncryption.keyVaultCertificateURL]",
+                                    "certificateStore": "My"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "name": "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
+                        "vhd": {
+                            "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "attach"
                     }
                 },
                 "networkProfile": {
