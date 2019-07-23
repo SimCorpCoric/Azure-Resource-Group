@@ -285,7 +285,7 @@
                 "count": "[parameters('machineSettings').numberOfVMs]"
             },
             "dependsOn": [
-                "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]"
+                "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]",
                 "[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'), '-Rebuild')]"
             ],
             "properties": {
