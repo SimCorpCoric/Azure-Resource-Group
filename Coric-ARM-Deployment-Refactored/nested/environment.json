@@ -182,7 +182,7 @@
         "storageAccountNamePremium": "[concat('sa', parameters('globals').baseName, toLower(parameters('globals').environment.shortname), 'prem')]",
         "storageAccountNamePremiumType": "Premium_LRS",
         "webReporterVMTemplate": "[replace(concat(split(parameters('globals').templateLinkVirtualMachine,'.json')[0], parameters('globals').webReporter,'.json'),'Yes','')]",
-        "vnetID": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', parameters('globals').networkSettings.vnetV2name, parameters('globals').asrBuild)]",
+        "vnetID": "[resourceId(parameters('globals').baseName, 'Microsoft.Network/virtualNetworks', concat(parameters('globals').networkSettings.vnetV2name, parameters('globals').asrBuild))]",
         "warehouseBasename": "[concat(parameters('globals').baseName, '-', variables('acronym'), '-iis')]",
         "warehouse": {
             "adminUsername": "[parameters('globals').localAdminUsername]",
