@@ -45,7 +45,7 @@
         "ppgName": "[toUpper(concat('ppg', parameters('globals').basename, '-', parameters('globals').environment.shortname))]",
         "vmName": "[parameters('machineSettings').basename]",
         "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
-        "vmTemplateLink": "[parameters('globals').networkSettings.vmTemplateLink]"
+        "templateLinkVM": "[parameters('globals').networkSettings.templateLinkVM]"
     },
     "resources": [
         {
@@ -137,7 +137,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('vmTemplateLink')]",
+                    "uri": "[variables('templateLinkVM')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -224,7 +224,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('vmTemplateLink')]",
+                    "uri": "[variables('templateLinkVM')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
