@@ -43,6 +43,13 @@
                 "description": "BNP and Candriam's NICs were built with a different naming convention--use '1' for those environments only."
             }
         },
+        "vmRebuild": {
+            "type": "bool",
+            "defaultValue": false,
+            "metadata": {
+                "description": "Set to true if VMs are being rebuilt and not created for the first time."
+            }
+        },
         "storageAccountType": {
             "allowedValues": [
                 "Standard_LRS",
@@ -381,7 +388,7 @@
         }
     },
     "variables": {
-        "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2'))]",
+        "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2', parameters('asrBuild')))]",
         "asrSuffix": "-asr",
         "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
         "domainSuffix": "Hosted",
@@ -403,6 +410,7 @@
                 "nic": "2018-02-01",
                 "nsg": "2015-06-15",
                 "pip": "2018-07-01",
+                "proximityPlacementGroups": "2018-04-01",
                 "routeTables": "2018-02-01",
                 "storage": "2018-02-01",
                 "subnets": "2018-12-01",
@@ -464,7 +472,7 @@
             "localAdminUsername": "[parameters('localAdminUsername')]",
             "networkSettings": {
                 "name": "[concat('vn', variables('baseName'))]",
-                "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2', parameters('asrBuild')))]",
+                "adminVnetID": "[variables('adminVnetID')]",
                 "vnetV2name": "[concat('vn', variables('baseName'), '-v2')]",
                 "vnetV2addressSpace": "[parameters('vnetV2addressSpace')]",
                 "addressSpace": "10.200.0.0/20",
@@ -602,6 +610,7 @@
                 "ftp": "OU=FTP;OU=Admin;",
                 "pushPull": "OU=PushPull;"
             },
+            "vmRebuild": "parameters('vmRebuild')",
             "sqlEncryption": {
                 "keyVaultURL": "[concat('https://', parameters('sqlKeyVaultName'), '.vault.azure.net/')]",
                 "servicePrincipalName": "[parameters('sqlServicePrincipalName')]",
@@ -701,7 +710,7 @@
         {
             "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'))]",
             "condition": "[or(equals(parameters('implementationPhase'), 1), equals(parameters('implementationPhase'), 4))]",
-            "resourceGroup": "[concat(resourcegroup().name, parameters('asrBuild'))]",
+            "resourceGroup": "[concat(resourcegroup().name)]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('globals').apiVersion.deployment]",
             "properties": {
@@ -730,7 +739,7 @@
             }
         },
         {
-            "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'))]",
+            "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'), variables('asrSuffix'))]",
             "condition": "[and(or(equals(parameters('implementationPhase'), 1), equals(parameters('implementationPhase'), 4)), empty(parameters('asrBuild')))]",
             "resourceGroup": "[concat(resourcegroup().name, variables('asrSuffix'))]",
             "type": "Microsoft.Resources/deployments",
