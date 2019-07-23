@@ -45,7 +45,7 @@
         "ppgName": "[toUpper(concat('ppg', parameters('globals').basename, '-', parameters('globals').environment.shortname))]",
         "vmName": "[parameters('machineSettings').basename]",
         "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]",
-        "templateLinkVM": "[parameters('globals').networkSettings.templateLinkVM]"
+        "templateLinkVM": "[parameters('globals').templateLinkVM]"
     },
     "resources": [
         {
