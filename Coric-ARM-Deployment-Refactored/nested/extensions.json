@@ -48,7 +48,7 @@
             "name": "[concat(parameters('vmName'),'/AntiMalwareExt')]",
             "apiVersion": "[parameters('globals').apiVersion.extension]",
             "dependsOn": [
-                "[concat(parameters('vmName'), '-Encryption')]",
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), '/extensions/BitLocker')]"
             ],
             "location": "[resourceGroup().location]",
             "properties": {
@@ -79,7 +79,7 @@
             "apiVersion": "[parameters('globals').apiVersion.extension]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat(parameters('vmName'),'/AntiMalwareExt')]",
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), '/extensions/AntiMalwareExt')]"
             ],
             "properties": {
                 "publisher": "Microsoft.Compute",
