@@ -97,12 +97,6 @@
                 "description": "If this is a DR/ASR build, pass the naming suffix (such as '-asr') to add to resource naming scheme."
             }
         },
-        "diskEncryptionKeySecretURLs": {
-            "type": "object",
-            "metadata": {
-                "description": "Lookup table of existing disk encryption key secret URLs, built dynamically at runtime."
-            }
-        },
         "domainAdminUsername": {
             "type": "string",
             "defaultValue": "DomainAdmin",
