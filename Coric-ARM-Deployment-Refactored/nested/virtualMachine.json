@@ -252,21 +252,7 @@
                                     "uri": "[concat('http://', parameters('machineSettings').storageAccount, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0')),'-OS.vhd')]"
                                 },
                                 "caching": "ReadWrite",
-                                "createOption": "Attach",
-                                "encryptionSettings": {
-                                    "diskEncryptionKey": {
-                                        "sourceVault": {
-                                            "id": "[variables('keyVaultResourceID')]"
-                                        },
-                                        "secretUrl": "[variables('diskEncryptionKeySecretURLs')[concat(variables('vmNamePortal'), padLeft(copyIndex(parameters('copyIndexOffset')), 2, '0'))]]"
-                                    },
-                                    "keyEncryptionKey": {
-                                        "sourceVault": {
-                                            "id": "[variables('keyVaultResourceID')]"
-                                        },
-                                        "keyUrl": "[parameters('globals').diskEncryption.keyVaultKEKURL]"
-                                    }
-                                }
+                                "createOption": "Attach"
                             }
                         }
                     },
