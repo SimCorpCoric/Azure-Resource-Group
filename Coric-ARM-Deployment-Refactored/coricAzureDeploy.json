@@ -435,7 +435,6 @@
                 "warehouse": 1023,
                 "rdg": 1023
             },
-            "diskEncryptionKeySecretURLs": "[parameters('diskEncryptionKeySecretURLs')]",
             "diskEncryption": {
                 "aadClientID": "[parameters('aadClientID')]",
                 "aadClientCertThumbprint": "[parameters('aadClientCertThumbprint')]",
