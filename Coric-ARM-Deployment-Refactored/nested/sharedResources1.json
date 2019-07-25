@@ -353,9 +353,7 @@
             "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[parameters('globals').apiVersion.deployment]",
-            "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc01', '/extensions/CreateADForest')]"
-            ],
+            "dependsOn": [],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
