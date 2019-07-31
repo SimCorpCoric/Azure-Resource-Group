@@ -1,0 +1,132 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "globals": {
+            "type": "object",
+            "metadata": {
+                "Description": "Global complex object passed to nested templates"
+            }
+        },
+        "adminPassword": {
+            "metadata": {
+                "description": "Administrator password"
+            },
+            "type": "securestring"
+        }
+    },
+    "variables": {
+        "availabilitySetName": "[concat('as',variables('basename'))]",
+        "basename": "[concat(parameters('globals').baseName, '-ScanEngine')]",
+        "imageOffer": "[parameters('globals').insightVMOffer]",
+        "imageReference": {
+            "publisher": "rapid7",
+            "offer": "[variables('imageOffer')]",
+            "sku": "nexpose-scan-engine",
+            "version": "latest"
+        },
+        "networkInterfaceName": "[concat('nic',variables('basename'))]",
+        "osDiskType": "Standard_LRS",
+        "vmNamePortal": "[concat('vm', variables('basename'))]"
+    },
+    "resources": [
+        {
+            "name": "[variables('networkInterfaceName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[parameters('globals').apiVersion.nic]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[parameters('globals').networkSettings.adminSecurityID]"
+                            },
+                            "privateIPAddress": "[parameters('globals').networkSettings.insightVMIPAddress]",
+                            "privateIPAllocationMethod": "Static"
+                        }
+                    }
+                ]
+            },
+            "tags": {
+                "Department": "Managed Services",
+                "Environment": "Admin",
+                "Service": "InsightVM"
+            }
+        },
+        {
+            "name": "[variables('vmNamePortal')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]",
+                "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('globals').insightVMSize]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[variables('osDiskType')]"
+                        }
+                    },
+                    "imageReference": "[variables('imageReference')]"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[variables('basename')]",
+                    "adminUsername": "[parameters('globals').localAdminUsername]",
+                    "adminPassword": "[parameters('adminPassword')]"
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": "true",
+                        "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
+                    }
+                },
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
+                }
+            },
+            "plan": {
+                "name": "[variables('imageReference').offer]",
+                "publisher": "[variables('imageReference').publisher]",
+                "product": "[variables('imageReference').sku]"
+            },
+            "tags": {
+                "Department": "Managed Services",
+                "Environment": "Admin",
+                "Service": "InsightVM"
+            }
+        },
+        {
+            "name": "[variables('availabilitySetName')]",
+            "type": "Microsoft.Compute/availabilitySets",
+            "apiVersion": "[parameters('globals').apiVersion.availabilitySets]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "platformFaultDomainCount": 2,
+                "platformUpdateDomainCount": 5
+            },
+            "sku": {
+                "name": "Aligned"
+            },
+            "tags": {
+                "Department": "Managed Services",
+                "Environment": "Admin",
+                "Service": "InsightVM"
+            }
+        }
+    ]
+}

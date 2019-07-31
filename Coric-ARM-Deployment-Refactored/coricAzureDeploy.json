@@ -385,6 +385,23 @@
             "metadata": {
                 "description": "The version of Check Point firewall/vpn gateway to install; r77.10 or r80.20"
             }
+        },
+        "insightVMOffer": {
+            "type": "string",
+            "allowedValues": [
+                "nexpose-scan-engine"
+            ],
+            "defaultValue": "nexpose-scan-engine",
+            "metadata": {
+                "description": "The Azure marketplace image to use when deploying Rapid7 InsightVM"
+            }
+        },
+        "insightVMSize": {
+            "type": "string",
+            "allowedValues": [
+                "Standard_D1_V2"
+            ],
+            "defaultValue": "Standard_D1_V2"
         }
     },
     "variables": {
@@ -469,6 +486,9 @@
                 "pushPullCount": "[parameters('pushPullCount')]",
                 "webCount": "[parameters('webCount')]"
             },
+            "insightVMOffer": "[parameters('insightVMOffer')]",
+            "insightVMSize": "[parameters('insightVMSize')]",
+            "insightVMTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/insightVM.json')]",
             "localAdminUsername": "[parameters('localAdminUsername')]",
             "networkSettings": {
                 "name": "[concat('vn', variables('baseName'))]",
@@ -480,6 +500,8 @@
                 "azureGatewayInternalIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.65')]",
                 "dc01IPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.196')]",
                 "dc02IPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.197')]",
+                "adminSecurityID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-security')]",
+                "insightVMIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.132')]",
                 "gatewayExternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-external')]",
                 "gatewayExternalIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.4')]",
                 "gatewayInternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/','sn', variables('vnetV2name'), '-admin-internalgateway')]",

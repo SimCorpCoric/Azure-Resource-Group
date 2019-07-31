@@ -322,7 +322,7 @@
             "apiVersion": "[parameters('globals').apiVersion.dsc]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('nic', parameters('globals').environment.shortname, '-vm', variables('primaryDomainController').basename, '01')]",
+                "[concat('nic', parameters('globals').environment.shortname, '-vm', variables('primaryDomainController').basename, '01')]"
             ],
             "properties": {
                 "publisher": "Microsoft.Powershell",
@@ -468,6 +468,32 @@
                     },
                     "domainAdminPassword": {
                         "value": "[parameters('domainAdminPassword')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "insightVMSetup",
+            "condition": "[empty(parameters('asrSuffix'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'adminStorage')]",
+                "[concat('Microsoft.Resources/deployments/', 'diagnosticsStorage')]",
+                "[concat('Microsoft.Resources/deployments/', 'networkVnetV2Setup')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').insightVMTemplateLink]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
                     }
                 }
             }
