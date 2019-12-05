@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "globals": {
@@ -68,11 +68,6 @@
                 }
             ],
             "dnsServers": [],
-            "finalDnsServers": [
-                "[parameters('globals').networkSettings.dc01IPAddress]",
-                "[parameters('globals').networkSettings.dc02IPAddress]",
-                "[parameters('globals').networkSettings.azureDNS]"
-            ],
             "numberOfVMs": 1,
             "ouPath": "",
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
@@ -110,11 +105,7 @@
                     }
                 }
             ],
-            "dnsServers": [
-                "[parameters('globals').networkSettings.dc01IPAddress]",
-                "[parameters('globals').networkSettings.dc02IPAddress]",
-                "[parameters('globals').networkSettings.azureDNS]"
-            ],
+            "dnsServers": [],
             "numberOfVMs": 1,
             "ouPath": "[parameters('globals').ou.domainControllers]",
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
@@ -259,7 +250,7 @@
                         "value": "[parameters('globals')]"
                     },
                     "dnsServers": {
-                        "value": []
+                        "value": "[parameters('globals').networkSettings.azureDNS]"
                     },
                     "name": {
                         "value": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('globals').asrBuild, parameters('asrSuffix'))]"
@@ -296,22 +287,6 @@
                     "domainAdminPassword": {
                         "value": "[parameters('domainAdminPassword')]"
                     }
-                }
-            }
-        },
-        {
-            "name": "[concat('nic', parameters('globals').environment.shortname, '-vm', variables('primaryDomainController').basename, '01')]",
-            "condition": "[empty(parameters('asrSuffix'))]",
-            "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "[parameters('globals').apiVersion.nic]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "primaryDCSetup"
-            ],
-            "properties": {
-                "ipConfigurations": "[variables('primaryDomainController').ipConfigurations]",
-                "dnsSettings": {
-                    "dnsServers": "[variables('primaryDomainController').finalDnsServers]"
                 }
             }
         },
@@ -353,7 +328,9 @@
             "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[parameters('globals').apiVersion.deployment]",
-            "dependsOn": [],
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', 'vm', parameters('globals').baseName, '-dc01', '/extensions/CreateADForest')]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -366,9 +343,7 @@
                     },
                     "dnsServers": {
                         "value": [
-                            "[parameters('globals').networkSettings.dc01IPAddress]",
-                            "[parameters('globals').networkSettings.dc02IPAddress]",
-                            "[parameters('globals').networkSettings.azureDNS]"
+                            "[parameters('globals').networkSettings.dc01IPAddress]"
                         ]
                     },
                     "name": {
