@@ -250,7 +250,9 @@
                         "value": "[parameters('globals')]"
                     },
                     "dnsServers": {
-                        "value": "[parameters('globals').networkSettings.azureDNS]"
+                        "value": [
+							"[parameters('globals').networkSettings.azureDNS]"
+						]
                     },
                     "name": {
                         "value": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('globals').asrBuild, parameters('asrSuffix'))]"
