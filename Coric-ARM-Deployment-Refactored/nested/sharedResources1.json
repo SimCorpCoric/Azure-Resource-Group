@@ -297,8 +297,7 @@
             "apiVersion": "[parameters('globals').apiVersion.dsc]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-				"primaryDCSetup",
-                "[concat('nic', parameters('globals').environment.shortname, '-vm', variables('primaryDomainController').basename, '01')]"
+				"primaryDCSetup"
             ],
             "properties": {
                 "publisher": "Microsoft.Powershell",
