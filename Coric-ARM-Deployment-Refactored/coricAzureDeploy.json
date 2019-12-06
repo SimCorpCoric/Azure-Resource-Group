@@ -683,8 +683,8 @@
         "SQL2016": "SQL2016-WS2012R2",
         "SQL2016SP1": "SQL2016SP1-WS2012R2",
         "SQL2016SP2": "SQL2016SP2-WS2016",
-        "SQL2017": "SQL2017-WS2016",
-        "SQL2019": "SQL2019-WS2016",
+        "SQL2017": "SQL2017-WS2019",
+        "SQL2019": "SQL2019-WS2019",
         "sqlDeveloperEncryption": "[variables('templateLinkSQLKeyVault')]",
         "sqlDeveloperVM": {
             "publisher": "MicrosoftSQLServer",
