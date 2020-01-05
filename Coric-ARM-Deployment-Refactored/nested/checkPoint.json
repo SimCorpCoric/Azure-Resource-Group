@@ -36,6 +36,9 @@
         }
     },
     "variables": {
+        "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', parameters('globals').baseName, '-v2'))]",
+        "gatewayExternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-external')]",
+        "gatewayInternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/','sn', parameters('globals').networkSettings.vnetV2name, '-admin-internalgateway')]",
         "basename": "[concat(parameters('globals').baseName, '-cp')]",
         "azureGatewayInternalIPAddress": "[parameters('globals').networkSettings.azureGatewayInternalIPAddress]",
         "customData": "[concat('#!/bin/bash\n', '\n', 'installSecurityGateway=\"', variables('installSecurityGateway'), '\"', '\n', 'installSecurityGateway=\"$(echo $installSecurityGateway | tr \"TF\" \"tf\")\"\n', 'installSecurityManagement=\"', variables('installSecurityManagement'), '\"', '\n', 'installSecurityManagement=\"$(echo $installSecurityManagement | tr \"TF\" \"tf\")\"\n', 'adminPassword=\"', parameters('adminPassword'), '\"', '\n', 'managementGUIClientNetwork=\"', variables('managementGUIClientNetwork'), '\"', '\n', 'ManagementGUIClientBase=\"$(echo $managementGUIClientNetwork | cut -d / -f 1)\"\n', 'ManagementGUIClientMaskLength=\"$(echo $managementGUIClientNetwork | cut -d / -f 2)\"\n', 'sicKey=\"', parameters('sicKey'), '\"', '\n', 'conf=\"install_security_gw=$installSecurityGateway\"\n', 'if $installSecurityGateway; then\n', '    conf=\"${conf}&install_ppak=true\"\n', '    conf=\"${conf}&gateway_cluster_member=false\"\n', 'fi\n', 'conf=\"${conf}&install_security_managment=$installSecurityManagement\"\n', 'if $installSecurityManagement; then\n', '    conf=\"${conf}&install_mgmt_primary=true\"\n', '    conf=\"${conf}&mgmt_admin_name=admin\"\n', '    conf=\"${conf}&mgmt_admin_passwd=$adminPassword\"\n', '    conf=\"${conf}&mgmt_gui_clients_radio=network\"\n', '    conf=\"${conf}&mgmt_gui_clients_ip_field=$ManagementGUIClientBase\"\n', '    conf=\"${conf}&mgmt_gui_clients_subnet_field=$ManagementGUIClientMaskLength\"\n', 'fi\n', 'conf=\"${conf}&ftw_sic_key=$sicKey\"\n', '\n', 'config_system -s $conf\n', '\n', 'clish -c \"set static-route ', variables('vnetAddressSpace'), ' nexthop gateway address ', variables('azureGatewayInternalIPAddress'),' on\"', '\n', 'clish -c \"set static-route ', variables('vnetV2addressSpace'), ' nexthop gateway address ', variables('azureGatewayInternalIPAddress'),' on\"', '\n', 'clish -c \"save config\"', '\n', 'shutdown -r now\n')]",
@@ -68,22 +71,22 @@
         "managementGUIClientNetwork": "0.0.0.0/0",
         "nic1Name": "[concat(variables('nicName'), '-Gateway')]",
         "nic2Name": "[concat(variables('nicName'), '-FWInternal')]",
-        "nicName": "[concat('nic', variables('basename'))]",
+        "nicName": "[concat('nic', parameters('globals').baseName)]",
         "osProfile": {
             "adminPassword": "[parameters('adminPassword')]",
             "adminUsername": "notused",
-            "computerName": "[variables('basename')]",
+            "computerName": "[parameters('globals').baseName]",
             "customData": "[base64(variables('customData'))]"
         },
-        "pipName": "[concat('pip', variables('basename'))]",
+        "pipName": "[concat('pip', parameters('globals').baseName, parameters('asrSuffix'))]",
         "plan": {
             "name": "sg-byol",
             "product": "[variables('imageOffer')]",
             "publisher": "[variables('imagePublisher')]"
         },
         "publicIPAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))]",
-        "publicIPAddressLB1Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name))]",
-        "publicIPAddressLB2Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[1].name))]",
+        "publicIPAddressLB1Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name, parameters('asrSuffix')))]",
+        "publicIPAddressLB2Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[1].name, parameters('asrSuffix')))]",
         "rdsGatewayNicName": "[concat('nicadmin-vm', variables('rdsGateway').basename, '01')]",
         "rdsGateway": {
             "basename": "[concat(parameters('globals').baseName, '-rdg')]",
@@ -100,7 +103,7 @@
                 }
             ]
         },
-        "vmNamePortal": "[concat('vm', variables('basename'))]",
+        "vmNamePortal": "[concat('vm', parameters('globals').baseName)]",
         "vnetAddressSpace": "[parameters('globals').networkSettings.addressSpace]",
         "vnetV2addressSpace": "[parameters('globals').networkSettings.vnetV2addressSpace]",
     },
@@ -161,14 +164,14 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[toLower(variables('basename'))]"
+                    "domainNameLabel": "[concat(toLower(parameters('globals').baseName), variables('asrSuffix'))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
             }
         },
         {
-            "name": "[concat('pip', variables('incomingTraffic')[0].name)]",
+            "name": "[concat('pip', variables('incomingTraffic')[0].name, parameters('asrSuffix'))]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -177,20 +180,20 @@
             ],
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[0].name]"
+                    "domainNameLabel": "[concat(variables('incomingTraffic')[0].name, parameters('asrSuffix'))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
             }
         },
         {
-            "name": "[concat('pip', variables('incomingTraffic')[1].name)]",
+            "name": "[concat('pip', variables('incomingTraffic')[1].name, parameters('asrSuffix'))]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[1].name]"
+                    "domainNameLabel": "[concat(variables('incomingTraffic')[1].name, parameters('asrSuffix'))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
@@ -272,7 +275,7 @@
                                 "Id": "[variables('publicIPAddressId')]"
                             },
                             "subnet": {
-                                "id": "[parameters('globals').networkSettings.gatewayExternalSubnetID]"
+                                "Id": "[variables('gatewayExternalSubnetID')]"
                             },
                             "loadBalancerInboundNatRules": [
                                 {
@@ -304,7 +307,7 @@
                             "privateIPAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[parameters('globals').networkSettings.gatewayInternalSubnetID]"
+                                "id": "[variables('gatewayInternalSubnetID')]"
                             }
                         }
                     }
@@ -325,7 +328,7 @@
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": "true",
-                        "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
+                        "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, parameters('asrSuffix'), '.blob.core.windows.net')]"
                     }
                 },
                 "hardwareProfile": {
@@ -355,7 +358,7 @@
                         "createOption": "FromImage",
                         "name": "osDisk",
                         "vhd": {
-                            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('vmNamePortal'), '-OS.vhd')]"
+                            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, parameters('asrSuffix'),'.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('vmNamePortal'), '-OS.vhd')]"
                         }
                     }
                 }

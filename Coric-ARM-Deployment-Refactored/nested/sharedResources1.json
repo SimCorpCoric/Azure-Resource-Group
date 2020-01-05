@@ -35,6 +35,10 @@
         }
     },
     "variables": {
+        "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', parameters('globals').baseName, '-v2'))]",
+        "adminSecurityID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-security')]",
+        "domainSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-domain')]",
+        "dmzSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-dmz')]",
         "dcBasename": "[concat(parameters('globals').baseName, '-dc')]",
         "primaryDomainController": {
             "adminUsername": "[parameters('globals').domainAdminUsername]",
@@ -62,7 +66,7 @@
                         "privateIPAllocationMethod": "Static",
                         "privateIPAddress": "[parameters('globals').networkSettings.dc01IPAddress]",
                         "subnet": {
-                            "id": "[parameters('globals').networkSettings.domainSubnetID]"
+                            "id": "[variables('domainSubnetID')]"
                         }
                     }
                 }
@@ -100,7 +104,7 @@
                         "privateIPAllocationMethod": "Static",
                         "privateIPAddress": "[parameters('globals').networkSettings.dc02IPAddress]",
                         "subnet": {
-                            "id": "[parameters('globals').networkSettings.domainSubnetID]"
+                            "id": "[variables('domainSubnetID')]"
                         }
                     }
                 }
@@ -140,7 +144,7 @@
                         "privateIPAllocationMethod": "Static",
                         "privateIPAddress": "[parameters('globals').networkSettings.rdgatewayIPAddress]",
                         "subnet": {
-                            "id": "[parameters('globals').networkSettings.dmzSubnetID]"
+                            "id": "[variables('dmzSubnetID')]"
                         }
                     }
                 }
@@ -180,7 +184,7 @@
                         "privateIPAllocationMethod": "Static",
                         "privateIPAddress": "[parameters('globals').networkSettings.ftpIPAddress]",
                         "subnet": {
-                            "id": "[parameters('globals').networkSettings.dmzSubnetID]"
+                            "id": "[variables('dmzSubnetID')]"
                         }
                     }
                 }
@@ -210,7 +214,7 @@
                         "value": "[parameters('globals')]"
                     },
                     "Name": {
-                        "value": "[concat(parameters('globals').storageAccountAdmin)]"
+                        "value": "[concat(parameters('globals').storageAccountAdmin, parameters('asrSuffix'))]"
                     }
                 }
             }
@@ -230,7 +234,7 @@
                         "value": "[parameters('globals')]"
                     },
                     "name": {
-                        "value": "[concat(parameters('globals').storageAccountDiagnostics)]"
+                        "value": "[concat(parameters('globals').storageAccountDiagnostics, parameters('asrSuffix'))]"
                     }
                 }
             }
@@ -472,6 +476,9 @@
                     },
                     "adminPassword": {
                         "value": "[parameters('localAdminPassword')]"
+                    },
+                    "adminSecurityID": {
+                        "value": "[variables('adminSecurityID')]"
                     }
                 }
             }

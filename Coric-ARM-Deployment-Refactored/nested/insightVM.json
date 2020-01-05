@@ -13,6 +13,12 @@
                 "description": "Administrator password"
             },
             "type": "securestring"
+        },
+        "adminSecurityID": {
+            "metadata": {
+                "description": "ID of the admin-security subnet"
+            },
+            "type": "string"
         }
     },
     "variables": {
@@ -41,7 +47,7 @@
                         "name": "ipconfig1",
                         "properties": {
                             "subnet": {
-                                "id": "[parameters('globals').networkSettings.adminSecurityID]"
+                                "id": "[parameters('adminSecurityID')]"
                             },
                             "privateIPAddress": "[parameters('globals').networkSettings.insightVMIPAddress]",
                             "privateIPAllocationMethod": "Static"
