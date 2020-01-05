@@ -78,15 +78,15 @@
             "computerName": "[parameters('globals').baseName]",
             "customData": "[base64(variables('customData'))]"
         },
-        "pipName": "[concat('pip', parameters('globals').baseName, parameters('asrSuffix'))]",
+        "pipName": "[concat('pip', parameters('globals').baseName)]",
         "plan": {
             "name": "sg-byol",
             "product": "[variables('imageOffer')]",
             "publisher": "[variables('imagePublisher')]"
         },
         "publicIPAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))]",
-        "publicIPAddressLB1Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name, parameters('asrSuffix')))]",
-        "publicIPAddressLB2Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[1].name, parameters('asrSuffix')))]",
+        "publicIPAddressLB1Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name))]",
+        "publicIPAddressLB2Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[1].name))]",
         "rdsGatewayNicName": "[concat('nicadmin-vm', variables('rdsGateway').basename, '01')]",
         "rdsGateway": {
             "basename": "[concat(parameters('globals').baseName, '-rdg')]",
@@ -171,7 +171,7 @@
             }
         },
         {
-            "name": "[concat('pip', variables('incomingTraffic')[0].name, parameters('asrSuffix'))]",
+            "name": "[concat('pip', variables('incomingTraffic')[0].name)]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -180,20 +180,20 @@
             ],
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[concat(variables('incomingTraffic')[0].name, parameters('asrSuffix'))]"
+                    "domainNameLabel": "[concat(variables('incomingTraffic')[0].name)]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
             }
         },
         {
-            "name": "[concat('pip', variables('incomingTraffic')[1].name, parameters('asrSuffix'))]",
+            "name": "[concat('pip', variables('incomingTraffic')[1].name)]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[concat(variables('incomingTraffic')[1].name, parameters('asrSuffix'))]"
+                    "domainNameLabel": "[concat(variables('incomingTraffic')[1].name)]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
@@ -328,7 +328,7 @@
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": "true",
-                        "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, parameters('asrSuffix'), '.blob.core.windows.net')]"
+                        "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, replace(parameters('asrSuffix'),'-',''), '.blob.core.windows.net')]"
                     }
                 },
                 "hardwareProfile": {
@@ -358,7 +358,7 @@
                         "createOption": "FromImage",
                         "name": "osDisk",
                         "vhd": {
-                            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, parameters('asrSuffix'),'.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('vmNamePortal'), '-OS.vhd')]"
+                            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, replace(parameters('asrSuffix'),'-',''),'.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('vmNamePortal'), '-OS.vhd')]"
                         }
                     }
                 }
