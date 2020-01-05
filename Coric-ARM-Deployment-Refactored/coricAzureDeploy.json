@@ -763,7 +763,7 @@
             }
         },
         {
-            "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'), parameters('asrBuild'))]",
+            "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'), '-asr')]",
             "condition": "[and(or(equals(parameters('implementationPhase'), 1), equals(parameters('implementationPhase'), 4)), not(empty(parameters('asrBuild'))))]",
             "resourceGroup": "[concat(resourcegroup().name, parameters('asrBuild'))]",
             "type": "Microsoft.Resources/deployments",
