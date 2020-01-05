@@ -156,7 +156,6 @@
         },
         {
             "name": "[variables('pipName')]",
-            "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -170,7 +169,6 @@
         },
         {
             "name": "[concat('pip', variables('incomingTraffic')[0].name)]",
-            "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -187,7 +185,6 @@
         },
         {
             "name": "[concat('pip', variables('incomingTraffic')[1].name)]",
-            "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -201,7 +198,6 @@
         },
         {
             "name": "[variables('lbName')]",
-            "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Network/loadBalancers",
             "apiVersion": "[parameters('globals').apiVersion.loadBalancer]",
             "dependsOn": [
@@ -256,7 +252,6 @@
         },
         {
             "name": "[variables('nic1Name')]",
-            "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "[parameters('globals').apiVersion.nic]",
             "dependsOn": [
@@ -294,7 +289,6 @@
         },
         {
             "name": "[variables('nic2Name')]",
-            "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "[parameters('globals').apiVersion.nic]",
             "dependsOn": [
@@ -319,7 +313,6 @@
         },
         {
             "name": "[variables('vmNamePortal')]",
-            "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "dependsOn": [
