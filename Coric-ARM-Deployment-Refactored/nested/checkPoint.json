@@ -164,7 +164,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[concat(toLower(parameters('globals').baseName), variables('asrSuffix'))]"
+                    "domainNameLabel": "[concat(toLower(parameters('globals').baseName), parameters('asrSuffix'))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
