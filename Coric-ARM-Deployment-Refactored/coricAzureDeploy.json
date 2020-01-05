@@ -407,7 +407,6 @@
     },
     "variables": {
         "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2', parameters('asrBuild')))]",
-        "asrSuffix": "-asr",
         "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
         "domainSuffix": "Hosted",
         "environmentShortNameAdmin": "admin",
@@ -641,8 +640,8 @@
             },
             "sqlVM": "[variables(concat('sql',parameters('sqlSKU'),'VM'))]",
             "sqlEncryptionTemplate": "[variables(concat('sql',parameters('sqlSKU'),'Encryption'))]",
-            "storageAccountAdmin": "[replace(concat('sa', variables('baseName'), 'admin', parameters('asrBuild')),'-','')]",
-            "storageAccountDiagnostics": "[replace(concat('sa', variables('baseName'), 'diagnostics', parameters('asrBuild')),'-','')]",
+            "storageAccountAdmin": "[replace(concat('sa', variables('baseName'), 'admin'),'-','')]",
+            "storageAccountDiagnostics": "[replace(concat('sa', variables('baseName'), 'diagnostics'),'-','')]",
             "storageAccountTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/storageAccount.json')]",
             "storageType": "Standard_RAGRS",
             "templateLinkDataDisk": "[uri(deployment().properties.templateLink.uri, 'nested/dataDisk.json')]",
@@ -764,9 +763,9 @@
             }
         },
         {
-            "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'), variables('asrSuffix'))]",
+            "name": "[concat('sharedResourcesSetup', parameters('implementationPhase'), parameters('asrBuild'))]",
             "condition": "[and(or(equals(parameters('implementationPhase'), 1), equals(parameters('implementationPhase'), 4)), not(empty(parameters('asrBuild'))))]",
-            "resourceGroup": "[concat(resourcegroup().name, variables('asrSuffix'))]",
+            "resourceGroup": "[concat(resourcegroup().name, parameters('asrBuild'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('globals').apiVersion.deployment]",
             "properties": {
@@ -789,7 +788,7 @@
                         "value": "[parameters('sicKey')]"
                     },
                     "asrSuffix": {
-                        "value": "[variables('asrSuffix')]"
+                        "value": "[parameters('asrBuild')]"
                     }
                 }
             }

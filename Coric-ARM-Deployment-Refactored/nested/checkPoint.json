@@ -127,7 +127,10 @@
                         ]
                     },
                     "name": {
-                        "value": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('globals').asrBuild)]"
+                        "value": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('asrSuffix'))]"
+                    },
+                    "asrSuffix": {
+                        "value": "[parameters('asrSuffix')]"
                     }
                 }
             }
