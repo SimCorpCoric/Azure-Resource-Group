@@ -72,14 +72,14 @@
         "managementGUIClientNetwork": "0.0.0.0/0",
         "nic1Name": "[concat(variables('nicName'), '-Gateway')]",
         "nic2Name": "[concat(variables('nicName'), '-FWInternal')]",
-        "nicName": "[concat('nic', parameters('globals').baseName)]",
+        "nicName": "[concat('nic', variables('basename'))]",
         "osProfile": {
             "adminPassword": "[parameters('adminPassword')]",
             "adminUsername": "notused",
-            "computerName": "[parameters('globals').baseName]",
+            "computerName": "[variables('basename')]",
             "customData": "[base64(variables('customData'))]"
         },
-        "pipName": "[concat('pip', parameters('globals').baseName)]",
+        "pipName": "[concat('pip', variables('basename'))]",
         "plan": {
             "name": "sg-byol",
             "product": "[variables('imageOffer')]",
@@ -104,7 +104,7 @@
                 }
             ]
         },
-        "vmNamePortal": "[concat('vm', parameters('globals').baseName)]",
+        "vmNamePortal": "[concat('vm', variables('basename'))]",
         "vnetAddressSpace": "[parameters('globals').networkSettings.addressSpace]",
         "vnetV2addressSpace": "[parameters('globals').networkSettings.vnetV2addressSpace]",
     },
@@ -165,7 +165,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[toLower(parameters('globals').baseName)]"
+                    "domainNameLabel": "[toLower(variables('basename'))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
@@ -181,7 +181,7 @@
             ],
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[concat(variables('incomingTraffic')[0].name)]"
+                    "domainNameLabel": "[variables('incomingTraffic')[0].name]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
@@ -194,7 +194,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[concat(variables('incomingTraffic')[1].name)]"
+                    "domainNameLabel": "[variables('incomingTraffic')[1].name]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
