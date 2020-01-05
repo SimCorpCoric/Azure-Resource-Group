@@ -24,6 +24,13 @@
             "metadata": {
                 "description": "Name of the network to be created."
             }
+        },
+        "asrSuffix": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "If not blank, indicates an ASR deployment should occur, as well as the naming suffix for the deployment."
+            }
         }
     },
     "resources": [
@@ -298,7 +305,7 @@
         {
             "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
             "name": "[concat(parameters('name'), '/', parameters('name'), '-vnMgmtNetwork')]",
-            "condition": "[empty(parameters('globals').asrBuild)]",
+            "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
             "properties": {
                 "peeringState": "Connected",
