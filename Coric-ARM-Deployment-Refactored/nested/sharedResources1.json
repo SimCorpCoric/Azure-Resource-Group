@@ -210,7 +210,7 @@
                         "value": "[parameters('globals')]"
                     },
                     "Name": {
-                        "value": "[concat(parameters('globals').storageAccountAdmin, parameters('asrSuffix'))]"
+                        "value": "[concat(parameters('globals').storageAccountAdmin)]"
                     }
                 }
             }
@@ -230,7 +230,7 @@
                         "value": "[parameters('globals')]"
                     },
                     "name": {
-                        "value": "[concat(parameters('globals').storageAccountDiagnostics, parameters('asrSuffix'))]"
+                        "value": "[concat(parameters('globals').storageAccountDiagnostics)]"
                     }
                 }
             }
@@ -255,7 +255,7 @@
 						]
                     },
                     "name": {
-                        "value": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('asrSuffix'))]"
+                        "value": "[concat(parameters('globals').networkSettings.vnetV2name)]"
                     },
                     "asrSuffix": {
                         "value": "[parameters('asrSuffix')]"
