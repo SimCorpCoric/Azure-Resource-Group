@@ -34,12 +34,13 @@
         }
     },
     "variables": {
-        "vnetV2name": "[parameters('name')]"
+        "vnetV2name": "[parameters('name')]",
+        "vnetV2originalName": "[parameters('globals').networkSettings.vnetV2name]"
     },
     "resources": [
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-admin-dmz-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-admin-dmz-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -74,7 +75,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-admin-domain-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-admin-domain-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -108,7 +109,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-admin-security-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-admin-security-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -142,7 +143,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-prod-desktop-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-prod-desktop-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -176,7 +177,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-prod-web-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-prod-web-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -210,7 +211,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-prod-application-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-prod-application-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -244,7 +245,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-prod-database-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-prod-database-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -278,7 +279,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-uat-desktop-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-uat-desktop-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -312,7 +313,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-uat-web-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-uat-web-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -346,7 +347,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-uat-application-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-uat-application-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -380,7 +381,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-uat-database-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-uat-database-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -414,7 +415,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-dev-desktop-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-dev-desktop-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -448,7 +449,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-dev-web-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-dev-web-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -482,7 +483,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-dev-application-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-dev-application-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -516,7 +517,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-dev-database-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-dev-database-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -550,7 +551,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-prod-dmz-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-prod-dmz-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -585,7 +586,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-uat-dmz-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-uat-dmz-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -620,7 +621,7 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2name'), '-dev-dmz-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-dev-dmz-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -685,7 +686,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetadmindmz.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-admin-dmz-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -702,7 +703,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetadmindomain.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-domain-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-admin-domain-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -719,7 +720,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetadminsecurity.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-admin-security-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -736,7 +737,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetproddesktop.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-prod-desktop-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -753,7 +754,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetprodweb.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-prod-web-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -770,7 +771,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetprodapplication.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-application-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-prod-application-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -787,7 +788,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetproddatabase.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-database-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-prod-database-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -804,7 +805,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetuatdesktop.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-desktop-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-uat-desktop-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -821,7 +822,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetuatweb.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-web-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-uat-web-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -838,7 +839,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetuatapplication.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-application-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-uat-application-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -855,7 +856,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetuatdatabase.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-database-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-uat-database-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -872,7 +873,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetdevdesktop.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-desktop-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-dev-desktop-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -889,7 +890,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetdevweb.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-web-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-dev-web-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -906,7 +907,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetdevapplication.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-application-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-dev-application-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -923,7 +924,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetdevdatabase.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-dev-database-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -940,7 +941,7 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetproddmz.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-dmz-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-prod-dmz-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -957,7 +958,24 @@
                         "properties": {
                             "addressPrefix": "[parameters('globals').networkSettings.subnetuatdmz.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-dmz-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-uat-dmz-local'))]"
+                            },
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "[parameters('globals').networkSettings.subnetdevdmz.name]",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetdevdmz.prefix]",
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-dev-dmz-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -972,23 +990,24 @@
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-dmz-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-domain-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-admin-security-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-desktop-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-web-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-application-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-database-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-desktop-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-web-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-application-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-database-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-desktop-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-web-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-application-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-dev-database-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-prod-dmz-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2name'), '-uat-dmz-local'))]"
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-admin-dmz-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-admin-domain-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-admin-security-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-prod-desktop-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-prod-web-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-prod-application-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-prod-database-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-uat-desktop-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-uat-web-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-uat-application-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-uat-database-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-dev-desktop-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-dev-web-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-dev-application-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-dev-database-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-prod-dmz-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-uat-dmz-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-dev-dmz-local'))]"
             ]
         },
         {

@@ -298,6 +298,20 @@
                                 }
                             ]
                         }
+                    },
+                    {
+                        "name": "[parameters('globals').networkSettings.subnetdevdmz.name]",
+                        "properties": {
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetdevdmz.prefix]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
+                        }
                     }
                 ]
             }

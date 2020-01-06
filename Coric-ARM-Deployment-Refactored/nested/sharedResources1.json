@@ -35,7 +35,8 @@
         }
     },
     "variables": {
-        "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', parameters('globals').baseName, '-v2'))]",
+        "vnetV2Name": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('asrSuffix'))]",
+        "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2Name'))]",
         "adminSecurityID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-security')]",
         "domainSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-domain')]",
         "dmzSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-dmz')]",
@@ -259,7 +260,7 @@
 						]
                     },
                     "name": {
-                        "value": "[concat(parameters('globals').networkSettings.vnetV2name)]"
+                        "value": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('asrSuffix'))]"
                     },
                     "asrSuffix": {
                         "value": "[parameters('asrSuffix')]"
