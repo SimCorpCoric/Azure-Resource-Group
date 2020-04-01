@@ -282,7 +282,10 @@
             "apiVersion": "[parameters('globals').apiVersion.loadBalancer]",
             "dependsOn": [
                 "[variables('publicIPAddressLB1Id')]",
-                "[variables('publicIPAddressLB2Id')]"
+                "[variables('publicIPAddressLB2Id')]",
+                "[variables('publicIPAddressLB3Id')]",
+                "[variables('publicIPAddressLB4Id')]",
+                "[variables('publicIPAddressLB5Id')]"
             ],
             "location": "[resourceGroup().location]",
             "properties": {
