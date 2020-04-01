@@ -43,7 +43,7 @@
         "dmzSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-dmz')]",
         "basename": "[concat(parameters('globals').baseName, '-cp')]",
         "azureGatewayInternalIPAddress": "[parameters('globals').networkSettings.azureGatewayInternalIPAddress]",
-        "customData": "[concat('#!/bin/bash\n', '\n', 'installSecurityGateway=\"', variables('installSecurityGateway'), '\"', '\n', 'installSecurityGateway=\"$(echo $installSecurityGateway | tr \"TF\" \"tf\")\"\n', 'installSecurityManagement=\"', variables('installSecurityManagement'), '\"', '\n', 'installSecurityManagement=\"$(echo $installSecurityManagement | tr \"TF\" \"tf\")\"\n', 'adminPassword=\"', parameters('adminPassword'), '\"', '\n', 'managementGUIClientNetwork=\"', variables('managementGUIClientNetwork'), '\"', '\n', 'ManagementGUIClientBase=\"$(echo $managementGUIClientNetwork | cut -d / -f 1)\"\n', 'ManagementGUIClientMaskLength=\"$(echo $managementGUIClientNetwork | cut -d / -f 2)\"\n', 'sicKey=\"', parameters('sicKey'), '\"', '\n', 'conf=\"install_security_gw=$installSecurityGateway\"\n', 'if $installSecurityGateway; then\n', '    conf=\"${conf}&install_ppak=true\"\n', '    conf=\"${conf}&gateway_cluster_member=false\"\n', 'fi\n', 'conf=\"${conf}&install_security_managment=$installSecurityManagement\"\n', 'if $installSecurityManagement; then\n', '    conf=\"${conf}&install_mgmt_primary=true\"\n', '    conf=\"${conf}&mgmt_admin_name=admin\"\n', '    conf=\"${conf}&mgmt_admin_passwd=$adminPassword\"\n', '    conf=\"${conf}&mgmt_gui_clients_radio=network\"\n', '    conf=\"${conf}&mgmt_gui_clients_ip_field=$ManagementGUIClientBase\"\n', '    conf=\"${conf}&mgmt_gui_clients_subnet_field=$ManagementGUIClientMaskLength\"\n', 'fi\n', 'conf=\"${conf}&ftw_sic_key=$sicKey\"\n', '\n', 'config_system -s $conf\n', '\n', 'clish -c \"set static-route ', variables('vnetAddressSpace'), ' nexthop gateway address ', variables('azureGatewayInternalIPAddress'),' on\"', '\n', 'clish -c \"set static-route ', variables('vnetV2addressSpace'), ' nexthop gateway address ', variables('azureGatewayInternalIPAddress'),' on\"', '\n', 'clish -c \"save config\"', '\n', 'shutdown -r now\n')]",
+        "customData": "[concat('#!/bin/bash\n', '\n', 'installSecurityGateway=\"', variables('installSecurityGateway'), '\"', '\n', 'installSecurityGateway=\"$(echo $installSecurityGateway | tr \"TF\" \"tf\")\"\n', 'installSecurityManagement=\"', variables('installSecurityManagement'), '\"', '\n', 'installSecurityManagement=\"$(echo $installSecurityManagement | tr \"TF\" \"tf\")\"\n', 'adminPassword=\"', parameters('adminPassword'), '\"', '\n', 'managementGUIClientNetwork=\"', variables('managementGUIClientNetwork'), '\"', '\n', 'ManagementGUIClientBase=\"$(echo $managementGUIClientNetwork | cut -d / -f 1)\"\n', 'ManagementGUIClientMaskLength=\"$(echo $managementGUIClientNetwork | cut -d / -f 2)\"\n', 'sicKey=\"', parameters('sicKey'), '\"', '\n', 'conf=\"install_security_gw=$installSecurityGateway\"\n', 'if $installSecurityGateway; then\n', '    conf=\"${conf}&install_ppak=true\"\n', '    conf=\"${conf}&gateway_cluster_member=false\"\n', 'fi\n', 'conf=\"${conf}&install_security_managment=$installSecurityManagement\"\n', 'if $installSecurityManagement; then\n', '    conf=\"${conf}&install_mgmt_primary=true\"\n', '    conf=\"${conf}&mgmt_admin_name=admin\"\n', '    conf=\"${conf}&mgmt_admin_passwd=$adminPassword\"\n', '    conf=\"${conf}&mgmt_gui_clients_radio=network\"\n', '    conf=\"${conf}&mgmt_gui_clients_ip_field=$ManagementGUIClientBase\"\n', '    conf=\"${conf}&mgmt_gui_clients_subnet_field=$ManagementGUIClientMaskLength\"\n', 'fi\n', 'conf=\"${conf}&ftw_sic_key=$sicKey\"\n', '\n', 'config_system -s $conf\n', '\n', 'clish -c \"set static-route ', variables('vnetV2addressSpace'), ' nexthop gateway address ', variables('azureGatewayInternalIPAddress'),' on\"', '\n', 'clish -c \"save config\"', '\n', 'shutdown -r now\n')]",
         "imageOffer": "[parameters('globals').checkPointOffer]",
         "imagePublisher": "checkpoint",
         "imageReference": {
@@ -62,12 +62,44 @@
                 "name": "[concat(parameters('globals').baseName,'-rdp')]",
                 "frontendPort": 3389,
                 "backendPort": 53389
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-d-c101')]",
+                "frontendPort": 80,
+                "backendPort": 1080
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-d-c101-443')]",
+                "frontendPort": 443,
+                "backendPort": 10443
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-u-c101')]",
+                "frontendPort": 80,
+                "backendPort": 1180
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-u-c101-443')]",
+                "frontendPort": 443,
+                "backendPort": 11443
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-p-c101')]",
+                "frontendPort": 80,
+                "backendPort": 1280
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-p-c101-443')]",
+                "frontendPort": 443,
+                "backendPort": 12443
             }
         ],
         "installSecurityGateway": true,
         "installSecurityManagement": false,
         "LB1IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB1FrontEnd')]",
         "LB2IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB2FrontEnd')]",
+        "LB3IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB3FrontEnd')]",
+        "LB4IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB4FrontEnd')]",
         "lbId": "[resourceId('Microsoft.Network/loadBalancers', variables('lbName'))]",
         "lbName": "lbCheckPointGateway",
         "managementGUIClientNetwork": "0.0.0.0/0",
@@ -89,6 +121,9 @@
         "publicIPAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))]",
         "publicIPAddressLB1Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name))]",
         "publicIPAddressLB2Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[1].name))]",
+        "publicIPAddressLB3Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[2].name))]",
+        "publicIPAddressLB4Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[4].name))]",
+        "publicIPAddressLB5Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[6].name))]",
         "rdsGatewayNicName": "[concat('nicadmin-vm', variables('rdsGateway').basename, '01')]",
         "rdsGateway": {
             "basename": "[concat(parameters('globals').baseName, '-rdg')]",
@@ -106,7 +141,6 @@
             ]
         },
         "vmNamePortal": "[concat('vm', variables('basename'))]",
-        "vnetAddressSpace": "[parameters('globals').networkSettings.addressSpace]",
         "vnetV2addressSpace": "[parameters('globals').networkSettings.vnetV2addressSpace]",
     },
     "resources": [
@@ -202,6 +236,47 @@
             }
         },
         {
+            "name": "[concat('pip', variables('incomingTraffic')[2].name)]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('globals').apiVersion.pip]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[2].name]"
+                },
+                "idleTimeoutInMinutes": 30,
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+
+        {
+            "name": "[concat('pip', variables('incomingTraffic')[4].name)]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('globals').apiVersion.pip]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[4].name]"
+                },
+                "idleTimeoutInMinutes": 30,
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+
+        {
+            "name": "[concat('pip', variables('incomingTraffic')[6].name)]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('globals').apiVersion.pip]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[6].name]"
+                },
+                "idleTimeoutInMinutes": 30,
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
             "name": "[variables('lbName')]",
             "type": "Microsoft.Network/loadBalancers",
             "apiVersion": "[parameters('globals').apiVersion.loadBalancer]",
@@ -227,6 +302,30 @@
                                 "id": "[variables('publicIPAddressLB2Id')]"
                             }
                         }
+                    },
+                    {
+                        "name": "LB3FrontEnd",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[variables('publicIPAddressLB3Id')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "LB4FrontEnd",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[variables('publicIPAddressLB4Id')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "LB5FrontEnd",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[variables('publicIPAddressLB5Id')]"
+                            }
+                        }
                     }
                 ],
                 "inboundNatRules": [
@@ -249,6 +348,50 @@
                                 "id": "[variables('LB2IPConfigId')]"
                             },
                             "frontendPort": "[variables('incomingTraffic')[1].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[2].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[2].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB3IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[2].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[3].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[3].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB3IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[3].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[4].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[4].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB4IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[4].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[5].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[5].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB4IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[5].frontendPort]",
                             "protocol": "tcp"
                         }
                     }
