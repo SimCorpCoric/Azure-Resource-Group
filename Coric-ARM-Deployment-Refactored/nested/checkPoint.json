@@ -403,7 +403,7 @@
                         "properties": {
                             "backendPort": "[variables('incomingTraffic')[6].backendPort]",
                             "frontendIPConfiguration": {
-                                "id": "[variables('LB4IPConfigId')]"
+                                "id": "[variables('LB5IPConfigId')]"
                             },
                             "frontendPort": "[variables('incomingTraffic')[6].frontendPort]",
                             "protocol": "tcp"
@@ -414,7 +414,7 @@
                         "properties": {
                             "backendPort": "[variables('incomingTraffic')[7].backendPort]",
                             "frontendIPConfiguration": {
-                                "id": "[variables('LB4IPConfigId')]"
+                                "id": "[variables('LB5IPConfigId')]"
                             },
                             "frontendPort": "[variables('incomingTraffic')[7].frontendPort]",
                             "protocol": "tcp"
