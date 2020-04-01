@@ -100,6 +100,7 @@
         "LB2IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB2FrontEnd')]",
         "LB3IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB3FrontEnd')]",
         "LB4IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB4FrontEnd')]",
+        "LB5IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB5FrontEnd')]",
         "lbId": "[resourceId('Microsoft.Network/loadBalancers', variables('lbName'))]",
         "lbName": "lbCheckPointGateway",
         "managementGUIClientNetwork": "0.0.0.0/0",
