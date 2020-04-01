@@ -431,6 +431,18 @@
                                 },
                                 {
                                     "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[1].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[2].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[3].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[4].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[5].name)]"
                                 }
                             ]
                         }
