@@ -397,6 +397,28 @@
                             "frontendPort": "[variables('incomingTraffic')[5].frontendPort]",
                             "protocol": "tcp"
                         }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[6].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[6].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB4IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[6].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[7].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[7].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB4IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[7].frontendPort]",
+                            "protocol": "tcp"
+                        }
                     }
                 ]
             }
@@ -443,6 +465,12 @@
                                 },
                                 {
                                     "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[5].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[6].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[7].name)]"
                                 }
                             ]
                         }
