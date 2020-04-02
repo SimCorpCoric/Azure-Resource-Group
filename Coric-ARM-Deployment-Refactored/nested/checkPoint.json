@@ -66,32 +66,32 @@
             {
                 "name": "[concat(parameters('globals').baseName,'-d-c101')]",
                 "frontendPort": 80,
-                "backendPort": 1080
+                "backendPort": 60080
             },
             {
                 "name": "[concat(parameters('globals').baseName,'-d-c101-443')]",
                 "frontendPort": 443,
-                "backendPort": 10443
+                "backendPort": 60443
             },
             {
                 "name": "[concat(parameters('globals').baseName,'-u-c101')]",
                 "frontendPort": 80,
-                "backendPort": 1180
+                "backendPort": 70080
             },
             {
                 "name": "[concat(parameters('globals').baseName,'-u-c101-443')]",
                 "frontendPort": 443,
-                "backendPort": 11443
+                "backendPort": 70443
             },
             {
                 "name": "[concat(parameters('globals').baseName,'-p-c101')]",
                 "frontendPort": 80,
-                "backendPort": 1280
+                "backendPort": 90080
             },
             {
                 "name": "[concat(parameters('globals').baseName,'-p-c101-443')]",
                 "frontendPort": 443,
-                "backendPort": 12443
+                "backendPort": 90443
             }
         ],
         "installSecurityGateway": true,
