@@ -66,32 +66,32 @@
             {
                 "name": "[concat(parameters('globals').baseName,'-d-c101')]",
                 "frontendPort": 80,
-                "backendPort": 60080
+                "backendPort": 6080
             },
             {
                 "name": "[concat(parameters('globals').baseName,'-d-c101-443')]",
                 "frontendPort": 443,
-                "backendPort": 60443
+                "backendPort": 6443
             },
             {
                 "name": "[concat(parameters('globals').baseName,'-u-c101')]",
                 "frontendPort": 80,
-                "backendPort": 70080
+                "backendPort": 7080
             },
             {
                 "name": "[concat(parameters('globals').baseName,'-u-c101-443')]",
                 "frontendPort": 443,
-                "backendPort": 70443
+                "backendPort": 7443
             },
             {
                 "name": "[concat(parameters('globals').baseName,'-p-c101')]",
                 "frontendPort": 80,
-                "backendPort": 90080
+                "backendPort": 9080
             },
             {
                 "name": "[concat(parameters('globals').baseName,'-p-c101-443')]",
                 "frontendPort": 443,
-                "backendPort": 90443
+                "backendPort": 9443
             }
         ],
         "installSecurityGateway": true,
@@ -545,7 +545,7 @@
                     "osDisk": {
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
-                        "name": "osDisk",
+                        "name": "[concat('vm', variables('basename'))]",
                         "vhd": {
                             "uri": "[concat('http://', parameters('globals').storageAccountAdmin, replace(parameters('asrSuffix'),'-',''),'.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('vmNamePortal'), '-OS.vhd')]"
                         }
