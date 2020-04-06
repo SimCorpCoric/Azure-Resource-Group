@@ -694,6 +694,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -708,6 +714,12 @@
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
                                     "locations": [
                                         "*"
                                     ]
@@ -728,6 +740,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -742,6 +760,12 @@
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
                                     "locations": [
                                         "*"
                                     ]
@@ -762,6 +786,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -776,6 +806,12 @@
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
                                     "locations": [
                                         "*"
                                     ]
@@ -796,6 +832,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -810,6 +852,12 @@
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
                                     "locations": [
                                         "*"
                                     ]
@@ -830,6 +878,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -844,6 +898,12 @@
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
                                     "locations": [
                                         "*"
                                     ]
@@ -864,6 +924,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -878,6 +944,12 @@
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
                                     "locations": [
                                         "*"
                                     ]
@@ -898,6 +970,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -912,6 +990,12 @@
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
                                     "locations": [
                                         "*"
                                     ]
@@ -932,6 +1016,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -946,6 +1036,12 @@
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
                                     "locations": [
                                         "*"
                                     ]
@@ -966,6 +1062,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -980,6 +1082,12 @@
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
                                     "locations": [
                                         "*"
                                     ]
