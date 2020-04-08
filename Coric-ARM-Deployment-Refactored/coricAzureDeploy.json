@@ -153,6 +153,13 @@
             ],
             "type": "string"
         },
+        "clientAcronym": {
+            "metadata": {
+                "Description": "Client acronym for naming C1 public IP hostnames with. If blank, uses baseName (clientID) naming pattern instead for those."
+            },
+            "defaultValue": "",
+            "type": "string"
+        },
         "sqlSKU": {
             "type": "string",
             "allowedValues": [
@@ -438,6 +445,7 @@
             "checkPointOffer": "[parameters('checkPointOffer')]",
             "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
             "clientID": "[parameters('clientID')]",
+            "clientAcronym": "[parameters('clientAcronym')]",
             "customScript": {
                 "diskInitialize": {
                     "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file DiskInitialize.ps1",

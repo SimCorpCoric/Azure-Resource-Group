@@ -64,32 +64,32 @@
                 "backendPort": 53389
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-d-c101')]",
+                "name": "[concat(parameters('globals').baseName,'-d-c1')]",
                 "frontendPort": 80,
                 "backendPort": 6080
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-d-c101-443')]",
+                "name": "[concat(parameters('globals').baseName,'-d-c1-443')]",
                 "frontendPort": 443,
                 "backendPort": 6443
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-u-c101')]",
+                "name": "[concat(parameters('globals').baseName,'-u-c1')]",
                 "frontendPort": 80,
                 "backendPort": 7080
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-u-c101-443')]",
+                "name": "[concat(parameters('globals').baseName,'-u-c1-443')]",
                 "frontendPort": 443,
                 "backendPort": 7443
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-p-c101')]",
+                "name": "[concat(parameters('globals').baseName,'-p-c1')]",
                 "frontendPort": 80,
                 "backendPort": 9080
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-p-c101-443')]",
+                "name": "[concat(parameters('globals').baseName,'-p-c1-443')]",
                 "frontendPort": 443,
                 "backendPort": 9443
             }
@@ -243,7 +243,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[2].name]"
+                    "domainNameLabel": "[if(empty(parameters('globals').clientAcronym), variables('incomingTraffic')[2].name, replace(variables('incomingTraffic')[2].name, parameters('globals').baseName, parameters('globals').clientAcronym))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
@@ -257,7 +257,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[4].name]"
+                    "domainNameLabel": "[if(empty(parameters('globals').clientAcronym), variables('incomingTraffic')[3].name, replace(variables('incomingTraffic')[4].name, parameters('globals').baseName, parameters('globals').clientAcronym))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
@@ -271,7 +271,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[6].name]"
+                    "domainNameLabel": "[if(empty(parameters('globals').clientAcronym), variables('incomingTraffic')[6].name, replace(variables('incomingTraffic')[6].name, parameters('globals').baseName, parameters('globals').clientAcronym))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
