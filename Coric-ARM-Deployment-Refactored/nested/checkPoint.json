@@ -64,32 +64,32 @@
                 "backendPort": 53389
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-d-dmz01')]",
+                "name": "[concat(parameters('globals').baseName,'-d-c1')]",
                 "frontendPort": 80,
                 "backendPort": 6080
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-d-dmz01-443')]",
+                "name": "[concat(parameters('globals').baseName,'-d-c1-443')]",
                 "frontendPort": 443,
                 "backendPort": 6443
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-u-dmz01')]",
+                "name": "[concat(parameters('globals').baseName,'-u-c1')]",
                 "frontendPort": 80,
                 "backendPort": 7080
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-u-dmz01-443')]",
+                "name": "[concat(parameters('globals').baseName,'-u-c1-443')]",
                 "frontendPort": 443,
                 "backendPort": 7443
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-p-dmz01')]",
+                "name": "[concat(parameters('globals').baseName,'-p-c1')]",
                 "frontendPort": 80,
                 "backendPort": 9080
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-p-dmz01-443')]",
+                "name": "[concat(parameters('globals').baseName,'-p-c1-443')]",
                 "frontendPort": 443,
                 "backendPort": 9443
             }
