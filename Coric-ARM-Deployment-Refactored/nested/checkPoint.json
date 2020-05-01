@@ -561,7 +561,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[parameters('globals').publicVpnIpsTemplateUrl]",
+                    "uri": "[parameters('globals').templateLinkPublicVpnIps]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
