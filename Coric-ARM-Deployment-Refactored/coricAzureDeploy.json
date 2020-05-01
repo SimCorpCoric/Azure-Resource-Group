@@ -160,6 +160,13 @@
             "defaultValue": "",
             "type": "string"
         },
+        "publicVpnIps": {
+            "metadata": {
+                "Description": "If true, create public VPN IPs not be attached to any VPNs - used only in the VPN."
+            },
+            "defaultValue": "false",
+            "type": "string"
+        },
         "sqlSKU": {
             "type": "string",
             "allowedValues": [
@@ -523,6 +530,7 @@
                 "mgmtNetworkID": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork",
                 "mgmtNetworkAddressSpace": "10.100.0.0/23",
                 "nicNamingVersion": "[parameters('nicNamingVersion')]",
+                "publicVpnIps": "[parameters('publicVpnIps')]",
                 "subnetadminexternal": {
                     "id": 10,
                     "name": "[concat('sn', variables('vnetV2name'), '-admin-external')]",
@@ -680,6 +688,7 @@
         },
         "octetsArr": "[split(parameters('vnetV2addressSpace'),'.')]",
         "paddedClientID": "[padLeft(parameters('clientID'),4,'0')]",
+        "publicVpnIpsTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'nested/publicVpnIps.json')]",
         "sharedResourcesTemplateURL": "[uri(deployment().properties.templateLink.uri, concat('nested/sharedResources', parameters('implementationPhase'), '.json'))]",
         "SQL2012SP2": "SQL2012SP2-WS2012R2",
         "SQL2012SP3": "SQL2012SP3-WS2012R2",
