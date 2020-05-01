@@ -12,14 +12,14 @@
   },
 
   "variables": {
-    "pipNameVpnRdg": "[concat(parameters('globals').baseName, '-rdg01')]",
-    "pipNameFtpRdg": "[concat(parameters('globals').baseName, '-ftp01')]",
-    "pipNameDevSql": "[concat(parameters('globals').baseName, '-d-sql01')]",
-    "pipNameUatSql": "[concat(parameters('globals').baseName, '-u-sql01')]",
-    "pipNamePrdSql": "[concat(parameters('globals').baseName, '-p-prd01')]",
-    "pipNameDevIis": "[concat(parameters('globals').baseName, '-d-iis01')]",
-    "pipNameUatIis": "[concat(parameters('globals').baseName, '-u-iis01')]",
-    "pipNamePrdIis": "[concat(parameters('globals').baseName, '-p-iis01')]"
+    "pipNameVpnRdg": "[concat('pip', parameters('globals').baseName, '-rdg01')]",
+    "pipNameFtpRdg": "[concat('pip', parameters('globals').baseName, '-ftp01')]",
+    "pipNameDevSql": "[concat('pip', parameters('globals').baseName, '-d-sql01')]",
+    "pipNameUatSql": "[concat('pip', parameters('globals').baseName, '-u-sql01')]",
+    "pipNamePrdSql": "[concat('pip', parameters('globals').baseName, '-p-prd01')]",
+    "pipNameDevIis": "[concat('pip', parameters('globals').baseName, '-d-iis01')]",
+    "pipNameUatIis": "[concat('pip', parameters('globals').baseName, '-u-iis01')]",
+    "pipNamePrdIis": "[concat('pip', parameters('globals').baseName, '-p-iis01')]"
   },
 
   "resources": [
