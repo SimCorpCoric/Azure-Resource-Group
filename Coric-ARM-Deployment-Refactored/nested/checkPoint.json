@@ -551,6 +551,25 @@
                     }
                 }
             }
+        },
+        {
+            "name": "vpnPublicIps",
+            "condition": "[and(equals(parameters('globals').networkSettings.publicVpnIps, 'true'), empty(parameters('asrSuffix')))]",
+            "resourceGroup": "[resourcegroup().name]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').publicVpnIpsTemplateUrl]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    }
+                }
+            }
         }
     ]
 }
