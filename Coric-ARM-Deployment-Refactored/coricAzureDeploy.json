@@ -648,6 +648,7 @@
                 "ftp": "OU=FTP;OU=Admin;",
                 "pushPull": "OU=PushPull;"
             },
+            "prefix": "[parameters('prefix')]",
             "sqlEncryption": {
                 "keyVaultURL": "[concat('https://', parameters('sqlKeyVaultName'), '.vault.azure.net/')]",
                 "servicePrincipalName": "[parameters('sqlServicePrincipalName')]",
