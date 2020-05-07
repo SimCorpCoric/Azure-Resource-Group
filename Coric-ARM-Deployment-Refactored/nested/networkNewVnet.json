@@ -427,7 +427,7 @@
         {
             "apiVersion": "[parameters('globals').apiVersion.networkpeerings]",
             "name": "[concat(parameters('name'), '/', parameters('name'), '-vnMgmtNetwork')]",
-            "condition": "[empty(parameters('asrSuffix'))]",
+            "condition": "[or(empty(parameters('asrSuffix')), not(parameters('prefix'), 'opn'))]",
             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
             "properties": {
                 "peeringState": "Connected",
