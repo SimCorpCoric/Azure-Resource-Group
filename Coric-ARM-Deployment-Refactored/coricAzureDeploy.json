@@ -673,8 +673,8 @@
                 }
             },
             "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
-            "networkVnetV2TemplateLink": "[if(empty(parameters('extraEnvName'), 'true'), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithExtraSubnet1.json'))]",
-            "networkVnetV2WithRoutesTemplateLink": "[if(empty(parameters('extraEnvName'), 'true'), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithExtra1ubnet1.json'))]",
+            "networkVnetV2TemplateLink": "[if(empty(parameters('extraEnvName')), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithExtraSubnet1.json'))]",
+            "networkVnetV2WithRoutesTemplateLink": "[if(empty(parameters('extraEnvName')), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutesWithExtraSubnet1.json'))]",
             "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
             "ou": {
                 "serverRoles": "OU=Coric Computers;",
