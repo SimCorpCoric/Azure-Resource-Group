@@ -436,6 +436,7 @@
         "environmentShortNameProduction": "prod",
         "environmentShortNameUAT": "uat",
         "environmentShortNameWeb": "web",
+        "extraEnv1ShortName": "[toLower(parameters('extraEnv1ShortName'))]",
         "globals": {
             "adminResourceGroupName": "[variables('baseName')]",
             "apiVersion": {
@@ -509,7 +510,6 @@
                 "pushPullCount": "[parameters('pushPullCount')]",
                 "webCount": "[parameters('webCount')]"
             },
-            "extraEnv1ShortName": "[toLower(parameters('extraEnv1ShortName'))]",
             "insightVMOffer": "[parameters('insightVMOffer')]",
             "insightVMSize": "[parameters('insightVMSize')]",
             "insightVMTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/insightVM.json')]",
