@@ -482,7 +482,6 @@
                 "warehouse": 1023,
                 "rdg": 1023
             },
-            "deployMigrationSubnet": "[parameters('deployMigrationSubnet')]",
             "diskEncryption": {
                 "aadClientID": "[parameters('aadClientID')]",
                 "aadClientCertThumbprint": "[parameters('aadClientCertThumbprint')]",
