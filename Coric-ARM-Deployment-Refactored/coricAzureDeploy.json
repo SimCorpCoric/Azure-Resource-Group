@@ -128,36 +128,49 @@
         },
         "environmentName": {
             "metadata": {
-                "Description": "Name of the environment being built"
+                "Description": "Name of the environment being built. Will usually be: 'Admin', 'Development', 'UAT', or 'Production'."
             },
             "defaultValue": "Admin",
-            "allowedValues": [
-                "Admin",
-                "Production",
-                "UAT",
-                "Development",
-                "Web",
-                "Migration"
-            ],
             "type": "string"
         },
         "environmentAcronym": {
             "metadata": {
-                "Description": "Acronym for the environment being built"
+                "Description": "Acronym for the environment being built. Will usually be: 'D','U', or 'P'."
             },
             "defaultValue": "P",
-            "allowedValues": [
-                "P",
-                "U",
-                "D",
-                "W",
-                "M"
-            ],
+            "type": "string"
+        },
+        "environmentShortName": {
+            "metadata": {
+                "Description": "Short name of the environment being built. Does not need to be set unless this is an 'Extra' env."
+            },
+            "defaultValue": "",
             "type": "string"
         },
         "clientAcronym": {
             "metadata": {
                 "Description": "Client acronym for naming C1 public IP hostnames with. If blank, uses baseName (clientID) naming pattern instead for those."
+            },
+            "defaultValue": "",
+            "type": "string"
+        },
+        "extraEnvName": {
+            "metadata": {
+                "Description": "Name of an extra environment to be built, will also trigger extra subnet deployment."
+            },
+            "defaultValue": "",
+            "type": "string"
+        },
+        "extraEnvShortName": {
+            "metadata": {
+                "Description": "Short name of an extra environment to be built, if 'extraEnvName' is also provided."
+            },
+            "defaultValue": "",
+            "type": "string"
+        },
+        "extraEnvAcronym": {
+            "metadata": {
+                "Description": "Single-letter acronym of the extra environment to be built, if 'extraEnvName' is also provided."
             },
             "defaultValue": "",
             "type": "string"
@@ -430,7 +443,6 @@
         "environmentShortNameProduction": "prod",
         "environmentShortNameUAT": "uat",
         "environmentShortNameWeb": "web",
-        "environmentShortNameMigration": "migr",
         "globals": {
             "adminResourceGroupName": "[variables('baseName')]",
             "apiVersion": {
@@ -470,6 +482,7 @@
                 "warehouse": 1023,
                 "rdg": 1023
             },
+            "deployMigrationSubnet": "[parameters('deployMigrationSubnet')]",
             "diskEncryption": {
                 "aadClientID": "[parameters('aadClientID')]",
                 "aadClientCertThumbprint": "[parameters('aadClientCertThumbprint')]",
@@ -496,7 +509,7 @@
             },
             "environment": {
                 "name": "[parameters('environmentName')]",
-                "shortname": "[variables(concat('environmentShortName', parameters('environmentName')))]",
+                "shortname": "[if(empty(parameters('environmentShortName')), variables(concat('environmentShortName', parameters('environmentName'))), parameters('environmentShortName'))]",
                 "acronym": "[parameters('environmentAcronym')]",
                 "droneCount": "[parameters('droneCount')]",
                 "desktopCount": "[parameters('desktopCount')]",
@@ -633,11 +646,36 @@
                     "id": 28,
                     "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.192/26')]"
+                },
+                "subnetextra1desktop": {
+                    "id": 29,
+                    "name": "[concat('sn', variables('vnetV2name'), '-', parameters('extraEnvName'), '-desktop')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.0/26')]"
+                },
+                "subnetextra1web": {
+                    "id": 30,
+                    "name": "[concat('sn', variables('vnetV2name'), '-', parameters('extraEnvName'), '-web')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.64/26')]"
+                },
+                "subnetextra1application": {
+                    "id": 31,
+                    "name": "[concat('sn', variables('vnetV2name'), '-', parameters('extraEnvName'), '-application')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.128/26')]"
+                },
+                "subnetextra1database": {
+                    "id": 32,
+                    "name": "[concat('sn', variables('vnetV2name'), '-', parameters('extraEnvName'), '-database')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.192/26')]"
+                },
+                "subnetextra1dmz": {
+                    "id": 33,
+                    "name": "[concat('sn', variables('vnetV2name'), '-', parameters('extraEnvName'), '-dmz')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),7),'.0/26')]"
                 }
             },
             "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
-            "networkVnetV2TemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json')]",
-            "networkVnetV2WithRoutesTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json')]",
+            "networkVnetV2TemplateLink": "[if(empty(parameters('extraEnvName'), 'true'), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithExtraSubnet1.json'))]",
+            "networkVnetV2WithRoutesTemplateLink": "[if(empty(parameters('extraEnvName'), 'true'), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithExtra1ubnet1.json'))]",
             "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
             "ou": {
                 "serverRoles": "OU=Coric Computers;",
