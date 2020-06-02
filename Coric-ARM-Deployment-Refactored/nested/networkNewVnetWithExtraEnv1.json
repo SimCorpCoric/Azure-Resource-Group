@@ -421,9 +421,9 @@
                         }
                     },
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1desktop.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1desktop.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1desktop.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1desktop.prefix]",
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
@@ -441,9 +441,9 @@
                         }
                     },
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1web.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1web.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1web.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1web.prefix]",
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
@@ -461,9 +461,9 @@
                         }
                     },
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1application.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1application.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1application.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1application.prefix]",
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
@@ -481,9 +481,9 @@
                         }
                     },
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1database.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1database.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1database.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1database.prefix]",
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",
@@ -501,9 +501,9 @@
                         }
                     },
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1dmz.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1dmz.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1dmz.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1dmz.prefix]",
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.KeyVault",

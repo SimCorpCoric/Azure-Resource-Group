@@ -655,16 +655,16 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1desktop.name, '-desktop-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1desktop.name, '-desktop-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1desktop.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1desktop.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1desktop.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1desktop.prefix]",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
                         }
@@ -690,16 +690,16 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1web.name, '-web-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1web.name, '-web-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1web.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1web.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1web.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1web.prefix]",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
                         }
@@ -725,16 +725,16 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1application.name, '-application-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1application.name, '-application-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1application.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1application.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1application.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1application.prefix]",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
                         }
@@ -760,16 +760,16 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1database.name, '-database-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1database.name, '-database-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1database.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1database.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1database.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1database.prefix]",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
                         }
@@ -795,16 +795,16 @@
         },
         {
             "apiVersion": "[parameters('globals').apiVersion.routeTables]",
-            "name": "[concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1dmz.name, '-dmz-local')]",
+            "name": "[concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1dmz.name, '-dmz-local')]",
             "type": "Microsoft.Network/routeTables",
             "location": "[resourceGroup().location]",
             "properties": {
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1dmz.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1dmz.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1dmz.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1dmz.prefix]",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]"
                         }
@@ -1270,11 +1270,11 @@
                         }
                     },
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1desktop.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1desktop.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1desktop.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1desktop.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1desktop.name, '-desktop-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1desktop.name, '-desktop-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -1293,11 +1293,11 @@
                         }
                     },
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1web.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1web.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1web.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1web.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1web.name, '-web-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1web.name, '-web-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -1316,11 +1316,11 @@
                         }
                     },
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1application.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1application.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1application.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1application.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1application.name, '-application-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1application.name, '-application-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -1339,11 +1339,11 @@
                         }
                     },
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1database.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1database.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1database.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1database.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1database.name, '-database-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1database.name, '-database-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -1362,11 +1362,11 @@
                         }
                     },
                     {
-                        "name": "[parameters('globals').networkSettings.subnetextra1dmz.name]",
+                        "name": "[parameters('globals').networkSettings.subnetextraenv1dmz.name]",
                         "properties": {
-                            "addressPrefix": "[parameters('globals').networkSettings.subnetextra1dmz.prefix]",
+                            "addressPrefix": "[parameters('globals').networkSettings.subnetextraenv1dmz.prefix]",
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1dmz.name, '-dmz-local'))]"
+                                "id": "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1dmz.name, '-dmz-local'))]"
                             },
                             "serviceEndpoints": [
                                 {
@@ -1405,11 +1405,11 @@
                 "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-prod-dmz-local'))]",
                 "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-uat-dmz-local'))]",
                 "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-dev-dmz-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1desktop.name, '-desktop-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1web.name, '-web-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1application.name, '-application-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1database.name, '-database-local'))]",
-                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextra1dmz.name, '-dmz-local'))]"
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1desktop.name, '-desktop-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1web.name, '-web-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1application.name, '-application-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1database.name, '-database-local'))]",
+                "[resourceId('Microsoft.Network/routeTables', concat('rt', variables('vnetV2originalName'), '-', parameters('globals').networkSettings.subnetextraenv1dmz.name, '-dmz-local'))]"
             ]
         },
         {
