@@ -648,27 +648,27 @@
                 },
                 "subnetextra1desktop": {
                     "id": 29,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', parameters('extraEnvName'), '-desktop')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnvShortName')), '-desktop')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.0/26')]"
                 },
                 "subnetextra1web": {
                     "id": 30,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', parameters('extraEnvName'), '-web')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnvShortName')), '-web')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.64/26')]"
                 },
                 "subnetextra1application": {
                     "id": 31,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', parameters('extraEnvName'), '-application')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnvShortName')), '-application')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.128/26')]"
                 },
                 "subnetextra1database": {
                     "id": 32,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', parameters('extraEnvName'), '-database')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnvShortName')), '-database')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.192/26')]"
                 },
                 "subnetextra1dmz": {
                     "id": 33,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', parameters('extraEnvName'), '-dmz')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnvShortName')), '-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),7),'.0/26')]"
                 }
             },
