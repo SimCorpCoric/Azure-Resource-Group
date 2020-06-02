@@ -154,16 +154,16 @@
             "defaultValue": "",
             "type": "string"
         },
-        "extraEnvName": {
+        "extraEnv1Name": {
             "metadata": {
                 "Description": "Name of an extra environment to be built, will also trigger extra subnet deployment."
             },
             "defaultValue": "",
             "type": "string"
         },
-        "extraEnvShortName": {
+        "extraEnv1ShortName": {
             "metadata": {
-                "Description": "Short name of an extra environment to be built, if 'extraEnvName' is also provided."
+                "Description": "Short name of an extra environment to be built, if 'extraEnv1Name' is also provided."
             },
             "defaultValue": "",
             "type": "string"
@@ -639,35 +639,35 @@
                     "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.192/26')]"
                 },
-                "subnetextra1desktop": {
+                "subnetextraenv1desktop": {
                     "id": 29,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnvShortName')), '-desktop')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnv1ShortName')), '-desktop')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.0/26')]"
                 },
-                "subnetextra1web": {
+                "subnetextraenv1web": {
                     "id": 30,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnvShortName')), '-web')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnv1ShortName')), '-web')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.64/26')]"
                 },
-                "subnetextra1application": {
+                "subnetextraenv1application": {
                     "id": 31,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnvShortName')), '-application')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnv1ShortName')), '-application')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.128/26')]"
                 },
-                "subnetextra1database": {
+                "subnetextraenv1database": {
                     "id": 32,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnvShortName')), '-database')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnv1ShortName')), '-database')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.192/26')]"
                 },
-                "subnetextra1dmz": {
+                "subnetextraenv1dmz": {
                     "id": 33,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnvShortName')), '-dmz')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnv1ShortName')), '-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),7),'.0/26')]"
                 }
             },
             "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
-            "networkVnetV2TemplateLink": "[if(empty(parameters('extraEnvName')), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithExtraSubnet1.json'))]",
-            "networkVnetV2WithRoutesTemplateLink": "[if(empty(parameters('extraEnvName')), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutesWithExtraSubnet1.json'))]",
+            "networkVnetV2TemplateLink": "[if(empty(parameters('extraEnv1Name')), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithExtraEnv1.json'))]",
+            "networkVnetV2WithRoutesTemplateLink": "[if(empty(parameters('extraEnv1Name')), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutesWithExtraEnv1.json'))]",
             "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
             "ou": {
                 "serverRoles": "OU=Coric Computers;",
