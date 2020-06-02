@@ -509,6 +509,7 @@
                 "pushPullCount": "[parameters('pushPullCount')]",
                 "webCount": "[parameters('webCount')]"
             },
+            "extraEnv1ShortName": "[toLower(parameters('extraEnv1ShortName'))]",
             "insightVMOffer": "[parameters('insightVMOffer')]",
             "insightVMSize": "[parameters('insightVMSize')]",
             "insightVMTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/insightVM.json')]",
@@ -525,6 +526,7 @@
                 "dc02IPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.197')]",
                 "adminSecurityID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-security')]",
                 "insightVMIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.132')]",
+                "extraEnv1ShortName": "[variables('extraEnv1ShortName')]",
                 "gatewayExternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-external')]",
                 "gatewayExternalIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.4')]",
                 "gatewayInternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/','sn', variables('vnetV2name'), '-admin-internalgateway')]",
@@ -641,27 +643,27 @@
                 },
                 "subnetextraenv1desktop": {
                     "id": 29,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnv1ShortName')), '-desktop')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv1ShortName'), '-desktop')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.0/26')]"
                 },
                 "subnetextraenv1web": {
                     "id": 30,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnv1ShortName')), '-web')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv1ShortName'), '-web')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.64/26')]"
                 },
                 "subnetextraenv1application": {
                     "id": 31,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnv1ShortName')), '-application')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv1ShortName'), '-application')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.128/26')]"
                 },
                 "subnetextraenv1database": {
                     "id": 32,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnv1ShortName')), '-database')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv1ShortName'), '-database')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.192/26')]"
                 },
                 "subnetextraenv1dmz": {
                     "id": 33,
-                    "name": "[concat('sn', variables('vnetV2name'), '-', toLower(parameters('extraEnv1ShortName')), '-dmz')]",
+                    "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv1ShortName'), '-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),7),'.0/26')]"
                 }
             },
