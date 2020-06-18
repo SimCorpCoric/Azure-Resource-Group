@@ -153,7 +153,7 @@
             "dnsServers": [],
             "numberOfVMs": 1,
             "ouPath": "[concat(parameters('globals').ou.rdg, parameters('globals').ou.serverRoles)]",
-            "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIP]",
+            "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sizeOfDataDiskInGB": 1023,
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
             "storageAccount": "[parameters('globals').storageAccountAdmin]"

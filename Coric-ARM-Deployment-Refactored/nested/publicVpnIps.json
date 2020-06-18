@@ -12,116 +12,133 @@
   },
 
   "variables": {
-    "pipNameVpnRdg": "[concat('pip', parameters('globals').baseName, '-rdg01')]",
-    "pipNameFtpRdg": "[concat('pip', parameters('globals').baseName, '-ftp01')]",
-    "pipNameDevSql": "[concat('pip', parameters('globals').baseName, '-d-sql01')]",
-    "pipNameUatSql": "[concat('pip', parameters('globals').baseName, '-u-sql01')]",
-    "pipNamePrdSql": "[concat('pip', parameters('globals').baseName, '-p-prd01')]",
-    "pipNameDevIis": "[concat('pip', parameters('globals').baseName, '-d-iis01')]",
-    "pipNameUatIis": "[concat('pip', parameters('globals').baseName, '-u-iis01')]",
-    "pipNamePrdIis": "[concat('pip', parameters('globals').baseName, '-p-iis01')]"
+    "noPipDnsLabels": "[parameters('globals').networkSettings.noPipDnsLabels]",
+
+    "pipVpnRdgName": "[concat('pip', parameters('globals').baseName, '-rdg01')]",
+    "pipVpnRdgDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(concat(variables('pipVpnRdgName'),'-vpn')),'')]",
+
+    "pipVpnFtpName": "[concat('pip', parameters('globals').baseName, '-ftp01')]",
+    "pipVpnFtpDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipVpnFtpName')),'')]",
+
+    "pipDevSqlName": "[concat('pip', parameters('globals').baseName, '-d-sql01')]",
+    "pipDevSqlDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipDevSqlName')),'')]",
+
+    "pipUatSqlName": "[concat('pip', parameters('globals').baseName, '-u-sql01')]",
+    "pipUatSqlDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipUatSqlName')),'')]",
+
+    "pipPrdSqlName": "[concat('pip', parameters('globals').baseName, '-p-prd01')]",
+    "pipPrdSqlDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipPrdSqlName')),'')]",
+
+    "pipDevIisName": "[concat('pip', parameters('globals').baseName, '-d-iis01')]",
+    "pipDevIisDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipDevIisName')),'')]",
+
+    "pipUatIisName": "[concat('pip', parameters('globals').baseName, '-u-iis01')]",
+    "pipUatIisDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipUatIisName')),'')]",
+
+    "pipPrdIisName": "[concat('pip', parameters('globals').baseName, '-p-iis01')]",
+    "pipPrdIisDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipPrdIisName')),'')]"
   },
 
   "resources": [
     {
-        "name": "[concat(variables('pipNameVpnRdg'),'-vpn')]",
+        "name": "[concat(variables('pipVpnRdgName'),'-vpn')]",
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "[parameters('globals').apiVersion.pip]",
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
-                "domainNameLabel": "[toLower(variables('pipNameVpnRdg'))]"
+                "domainNameLabel": "[variables('pipVpnRdgDns')]"
             },
             "idleTimeoutInMinutes": 30,
             "publicIPAllocationMethod": "Static"
         }
     },
     {
-        "name": "[variables('pipNameFtpRdg')]",
+        "name": "[variables('pipVpnFtpName')]",
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "[parameters('globals').apiVersion.pip]",
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
-                "domainNameLabel": "[toLower(variables('pipNameFtpRdg'))]"
+                "domainNameLabel": "[variables('pipVpnFtpDns')]"
             },
             "idleTimeoutInMinutes": 30,
             "publicIPAllocationMethod": "Static"
         }
     },
     {
-        "name": "[variables('pipNameDevSql')]",
+        "name": "[variables('pipDevSqlName')]",
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "[parameters('globals').apiVersion.pip]",
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
-                "domainNameLabel": "[toLower(variables('pipNameDevSql'))]"
+                "domainNameLabel": "[variables('pipDevSqlDns')]"
             },
             "idleTimeoutInMinutes": 30,
             "publicIPAllocationMethod": "Static"
         }
     },
     {
-        "name": "[variables('pipNameUatSql')]",
+        "name": "[variables('pipUatSqlName')]",
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "[parameters('globals').apiVersion.pip]",
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
-                "domainNameLabel": "[toLower(variables('pipNameUatSql'))]"
+                "domainNameLabel": "[variables('pipUatSqlDns')]"
             },
             "idleTimeoutInMinutes": 30,
             "publicIPAllocationMethod": "Static"
         }
     },
     {
-        "name": "[variables('pipNamePrdSql')]",
+        "name": "[variables('pipPrdSqlName')]",
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "[parameters('globals').apiVersion.pip]",
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
-                "domainNameLabel": "[toLower(variables('pipNamePrdSql'))]"
+                "domainNameLabel": "[variables('pipPrdSqlDns')]"
             },
             "idleTimeoutInMinutes": 30,
             "publicIPAllocationMethod": "Static"
         }
     },
     {
-        "name": "[variables('pipNameDevIis')]",
+        "name": "[variables('pipDevIisName')]",
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "[parameters('globals').apiVersion.pip]",
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
-                "domainNameLabel": "[toLower(variables('pipNameDevIis'))]"
+                "domainNameLabel": "[variables('pipDevIisDns')]"
             },
             "idleTimeoutInMinutes": 30,
             "publicIPAllocationMethod": "Static"
         }
     },
     {
-        "name": "[variables('pipNameUatIis')]",
+        "name": "[variables('pipUatIisName')]",
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "[parameters('globals').apiVersion.pip]",
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
-                "domainNameLabel": "[toLower(variables('pipNameUatIis'))]"
+                "domainNameLabel": "[variables('pipUatIisDns')]"
             },
             "idleTimeoutInMinutes": 30,
             "publicIPAllocationMethod": "Static"
         }
     },
     {
-        "name": "[variables('pipNamePrdIis')]",
+        "name": "[variables('pipPrdIisName')]",
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "[parameters('globals').apiVersion.pip]",
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
-                "domainNameLabel": "[toLower(variables('pipNamePrdIis'))]"
+                "domainNameLabel": "[variables('pipPrdIisDns')]"
             },
             "idleTimeoutInMinutes": 30,
             "publicIPAllocationMethod": "Static"
