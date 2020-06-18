@@ -98,12 +98,12 @@
                 "backendPort": 9443
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-d-iis01-letsencrypt')]",
+                "name": "[concat(parameters('globals').baseName,'-d-iis01-acme')]",
                 "frontendPort": 80,
                 "backendPort": 9580
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-u-iis01-letsencrypt')]",
+                "name": "[concat(parameters('globals').baseName,'-u-iis01-acme')]",
                 "frontendPort": 80,
                 "backendPort": 9680
             }

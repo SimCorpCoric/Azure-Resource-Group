@@ -12,8 +12,6 @@
   },
 
   "variables": {
-    "noPipDnsLabels": "[parameters('globals').networkSettings.noPipDnsLabels]",
-
     "pipVpnRdgName": "[concat('pip', parameters('globals').baseName, '-rdg01')]",
     "pipVpnRdgDns": "[toLower(concat(variables('pipVpnRdgName'),'-vpn'))]",
 
