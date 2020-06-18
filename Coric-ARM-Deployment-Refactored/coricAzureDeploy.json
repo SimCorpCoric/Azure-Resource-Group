@@ -168,13 +168,6 @@
             "defaultValue": "",
             "type": "string"
         },
-        "noPipDnsLabels": {
-            "metadata": {
-                "Description": "If true, do not create azure.com DNS labels for any PIPs -- Custom CNAMEs will be created manually for them instead."
-            },
-            "defaultValue": "false",
-            "type": "string"
-        },
         "publicVpnIps": {
             "metadata": {
                 "Description": "If true, create public VPN IPs not be attached to any VPNs - used only in the VPN."
@@ -546,7 +539,6 @@
                 "mgmtNetworkResourceGroup": "rgMgmtNetwork",
                 "mgmtNetworkID": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork",
                 "mgmtNetworkAddressSpace": "10.100.0.0/23",
-                "noPipDnsLabels": "[parameters('noPipDnsLabels')]",
                 "nicNamingVersion": "[parameters('nicNamingVersion')]",
                 "publicVpnIps": "[parameters('publicVpnIps')]",
                 "subnetadminexternal": {
