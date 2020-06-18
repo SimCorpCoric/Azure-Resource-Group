@@ -15,28 +15,28 @@
     "noPipDnsLabels": "[parameters('globals').networkSettings.noPipDnsLabels]",
 
     "pipVpnRdgName": "[concat('pip', parameters('globals').baseName, '-rdg01')]",
-    "pipVpnRdgDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(concat(variables('pipVpnRdgName'),'-vpn')),'')]",
+    "pipVpnRdgDns": "[toLower(concat(variables('pipVpnRdgName'),'-vpn'))]",
 
     "pipVpnFtpName": "[concat('pip', parameters('globals').baseName, '-ftp01')]",
-    "pipVpnFtpDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipVpnFtpName')),'')]",
+    "pipVpnFtpDns": "[toLower(variables('pipVpnFtpName'))]",
 
     "pipDevSqlName": "[concat('pip', parameters('globals').baseName, '-d-sql01')]",
-    "pipDevSqlDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipDevSqlName')),'')]",
+    "pipDevSqlDns": "[toLower(variables('pipDevSqlName'))]",
 
     "pipUatSqlName": "[concat('pip', parameters('globals').baseName, '-u-sql01')]",
-    "pipUatSqlDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipUatSqlName')),'')]",
+    "pipUatSqlDns": "[toLower(variables('pipUatSqlName'))]",
 
     "pipPrdSqlName": "[concat('pip', parameters('globals').baseName, '-p-prd01')]",
-    "pipPrdSqlDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipPrdSqlName')),'')]",
+    "pipPrdSqlDns": "[toLower(variables('pipPrdSqlName'))]",
 
     "pipDevIisName": "[concat('pip', parameters('globals').baseName, '-d-iis01')]",
-    "pipDevIisDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipDevIisName')),'')]",
+    "pipDevIisDns": "[toLower(variables('pipDevIisName'))]",
 
     "pipUatIisName": "[concat('pip', parameters('globals').baseName, '-u-iis01')]",
-    "pipUatIisDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipUatIisName')),'')]",
+    "pipUatIisDns": "[toLower(variables('pipUatIisName'))]",
 
     "pipPrdIisName": "[concat('pip', parameters('globals').baseName, '-p-iis01')]",
-    "pipPrdIisDns": "[if(equals(variables('noPipDnsLabels'),'true'), toLower(variables('pipPrdIisName')),'')]"
+    "pipPrdIisDns": "[toLower(variables('pipPrdIisName'))]"
   },
 
   "resources": [
