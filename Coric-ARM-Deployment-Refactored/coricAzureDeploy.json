@@ -168,6 +168,13 @@
             "defaultValue": "",
             "type": "string"
         },
+        "noPipDnsLabels": {
+            "metadata": {
+                "Description": "If true, do not create azure.com DNS labels for any PIPs -- Custom CNAMEs will be created manually for them instead."
+            },
+            "defaultValue": "false",
+            "type": "string"
+        },
         "publicVpnIps": {
             "metadata": {
                 "Description": "If true, create public VPN IPs not be attached to any VPNs - used only in the VPN."
@@ -539,6 +546,7 @@
                 "mgmtNetworkResourceGroup": "rgMgmtNetwork",
                 "mgmtNetworkID": "/subscriptions/7f656f31-ece7-4425-8ef7-e597e1b2eac7/resourceGroups/rgMgmtNetwork/providers/Microsoft.Network/virtualNetworks/vnMgmtNetwork",
                 "mgmtNetworkAddressSpace": "10.100.0.0/23",
+                "noPipDnsLabels": "[parameters('noPipDnsLabels')]",
                 "nicNamingVersion": "[parameters('nicNamingVersion')]",
                 "publicVpnIps": "[parameters('publicVpnIps')]",
                 "subnetadminexternal": {
@@ -637,32 +645,32 @@
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.64/26')]"
                 },
                 "subnetdevdmz": {
-                    "id": 28,
+                    "id": 29,
                     "name": "[concat('sn', variables('vnetV2name'), '-dev-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.192/26')]"
                 },
                 "subnetextraenv1desktop": {
-                    "id": 29,
+                    "id": 30,
                     "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv1ShortName'), '-desktop')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.0/26')]"
                 },
                 "subnetextraenv1web": {
-                    "id": 30,
+                    "id": 31,
                     "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv1ShortName'), '-web')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.64/26')]"
                 },
                 "subnetextraenv1application": {
-                    "id": 31,
+                    "id": 32,
                     "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv1ShortName'), '-application')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.128/26')]"
                 },
                 "subnetextraenv1database": {
-                    "id": 32,
+                    "id": 33,
                     "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv1ShortName'), '-database')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),5),'.192/26')]"
                 },
                 "subnetextraenv1dmz": {
-                    "id": 33,
+                    "id": 34,
                     "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv1ShortName'), '-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),7),'.0/26')]"
                 }
