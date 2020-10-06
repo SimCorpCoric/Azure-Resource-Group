@@ -683,7 +683,8 @@
                 "dmz": "OU=IIS;",
                 "rdg": "OU=RDG;OU=Admin;",
                 "ftp": "OU=FTP;OU=Admin;",
-                "pushPull": "OU=PushPull;"
+                "pushPull": "OU=PushPull;",
+                "mfa": "OU=MFA;"
             },
             "prefix": "[parameters('prefix')]",
             "sqlEncryption": {
