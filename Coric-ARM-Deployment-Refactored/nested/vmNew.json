@@ -57,14 +57,14 @@
             }
         }
     },
-    "variables": {},
+    "variables": { "empty": [] },
     "resources": [
         {
             "name": "[parameters('vmName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
-            "plan": "[parameters('vmPlan')]",
+            "plan": "[if(empty(parameters('vmPlan')), variables('empty'), parameters('vmPlan'))]",
             "properties": {
                 "availabilitySet": "[parameters('availabilitySet')]",
                 "hardwareProfile": "[parameters('hardwareProfile')]",
