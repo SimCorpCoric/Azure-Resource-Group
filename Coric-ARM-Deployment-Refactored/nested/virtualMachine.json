@@ -202,7 +202,8 @@
                                 "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, '.blob.core.windows.net')]"
                             }
                         }
-                    }
+                    },
+                    "plan": "[parameters('machineSettings').plan]"
                 }
             }
         },

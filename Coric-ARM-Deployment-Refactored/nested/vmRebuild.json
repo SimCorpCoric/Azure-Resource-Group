@@ -53,7 +53,7 @@
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
             "properties": {
-                "availabilitySet":  "[parameters('availabilitySet')]",
+                "availabilitySet": "[parameters('availabilitySet')]",
                 "hardwareProfile": "[parameters('hardwareProfile')]",
                 "storageProfile": "[parameters('storageProfile')]",
                 "networkProfile": "[parameters('networkProfile')]",

@@ -49,6 +49,13 @@
             "metadata": {
                 "Description": "Machine settings object"
             }
+        },
+        "vmPlan": {
+            "type": "object",
+            "metadata": {
+                "Description": "Machine settings object"
+            },
+            "defaultValue": []
         }
     },
     "variables": {},
@@ -58,8 +65,9 @@
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
+            "plan": "[parameters('vmPlan')]",
             "properties": {
-                "availabilitySet":  "[parameters('availabilitySet')]",
+                "availabilitySet": "[parameters('availabilitySet')]",
                 "hardwareProfile": "[parameters('hardwareProfile')]",
                 "osProfile": "[parameters('osProfile')]",
                 "storageProfile": "[parameters('storageProfile')]",

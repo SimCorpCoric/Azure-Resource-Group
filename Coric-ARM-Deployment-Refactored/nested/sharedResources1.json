@@ -116,6 +116,11 @@
                     }
                 }
             ],
+            "plan": {
+                "name": "[parameters('globals').mfaVMOffer]",
+                "publisher": "cloud-infrastructure-services",
+                "product": "azure-ad-connect-server-2019"
+            },
             "dnsServers": [],
             "numberOfVMs": 1,
             "ouPath": "[concat(parameters('globals').ou.mfa, parameters('globals').ou.serverRoles)]",
