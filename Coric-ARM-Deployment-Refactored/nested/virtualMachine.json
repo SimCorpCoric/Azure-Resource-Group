@@ -36,6 +36,7 @@
         }
     },
     "variables": {
+        "emptyObject": "[json('null')]",
         "keyVaultURL": "[concat('https://', parameters('globals').diskEncryption.keyVaultName, '.vault.azure.net/')]",
         "keyVaultResourceId": "[resourceId(parameters('globals').diskEncryption.keyVaultResourceGroup, 'Microsoft.KeyVault/vaults', parameters('globals').diskEncryption.keyVaultName)]",
         "asName": "[toUpper(concat('as', parameters('globals').basename, '-', parameters('globals').environment.shortname, '-', parameters('machineSettings').appID))]",
@@ -203,7 +204,7 @@
                             }
                         }
                     },
-                    "plan": "[parameters('machineSettings').plan]"
+                    "plan": "[if(empty(parameters('machineSettings').plan), variables('emptyObject'), parameters('machineSettings').plan)]"
                 }
             }
         },
