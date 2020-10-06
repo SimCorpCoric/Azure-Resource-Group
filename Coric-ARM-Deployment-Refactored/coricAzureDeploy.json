@@ -401,10 +401,9 @@
         "checkPointOffer": {
             "type": "string",
             "allowedValues": [
-                "check-point-r77-10",
                 "check-point-cg-r8020-blink-v2"
             ],
-            "defaultValue": "check-point-r77-10",
+            "defaultValue": "check-point-cg-r8020-blink-v2",
             "metadata": {
                 "description": "The version of Check Point firewall/vpn gateway to install; r77.10 or r80.20"
             }
@@ -425,6 +424,13 @@
                 "Standard_D1_V2"
             ],
             "defaultValue": "Standard_D1_V2"
+        },
+        "mfaServerBuild": {
+            "type": "string",
+            "defaultValue": "false",
+            "metadata": {
+                "description": "If true, add an AAD Connect server to the domain subnet."
+            }
         }
     },
     "variables": {
@@ -515,6 +521,7 @@
             "insightVMSize": "[parameters('insightVMSize')]",
             "insightVMTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/insightVM.json')]",
             "localAdminUsername": "[parameters('localAdminUsername')]",
+            "mfaServerBuild": "[parameters('mfaServerBuild')]",
             "networkSettings": {
                 "name": "[concat('vn', variables('baseName'))]",
                 "adminVnetID": "[variables('adminVnetID')]",

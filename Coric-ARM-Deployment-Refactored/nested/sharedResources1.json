@@ -79,7 +79,7 @@
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
             "storageAccount": "[parameters('globals').storageAccountAdmin]"
         },
-        "mfaSyncServer": {
+        "mfaServer": {
             "adminUsername": "[parameters('globals').localAdminUsername]",
             "appID": "mfa",
             "basename": "[variables('mfaBasename')]",
@@ -525,8 +525,8 @@
             }
         },
         {
-            "name": "mfaSyncServer",
-            "condition": "[empty(parameters('asrSuffix'))]",
+            "name": "mfaServer",
+            "condition": "[and(empty(parameters('asrSuffix')), equals(parameters('globals').mfaServerBuild,'true'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[parameters('globals').apiVersion.deployment]",
             "dependsOn": [
@@ -543,7 +543,7 @@
                         "value": "[parameters('globals')]"
                     },
                     "machineSettings": {
-                        "value": "[variables('mfaSyncServer')]"
+                        "value": "[variables('mfaServer')]"
                     },
                     "adminPassword": {
                         "value": "[parameters('localAdminPassword')]"
