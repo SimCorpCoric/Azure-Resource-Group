@@ -10,6 +10,8 @@
         },
         "dnsServers": {
             "defaultValue": [
+                "[parameters('globals').networkSettings.dc01IPAddress]",
+                "[parameters('globals').networkSettings.dc02IPAddress]",
                 "[parameters('globals').networkSettings.azureDNS]"
             ],
             "type": "array",
@@ -75,6 +77,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -92,6 +100,12 @@
                                 },
                                 {
                                     "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
                                     "locations": [
                                         "*"
                                     ]
@@ -115,6 +129,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -132,6 +152,12 @@
                                 },
                                 {
                                     "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
                                     "locations": [
                                         "*"
                                     ]
@@ -155,6 +181,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -172,6 +204,12 @@
                                 },
                                 {
                                     "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
                                     "locations": [
                                         "*"
                                     ]
@@ -195,6 +233,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -212,6 +256,12 @@
                                 },
                                 {
                                     "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
                                     "locations": [
                                         "*"
                                     ]
@@ -235,6 +285,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -252,6 +308,12 @@
                                 },
                                 {
                                     "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
                                     "locations": [
                                         "*"
                                     ]
@@ -275,6 +337,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -292,6 +360,12 @@
                                 },
                                 {
                                     "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
                                     "locations": [
                                         "*"
                                     ]
@@ -315,6 +389,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -332,6 +412,12 @@
                                 },
                                 {
                                     "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
                                     "locations": [
                                         "*"
                                     ]
@@ -355,6 +441,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -372,6 +464,12 @@
                                 },
                                 {
                                     "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
                                     "locations": [
                                         "*"
                                     ]
@@ -395,6 +493,12 @@
                                     "locations": [
                                         "*"
                                     ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
+                                    "locations": [
+                                        "*"
+                                    ]
                                 }
                             ]
                         }
@@ -412,6 +516,12 @@
                                 },
                                 {
                                     "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureActiveDirectory",
                                     "locations": [
                                         "*"
                                     ]

@@ -79,6 +79,45 @@
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
             "storageAccount": "[parameters('globals').storageAccountAdmin]"
         },
+        "mfaSyncServer": {
+            "adminUsername": "[parameters('globals').localAdminUsername]",
+            "appID": "mfa",
+            "basename": "[variables('mfaBasename')]",
+            "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
+            "dataDisks": [
+                {
+                    "name": "[concat(variables('mfaBasename'), '01-datadisk-0')]",
+                    "diskSizeGB": "[parameters('globals').dataDiskSizes.mfa]",
+                    "lun": 0,
+                    "vhd": {
+                        "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('mfaBasename'), '01-Data0.vhd')]"
+                    },
+                    "createOption": "[if(equals(parameters('globals').vmRebuild, 'true'), 'Attach', 'Empty')]"
+                }
+            ],
+            "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
+            "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
+            "imageReference": "[parameters('globals').windowsVM]",
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig1",
+                    "properties": {
+                        "privateIPAllocationMethod": "Static",
+                        "privateIPAddress": "[parameters('globals').networkSettings.mfaIPAddress]",
+                        "subnet": {
+                            "id": "[variables('domainSubnetID')]"
+                        }
+                    }
+                }
+            ],
+            "dnsServers": [],
+            "numberOfVMs": 1,
+            "ouPath": "[concat(parameters('globals').ou.mfa, parameters('globals').ou.serverRoles)]",
+            "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
+            "sizeOfDataDiskInGB": 1023,
+            "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
+            "storageAccount": "[parameters('globals').storageAccountAdmin]"
+        },
         "backupDomainController": {
             "adminUsername": "[parameters('globals').domainAdminUsername]",
             "appID": "dc",
@@ -118,6 +157,7 @@
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
             "storageAccount": "[parameters('globals').storageAccountAdmin]"
         },
+        "mfaBasename": "[concat(parameters('globals').baseName, '-mfa')]",
         "rdsBasename": "[concat(parameters('globals').baseName, '-rdg')]",
         "rdsGateway": {
             "adminUsername": "[parameters('globals').localAdminUsername]",
@@ -480,6 +520,36 @@
                     },
                     "adminSecurityID": {
                         "value": "[variables('adminSecurityID')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "mfaSyncServer",
+            "condition": "[empty(parameters('asrSuffix'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "dependsOn": [
+                "UpdatingDNStoPrimaryADVM"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').templateLinkVirtualMachine]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "machineSettings": {
+                        "value": "[variables('mfaSyncServer')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('localAdminPassword')]"
+                    },
+                    "domainAdminPassword": {
+                        "value": "[parameters('domainAdminPassword')]"
                     }
                 }
             }

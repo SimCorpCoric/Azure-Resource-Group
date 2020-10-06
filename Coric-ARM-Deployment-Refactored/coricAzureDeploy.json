@@ -474,7 +474,8 @@
                 "ftp": 1023,
                 "sql": 1023,
                 "warehouse": 1023,
-                "rdg": 1023
+                "rdg": 1023,
+                "mfa": 1023
             },
             "diskEncryption": {
                 "aadClientID": "[parameters('aadClientID')]",
@@ -524,6 +525,7 @@
                 "azureGatewayInternalIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.65')]",
                 "dc01IPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.196')]",
                 "dc02IPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.197')]",
+                "mfaIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.198')]",
                 "adminSecurityID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-security')]",
                 "insightVMIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.132')]",
                 "extraEnv1ShortName": "[variables('extraEnv1ShortName')]",
