@@ -42,6 +42,7 @@
         "nicName": "[variables(concat('nicName', parameters('globals').networkSettings.nicNamingVersion))]",
         "nicName1": "[toLower(concat('nic', parameters('machineSettings').basename))]",
         "nicName2": "[toLower(concat('nic', parameters('globals').environment.shortname, '-vm', parameters('machineSettings').basename))]",
+        "emptyPlanObject": [ { "name": "none" } ],
         "pipName": "[toLower(concat('pip', parameters('machineSettings').basename))]",
         "vmName": "[parameters('machineSettings').basename]",
         "vmNamePortal": "[concat('vm', parameters('machineSettings').basename)]"
@@ -203,7 +204,7 @@
                             }
                         }
                     },
-                    "plan": "[parameters('machineSettings').plan]"
+                    "plan": "[if(empty(parameters('machineSettings').plan.name), variables('emptyPlanObject'), parameters('machineSettings').plan)]"
                 }
             }
         },

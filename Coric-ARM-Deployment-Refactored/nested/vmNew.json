@@ -54,15 +54,14 @@
             "type": "object",
             "metadata": {
                 "Description": "Machine settings object"
-            },
-            "defaultValue": ""
+            }
         }
     },
     "variables": { },
     "resources": [
         {
             "name": "[parameters('vmName')]",
-            "condition": "[empty(parameters('vmPlan'))]",
+            "condition": "[equals(parameters('vmPlan').name, 'none')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
@@ -77,7 +76,7 @@
         },
         {
             "name": "[parameters('vmName')]",
-            "condition": "[not(empty(parameters('vmPlan')))]",
+            "condition": "[not(equals(parameters('vmPlan').name, 'none'))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
