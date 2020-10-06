@@ -204,7 +204,7 @@
                             }
                         }
                     },
-                    "plan": "[if(empty(parameters('machineSettings').plan.name), variables('emptyPlanObject'), parameters('machineSettings').plan)]"
+                    "vmPlan": "[if(empty(parameters('machineSettings').plan.name), variables('emptyPlanObject'), parameters('machineSettings').plan)]"
                 }
             }
         },
