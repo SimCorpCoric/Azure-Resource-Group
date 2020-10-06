@@ -54,7 +54,8 @@
             "type": "object",
             "metadata": {
                 "Description": "Machine settings object"
-            }
+            },
+            "defaultValue": ""
         }
     },
     "variables": { },
@@ -80,7 +81,7 @@
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
-            "plan": "[if(empty(parameters('vmPlan')), variables('empty'), parameters('vmPlan'))]",
+            "plan": "[parameters('vmPlan')]",
             "properties": {
                 "availabilitySet": "[parameters('availabilitySet')]",
                 "hardwareProfile": "[parameters('hardwareProfile')]",
