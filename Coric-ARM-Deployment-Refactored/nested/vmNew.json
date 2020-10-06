@@ -57,10 +57,26 @@
             }
         }
     },
-    "variables": { "empty": [] },
+    "variables": { },
     "resources": [
         {
             "name": "[parameters('vmName')]",
+            "condition": "[empty(parameters('vmPlan'))]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "availabilitySet": "[parameters('availabilitySet')]",
+                "hardwareProfile": "[parameters('hardwareProfile')]",
+                "osProfile": "[parameters('osProfile')]",
+                "storageProfile": "[parameters('storageProfile')]",
+                "networkProfile": "[parameters('networkProfile')]",
+                "diagnosticsProfile": "[parameters('diagnosticsProfile')]"
+            }
+        },
+        {
+            "name": "[parameters('vmName')]",
+            "condition": "[not(empty(parameters('vmPlan')))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
