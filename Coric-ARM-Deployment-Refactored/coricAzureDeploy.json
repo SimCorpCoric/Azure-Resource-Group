@@ -425,12 +425,23 @@
             ],
             "defaultValue": "Standard_D1_V2"
         },
-        "mfaServerBuild": {
+        "mfaVMOffer": {
             "type": "string",
-            "defaultValue": "false",
+            "allowedValues": [
+                "",
+                "azure-ad-connect-2019"
+            ],
+            "defaultValue": "",
             "metadata": {
-                "description": "If true, add an AAD Connect server to the domain subnet."
+                "description": "The Azure marketplace image to use when deploying the AAD Connect server. If blank, no AAD Connect server will be deployed."
             }
+        },
+        "mfaVMSize": {
+            "type": "string",
+            "allowedValues": [
+                "Standard_B2s"
+            ],
+            "defaultValue": "Standard_B2s"
         }
     },
     "variables": {
@@ -521,7 +532,8 @@
             "insightVMSize": "[parameters('insightVMSize')]",
             "insightVMTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/insightVM.json')]",
             "localAdminUsername": "[parameters('localAdminUsername')]",
-            "mfaServerBuild": "[parameters('mfaServerBuild')]",
+            "mfaVMOffer": "[parameters('mfaVMOffer')]",
+            "mfaVMSize": "[parameters('mfaVMSize')]",
             "networkSettings": {
                 "name": "[concat('vn', variables('baseName'))]",
                 "adminVnetID": "[variables('adminVnetID')]",

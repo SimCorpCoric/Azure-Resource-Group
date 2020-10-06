@@ -97,7 +97,13 @@
             ],
             "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
             "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
-            "imageReference": "[parameters('globals').windowsVM]",
+            "imageReference": {
+                "publisher": "cloud-infrastructure-services",
+                "offer": "[parameters('globals').mfaVMOffer]",
+                "sku": "azure-ad-connect-server-2019",
+                "version": "latest",
+                "size": "[parameters('globals').mfaVMSize]"
+            },
             "ipConfigurations": [
                 {
                     "name": "ipconfig1",
@@ -526,7 +532,7 @@
         },
         {
             "name": "mfaServer",
-            "condition": "[and(empty(parameters('asrSuffix')), equals(parameters('globals').mfaServerBuild,'true'))]",
+            "condition": "[and(empty(parameters('asrSuffix')), not(empty(parameters('globals').mfaVMOffer)))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[parameters('globals').apiVersion.deployment]",
             "dependsOn": [
