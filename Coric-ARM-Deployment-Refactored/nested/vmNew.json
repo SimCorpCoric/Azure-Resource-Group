@@ -61,7 +61,7 @@
     "resources": [
         {
             "name": "[parameters('vmName')]",
-            "condition": "[not(empty(parameters('plan')))]",
+            "condition": "[equals(parameters('plan').name, 'none')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
@@ -76,7 +76,7 @@
         },
         {
             "name": "[parameters('vmName')]",
-            "condition": "[empty(parameters('plan'))]",
+            "condition": "[not(equals(parameters('plan').name, 'none'))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",

@@ -45,7 +45,7 @@
             "dnsServers": [],
             "numberOfVMs": "[parameters('globals').environment.desktopCount]",
             "ouPath": "[concat(parameters('globals').ou.desktop, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-            "plan": "[json('null')]",
+            "plan": { "name": "none" },
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
             "storageAccount": "[variables('storageAccountName')]"
@@ -84,7 +84,7 @@
             "dnsServers": [],
             "numberOfVMs": "[parameters('globals').environment.dmzServerCount]",
             "ouPath": "[concat(parameters('globals').ou.dmz, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-            "plan": "[json('null')]",
+            "plan": { "name": "none" },
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
             "storageAccount": "[variables('storageAccountName')]"
@@ -111,7 +111,7 @@
             "dnsServers": [],
             "numberOfVMs": "[parameters('globals').environment.droneCount]",
             "ouPath": "[concat(parameters('globals').ou.drone, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-            "plan": "[json('null')]",
+            "plan": { "name": "none" },
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
             "storageAccount": "[variables('storageAccountName')]"
@@ -138,7 +138,7 @@
             "dnsServers": [],
             "numberOfVMs": "[parameters('globals').environment.pushPullCount]",
             "ouPath": "[concat(parameters('globals').ou.pushPull, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-            "plan": "[json('null')]",
+            "plan": { "name": "none" },
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
             "storageAccount": "[variables('storageAccountName')]"
@@ -177,7 +177,7 @@
             "dnsServers": [],
             "numberOfVMs": 1,
             "ouPath": "[concat(parameters('globals').ou.sql, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-            "plan": "[json('null')]",
+            "plan": { "name": "none" },
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sizeOfDataDiskInGB": 1023,
             "sqlKeyVaultTemplateLink": "[parameters('globals').sqlEncryptionTemplate]",
@@ -222,7 +222,7 @@
             "dnsServers": [],
             "numberOfVMs": 1,
             "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-            "plan": "[json('null')]",
+            "plan": { "name": "none" },
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
             "storageAccount": "[variables('storageAccountName')]"
@@ -249,7 +249,7 @@
             "dnsServers": [],
             "numberOfVMs": "[parameters('globals').environment.webCount]",
             "ouPath": "[concat(parameters('globals').ou.iis, 'OU=Env ', parameters('globals').environment.acronym, ';', parameters('globals').ou.serverRoles)]",
-            "plan": "[json('null')]",
+            "plan": { "name": "none" },
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
             "storageAccount": "[variables('storageAccountName')]"
