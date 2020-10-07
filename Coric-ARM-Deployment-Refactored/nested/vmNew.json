@@ -81,14 +81,14 @@
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
             "properties": {
-                "plan": "[parameters('VMPlan').plan]",
                 "availabilitySet": "[parameters('availabilitySet')]",
                 "hardwareProfile": "[parameters('hardwareProfile')]",
                 "osProfile": "[parameters('osProfile')]",
                 "storageProfile": "[parameters('storageProfile')]",
                 "networkProfile": "[parameters('networkProfile')]",
                 "diagnosticsProfile": "[parameters('diagnosticsProfile')]"
-            }
+            },
+            "plan": "[parameters('VMPlan').plan]"
         }
     ]
 }
