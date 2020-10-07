@@ -57,7 +57,9 @@
             }
         }
     },
-    "variables": { },
+    "variables": {
+        "plan": "[parameters('VMPlan').plan]"
+    },
     "resources": [
         {
             "name": "[parameters('vmName')]",
