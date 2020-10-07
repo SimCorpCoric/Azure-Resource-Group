@@ -61,7 +61,7 @@
     "resources": [
         {
             "name": "[parameters('vmName')]",
-            "condition": "[equals(parameters('vmPlan').plan.name, 'none')]",
+            "condition": "[equals(parameters('vmPlan').name, 'none')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
             "location": "[resourceGroup().location]",
