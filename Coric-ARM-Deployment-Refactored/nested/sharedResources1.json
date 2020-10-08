@@ -75,7 +75,7 @@
             "dnsServers": [],
             "numberOfVMs": 1,
             "ouPath": "",
-            "plan": { "name": "none",  "publisher": "none" },
+            "plan": { "name": "none" },
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
             "storageAccount": "[parameters('globals').storageAccountAdmin]"
@@ -118,9 +118,9 @@
                 }
             ],
             "plan": {
-                "name": "[parameters('globals').mfaVMOffer]",
+                "name": "azure-ad-connect-server-2019",
                 "publisher": "cloud-infrastructure-services",
-                "product": "azure-ad-connect-server-2019"
+                "product": "[parameters('globals').mfaVMOffer]"
             },
             "dnsServers": [],
             "numberOfVMs": 1,
@@ -164,7 +164,7 @@
             "dnsServers": [],
             "numberOfVMs": 1,
             "ouPath": "[parameters('globals').ou.domainControllers]",
-            "plan": { "name": "none",  "publisher": "none" },
+            "plan": { "name": "none" },
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sizeOfDataDiskInGB": 1023,
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
@@ -206,7 +206,7 @@
             "dnsServers": [],
             "numberOfVMs": 1,
             "ouPath": "[concat(parameters('globals').ou.rdg, parameters('globals').ou.serverRoles)]",
-            "plan": { "name": "none",  "publisher": "none" },
+            "plan": { "name": "none" },
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sizeOfDataDiskInGB": 1023,
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
@@ -247,7 +247,7 @@
             "dnsServers": [],
             "numberOfVMs": 1,
             "ouPath": "[concat(parameters('globals').ou.ftp, parameters('globals').ou.serverRoles)]",
-            "plan": { "name": "none",  "publisher": "none" },
+            "plan": { "name": "none" },
             "publicIPTemplateLink": "[parameters('globals').templateLinkPublicIPNull]",
             "sizeOfDataDiskInGB": "[parameters('globals').dataDiskSizes.ftp]",
             "sqlKeyVaultTemplateLink": "[parameters('globals').templateLinkSQLKeyVaultNull]",
