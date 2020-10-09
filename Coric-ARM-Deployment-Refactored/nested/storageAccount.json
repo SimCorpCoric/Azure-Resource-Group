@@ -45,7 +45,13 @@
       "sku": {
         "name": "[parameters('accountType')]"
       },
-      "type": "Microsoft.Storage/storageAccounts"
+      "type": "Microsoft.Storage/storageAccounts",
+      "properties": {
+        "deleteRetentionPolicy": {
+          "enabled": true,
+          "days": 90
+        }
+      }
     }
   ]
 }
