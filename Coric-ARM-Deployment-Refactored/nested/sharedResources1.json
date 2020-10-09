@@ -84,18 +84,7 @@
             "adminUsername": "[parameters('globals').localAdminUsername]",
             "appID": "mfa",
             "basename": "[variables('mfaBasename')]",
-            "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDisk]",
-            "dataDisks": [
-                {
-                    "name": "[concat(variables('mfaBasename'), '01-datadisk-0')]",
-                    "diskSizeGB": "[parameters('globals').dataDiskSizes.mfa]",
-                    "lun": 0,
-                    "vhd": {
-                        "uri": "[concat('http://', parameters('globals').storageAccountAdmin, '.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('mfaBasename'), '01-Data0.vhd')]"
-                    },
-                    "createOption": "[if(equals(parameters('globals').vmRebuild, 'true'), 'Attach', 'Empty')]"
-                }
-            ],
+            "dataDiskTemplateLink": "[parameters('globals').templateLinkDataDiskNull]",
             "domainJoinTemplateLink": "[parameters('globals').templateLinkDomainJoin]",
             "encryptionTemplateLink": "[parameters('globals').templateLinkDiskEncryption]",
             "imageReference": {
