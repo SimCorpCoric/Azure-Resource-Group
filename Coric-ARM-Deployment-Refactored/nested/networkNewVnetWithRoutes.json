@@ -1198,12 +1198,6 @@
                                     "locations": [
                                         "*"
                                     ]
-                                },
-                                {
-                                    "service": "Microsoft.AzureActiveDirectory",
-                                    "locations": [
-                                        "*"
-                                    ]
                                 }
                             ]
                         }
