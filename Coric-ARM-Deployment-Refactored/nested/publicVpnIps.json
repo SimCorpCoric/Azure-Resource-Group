@@ -12,6 +12,8 @@
   },
 
   "variables": {
+    "azureDnsZone": "[concat('.', resourceGroup().location, '.cloudapp.azure.com')]",
+
     "pipVpnRdgName": "[concat('pip', parameters('globals').baseName, '-rdg01')]",
     "pipVpnRdgDns": "[toLower(concat(variables('pipVpnRdgName'),'-vpn'))]",
 
@@ -52,12 +54,12 @@
         }
     },
     {
-        "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', concat(variables('pipVpnRdgName'),'-vpn'))).dnsSettings.domainNameLabel)]",
+        "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipVpnRdgDns'))]",
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
             "CNAMERecord": {
-                "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(variables('pipVpnRdgName'),'-vpn'))).dnsSettings.fqdn]"
+                "cname": "[concat(variables('pipVpnRdgDns'), variables('azureDnsZone'))]"
             }
         }
     },
@@ -75,12 +77,12 @@
         }
     },
     {
-        "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipVpnFtpName'))).dnsSettings.domainNameLabel)]",
+        "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipVpnFtpDns'))]",
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
             "CNAMERecord": {
-                "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipVpnFtpName'))).dnsSettings.fqdn]"
+                "cname": "[concat(variables('pipVpnFtpDns'), variables('azureDnsZone'))]"
             }
         }
     },
@@ -98,12 +100,12 @@
         }
     },
     {
-        "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipDevSqlName'))).dnsSettings.domainNameLabel)]",
+        "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipDevSqlDns'))]",
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
             "CNAMERecord": {
-                "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipDevSqlName'))).dnsSettings.fqdn]"
+                "cname": "[concat(variables('pipDevSqlDns'), variables('azureDnsZone'))]"
             }
         }
     },
@@ -121,12 +123,12 @@
         }
     },
     {
-        "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipUatSqlName'))).dnsSettings.domainNameLabel)]",
+        "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipUatSqlDns'))]",
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
             "CNAMERecord": {
-                "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipUatSqlName'))).dnsSettings.fqdn]"
+                "cname": "[concat(variables('pipUatSqlDns'), variables('azureDnsZone'))]"
             }
         }
     },
@@ -144,12 +146,12 @@
         }
     },
     {
-        "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipPrdSqlName'))).dnsSettings.domainNameLabel)]",
+        "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipPrdSqlDns'))]",
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
             "CNAMERecord": {
-                "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipPrdSqlName'))).dnsSettings.fqdn]"
+                "cname": "[concat(variables('pipPrdSqlDns'), variables('azureDnsZone'))]"
             }
         }
     },
@@ -167,12 +169,12 @@
         }
     },
     {
-        "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipDevIisName'))).dnsSettings.domainNameLabel)]",
+        "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipDevIisDns'))]",
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
             "CNAMERecord": {
-                "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipDevIisName'))).dnsSettings.fqdn]"
+                "cname": "[concat(variables('pipDevIisDns'), variables('azureDnsZone'))]"
             }
         }
     },
@@ -190,12 +192,12 @@
         }
     },
     {
-        "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipUatIisName'))).dnsSettings.domainNameLabel)]",
+        "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipUatIisDns'))]",
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
             "CNAMERecord": {
-                "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipUatIisName'))).dnsSettings.fqdn]"
+                "cname": "[concat(variables('pipUatIisDns'), variables('azureDnsZone'))]"
             }
         }
     },
@@ -213,12 +215,12 @@
         }
     },
     {
-        "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipPrdIisName'))).dnsSettings.domainNameLabel)]",
+        "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipPrdIisDns'))]",
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
             "CNAMERecord": {
-                "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipPrdIisName'))).dnsSettings.fqdn]"
+                "cname": "[concat(variables('pipPrdIisDns'), variables('azureDnsZone'))]"
             }
         }
     }

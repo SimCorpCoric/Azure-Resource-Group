@@ -149,7 +149,7 @@
         },
         "clientAcronym": {
             "metadata": {
-                "Description": "Client acronym for naming C1 public IP hostnames with. If blank, uses baseName (clientID) naming pattern instead for those. Also used to create a simcorpcloud.com child domain."
+                "Description": "Client acronym for naming C1 public IP hostnames with. Must be populated. Also used to create a simcorpcloud.com child domain."
             },
             "defaultValue": "",
             "type": "string"

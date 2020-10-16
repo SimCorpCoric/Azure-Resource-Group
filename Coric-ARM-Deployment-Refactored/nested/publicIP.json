@@ -68,6 +68,7 @@
   },
 
   "variables": {
+    "azureDnsZone": "[concat('.', resourceGroup().location, '.cloudapp.azure.com')]"
   },
 
   "resources": [
@@ -84,12 +85,12 @@
       "type": "Microsoft.Network/publicIPAddresses"
     },
     {
-        "name": "[concat(parameters('childDnsZoneName'), '/', reference(resourceId('Microsoft.Network/publicIPAddresses', parameters('pipName'))).dnsSettings.domainNameLabel)]",
+        "name": "[concat(parameters('childDnsZoneName'), '/', parameters('dnsPrefix'))]",
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('apiVersionDNS')]",
         "properties": {
             "CNAMERecord": {
-                "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', parameters('pipName'))).dnsSettings.fqdn]"
+                "cname": "[concat(parameters('dnsPrefix'), variables('azureDnsZone'))]"
             }
         }
     },

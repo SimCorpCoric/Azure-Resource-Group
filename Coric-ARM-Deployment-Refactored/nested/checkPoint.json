@@ -40,6 +40,7 @@
         }
     },
     "variables": {
+        "azureDnsZone": "[concat('.', resourceGroup().location, '.cloudapp.azure.com')]",
         "vnetV2Name": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('asrSuffix'))]",
         "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2Name'))]",
         "gatewayExternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-external')]",
@@ -220,12 +221,12 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))).dnsSettings.domainNameLabel)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', toLower(variables('basename')))]",
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "CNAMERecord": {
-                    "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))).dnsSettings.fqdn]"
+                    "cname": "[concat(toLower(variables('basename')), variables('azureDnsZone'))]"
                 }
             }
         },
@@ -246,12 +247,12 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name))).dnsSettings.domainNameLabel)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[0].name)]",
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "CNAMERecord": {
-                    "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name))).dnsSettings.fqdn]"
+                    "cname": "[concat(variables('incomingTraffic')[0].name, variables('azureDnsZone'))]"
                 }
             }
         },
@@ -269,12 +270,12 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[2].name))).dnsSettings.domainNameLabel)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[2].name)]",
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "CNAMERecord": {
-                    "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[2].name))).dnsSettings.fqdn]"
+                    "cname": "[concat(variables('incomingTraffic')[2].name, variables('azureDnsZone'))]"
                 }
             }
         },
@@ -292,12 +293,12 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[4].name))).dnsSettings.domainNameLabel)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[3].name)]",
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "CNAMERecord": {
-                    "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[4].name))).dnsSettings.fqdn]"
+                    "cname": "[concat(variables('incomingTraffic')[3].name, variables('azureDnsZone'))]"
                 }
             }
         },
@@ -315,12 +316,12 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[6].name))).dnsSettings.domainNameLabel)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[6].name)]",
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "CNAMERecord": {
-                    "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[6].name))).dnsSettings.fqdn]"
+                    "cname": "[concat(variables('incomingTraffic')[6].name, variables('azureDnsZone'))]"
                 }
             }
         },
@@ -338,12 +339,12 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[8].name))).dnsSettings.domainNameLabel)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[8].name)]",
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "CNAMERecord": {
-                    "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[8].name))).dnsSettings.fqdn]"
+                    "cname": "[concat(variables('incomingTraffic')[8].name, variables('azureDnsZone'))]"
                 }
             }
         },
@@ -361,12 +362,12 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[9].name))).dnsSettings.domainNameLabel)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[9].name)]",
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "CNAMERecord": {
-                    "cname": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[9].name))).dnsSettings.fqdn]"
+                    "cname": "[concat(variables('incomingTraffic')[9].name, variables('azureDnsZone'))]"
                 }
             }
         },
