@@ -251,6 +251,7 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
+                "TTL": 3600,
                 "CNAMERecord": {
                     "cname": "[concat(variables('incomingTraffic')[0].name, variables('azureDnsZone'))]"
                 }
@@ -274,6 +275,7 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
+                "TTL": 3600,
                 "CNAMERecord": {
                     "cname": "[concat(variables('incomingTraffic')[2].name, variables('azureDnsZone'))]"
                 }
@@ -297,6 +299,7 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
+                "TTL": 3600,
                 "CNAMERecord": {
                     "cname": "[concat(variables('incomingTraffic')[3].name, variables('azureDnsZone'))]"
                 }
@@ -320,6 +323,7 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
+                "TTL": 3600,
                 "CNAMERecord": {
                     "cname": "[concat(variables('incomingTraffic')[6].name, variables('azureDnsZone'))]"
                 }
@@ -343,6 +347,7 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
+                "TTL": 3600,
                 "CNAMERecord": {
                     "cname": "[concat(variables('incomingTraffic')[8].name, variables('azureDnsZone'))]"
                 }
@@ -366,6 +371,7 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
+                "TTL": 3600,
                 "CNAMERecord": {
                     "cname": "[concat(variables('incomingTraffic')[9].name, variables('azureDnsZone'))]"
                 }

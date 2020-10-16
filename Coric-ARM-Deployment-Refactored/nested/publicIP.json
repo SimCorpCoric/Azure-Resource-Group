@@ -89,6 +89,7 @@
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('apiVersionDNS')]",
         "properties": {
+            "TTL": 3600,
             "CNAMERecord": {
                 "cname": "[concat(parameters('dnsPrefix'), variables('azureDnsZone'))]"
             }
