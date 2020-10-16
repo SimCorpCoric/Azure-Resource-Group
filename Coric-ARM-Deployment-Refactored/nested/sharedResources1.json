@@ -313,11 +313,18 @@
             }
         },
         {
+            "name": "[parameters('globals').childDnsZoneName]",
+            "type": "Microsoft.Network/dnsZones",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "location": "global"
+        },
+        {
             "name": "primaryDCSetup",
             "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[parameters('globals').apiVersion.deployment]",
             "dependsOn": [
+                "[parameters('globals').childDnsZoneName]",
                 "[concat('Microsoft.Resources/deployments/', 'adminStorage')]",
                 "[concat('Microsoft.Resources/deployments/', 'diagnosticsStorage')]",
                 "[concat('Microsoft.Resources/deployments/', 'networkVnetV2Setup')]"

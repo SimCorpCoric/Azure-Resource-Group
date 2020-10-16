@@ -149,7 +149,7 @@
         },
         "clientAcronym": {
             "metadata": {
-                "Description": "Client acronym for naming C1 public IP hostnames with. If blank, uses baseName (clientID) naming pattern instead for those."
+                "Description": "Client acronym for naming C1 public IP hostnames with. If blank, uses baseName (clientID) naming pattern instead for those. Also used to create a simcorpcloud.com child domain."
             },
             "defaultValue": "",
             "type": "string"
@@ -442,6 +442,14 @@
                 "Standard_B2s"
             ],
             "defaultValue": "Standard_B2s"
+        },
+        "dnsParentZone": {
+            "type": "string",
+            "allowedValues": [
+                "",
+                "simcorpcloud.com"
+            ],
+            "defaultValue": "simcorpcloud.com"
         }
     },
     "variables": {
@@ -459,6 +467,7 @@
             "apiVersion": {
                 "availabilitySets": "2018-06-01",
                 "deployment": "2018-05-01",
+                "dnsZone": "2018-05-01",
                 "dsc": "2019-07-01",
                 "extension": "2019-07-01",
                 "loadBalancer": "2018-02-01",
@@ -477,6 +486,7 @@
             "baseName": "[variables('baseName')]",
             "checkPointOffer": "[parameters('checkPointOffer')]",
             "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
+            "childDnsZoneName": "[concat(parameters('clientAcronym'), '.', parameters('dnsParentZone'))]",
             "clientID": "[parameters('clientID')]",
             "clientAcronym": "[parameters('clientAcronym')]",
             "customScript": {

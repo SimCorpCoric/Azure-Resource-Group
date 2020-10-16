@@ -17,6 +17,13 @@
       "type": "string"
     },
 
+    "apiVersionDNS": {
+        "metadata": {
+            "Description": "API Version for the DNSZone resource type"
+        },
+        "type": "string"
+    },
+
     "pipName": {
       "metadata": {
         "Description": "PIP name"
@@ -36,6 +43,13 @@
         "Description": "DNS prefix for Public IP"
       },
       "type": "string"
+    },
+
+    "childDnsZoneName": {
+        "metadata": {
+            "Description": "Child dns zone"
+        },
+        "type": "string"
     },
 
     "ipConfigurations": {
