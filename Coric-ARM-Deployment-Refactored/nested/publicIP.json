@@ -73,27 +73,25 @@
 
   "resources": [
     {
-      "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "[parameters('apiVersionPIP')]",
       "location": "[resourceGroup().location]",
       "name": "[parameters('pipName')]",
       "properties": {
         "dnsSettings": {
-          "fqdn": "[parameters('dnsPrefix')]"
+          "domainNameLabel": "[parameters('dnsPrefix')]"
         },
         "publicIPAllocationMethod": "Static"
-      }
+      },
+      "type": "Microsoft.Network/publicIPAddresses"
     },
     {
         "name": "[concat(parameters('childDnsZoneName'), '/', parameters('dnsPrefix'))]",
-        "type": "Microsoft.Network/dnsZones/A",
+        "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('apiVersionDNS')]",
         "properties": {
-            "ARecords": [
-                {
-                    "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', parameters('pipName'))).IpAddress]"
-                }
-            ]
+            "CNAMERecord": {
+                "cname": "[concat(parameters('dnsPrefix'), variables('azureDnsZone'))]"
+            }
         }
     },
     {
