@@ -222,7 +222,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', toLower(variables('basename')))]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -248,7 +248,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[0].name)]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -271,7 +271,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[2].name)]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -294,7 +294,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[4].name)]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -317,7 +317,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[6].name)]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -340,7 +340,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[8].name)]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -363,7 +363,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[9].name)]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {

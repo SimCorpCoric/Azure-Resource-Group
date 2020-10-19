@@ -55,7 +55,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipVpnRdgDns'))]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -78,7 +78,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipVpnFtpDns'))]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -101,7 +101,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipDevSqlDns'))]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -124,7 +124,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipUatSqlDns'))]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -147,7 +147,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipPrdSqlDns'))]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -170,7 +170,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipDevIisDns'))]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -193,7 +193,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipUatIisDns'))]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
@@ -216,7 +216,7 @@
         },
         {
             "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipPrdIisDns'))]",
-            "type": "Microsoft.Network/dnsZones/CNAME",
+            "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {

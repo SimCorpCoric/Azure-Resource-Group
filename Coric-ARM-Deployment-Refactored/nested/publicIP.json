@@ -86,7 +86,7 @@
     },
     {
         "name": "[concat(parameters('childDnsZoneName'), '/', parameters('dnsPrefix'))]",
-        "type": "Microsoft.Network/dnsZones/CNAME",
+        "type": "Microsoft.Network/dnsZones/A",
         "apiVersion": "[parameters('apiVersionDNS')]",
         "properties": {
             "CNAMERecord": {
