@@ -1,0 +1,706 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "globals": {
+            "type": "object",
+            "metadata": {
+                "Description": "Global complex object passed to nested templates"
+            }
+        },
+        "dnsServers": {
+            "defaultValue": [
+                "[parameters('globals').networkSettings.dc01IPAddress]",
+                "[parameters('globals').networkSettings.dc02IPAddress]"
+            ],
+            "type": "array",
+            "metadata": {
+                "description": "DNS address(es) of the DNS Server(s) used by the VNET"
+            }
+        },
+        "adminPassword": {
+            "metadata": {
+                "description": "Administrator password"
+            },
+            "type": "securestring"
+        },
+        "sicKey": {
+            "type": "securestring",
+            "minLength": 8,
+            "metadata": {
+                "description": "One time key for Secure Internal Communication"
+            }
+        },
+        "asrSuffix": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "If not blank, indicates an ASR deployment should occur, as well as the naming suffix for the deployment."
+            }
+        }
+    },
+    "variables": {
+        "vnetV2Name": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('asrSuffix'))]",
+        "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2Name'))]",
+        "gatewayExternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-external')]",
+        "gatewayInternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/','sn', parameters('globals').networkSettings.vnetV2name, '-admin-internalgateway')]",
+        "dmzSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-dmz')]",
+        "basename": "[concat(parameters('globals').baseName, '-cp')]",
+        "azureGatewayInternalIPAddress": "[parameters('globals').networkSettings.azureGatewayInternalIPAddress]",
+        "customData": "[concat('#!/bin/bash\n', '\n', 'installSecurityGateway=\"', variables('installSecurityGateway'), '\"', '\n', 'installSecurityGateway=\"$(echo $installSecurityGateway | tr \"TF\" \"tf\")\"\n', 'installSecurityManagement=\"', variables('installSecurityManagement'), '\"', '\n', 'installSecurityManagement=\"$(echo $installSecurityManagement | tr \"TF\" \"tf\")\"\n', 'adminPassword=\"', parameters('adminPassword'), '\"', '\n', 'managementGUIClientNetwork=\"', variables('managementGUIClientNetwork'), '\"', '\n', 'ManagementGUIClientBase=\"$(echo $managementGUIClientNetwork | cut -d / -f 1)\"\n', 'ManagementGUIClientMaskLength=\"$(echo $managementGUIClientNetwork | cut -d / -f 2)\"\n', 'sicKey=\"', parameters('sicKey'), '\"', '\n', 'conf=\"install_security_gw=$installSecurityGateway\"\n', 'if $installSecurityGateway; then\n', '    conf=\"${conf}&install_ppak=true\"\n', '    conf=\"${conf}&gateway_cluster_member=false\"\n', 'fi\n', 'conf=\"${conf}&install_security_managment=$installSecurityManagement\"\n', 'if $installSecurityManagement; then\n', '    conf=\"${conf}&install_mgmt_primary=true\"\n', '    conf=\"${conf}&mgmt_admin_name=admin\"\n', '    conf=\"${conf}&mgmt_admin_passwd=$adminPassword\"\n', '    conf=\"${conf}&mgmt_gui_clients_radio=network\"\n', '    conf=\"${conf}&mgmt_gui_clients_ip_field=$ManagementGUIClientBase\"\n', '    conf=\"${conf}&mgmt_gui_clients_subnet_field=$ManagementGUIClientMaskLength\"\n', 'fi\n', 'conf=\"${conf}&ftw_sic_key=$sicKey\"\n', '\n', 'config_system -s $conf\n', '\n', 'clish -c \"set static-route ', variables('vnetV2addressSpace'), ' nexthop gateway address ', variables('azureGatewayInternalIPAddress'),' on\"', '\n', 'clish -c \"save config\"', '\n', 'shutdown -r now\n')]",
+        "imageOffer": "[parameters('globals').checkPointOffer]",
+        "imagePublisher": "checkpoint",
+        "imageReference": {
+            "offer": "[variables('imageOffer')]",
+            "publisher": "[variables('imagePublisher')]",
+            "sku": "sg-byol",
+            "version": "latest"
+        },
+        "incomingTraffic": [
+            {
+                "name": "[concat(parameters('globals').baseName,'-rdg01')]",
+                "frontendPort": 443,
+                "backendPort": 8443
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-rdp')]",
+                "frontendPort": 3389,
+                "backendPort": 53389
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-d-c1')]",
+                "frontendPort": 80,
+                "backendPort": 6080
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-d-c1-443')]",
+                "frontendPort": 443,
+                "backendPort": 6443
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-u-c1')]",
+                "frontendPort": 80,
+                "backendPort": 7080
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-u-c1-443')]",
+                "frontendPort": 443,
+                "backendPort": 7443
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-p-c1')]",
+                "frontendPort": 80,
+                "backendPort": 9080
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-p-c1-443')]",
+                "frontendPort": 443,
+                "backendPort": 9443
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-d-iis01-acme')]",
+                "frontendPort": 80,
+                "backendPort": 9580
+            },
+            {
+                "name": "[concat(parameters('globals').baseName,'-u-iis01-acme')]",
+                "frontendPort": 80,
+                "backendPort": 9680
+            }
+        ],
+        "installSecurityGateway": true,
+        "installSecurityManagement": false,
+        "LB1IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB1FrontEnd')]",
+        "LB3IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB3FrontEnd')]",
+        "LB4IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB4FrontEnd')]",
+        "LB5IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB5FrontEnd')]",
+        "LB6IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB6FrontEnd')]",
+        "LB7IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB7FrontEnd')]",
+        "lbId": "[resourceId('Microsoft.Network/loadBalancers', variables('lbName'))]",
+        "lbName": "lbCheckPointGateway",
+        "managementGUIClientNetwork": "0.0.0.0/0",
+        "nic1Name": "[concat(variables('nicName'), '-Gateway')]",
+        "nic2Name": "[concat(variables('nicName'), '-FWInternal')]",
+        "nicName": "[concat('nic', variables('basename'))]",
+        "osProfile": {
+            "adminPassword": "[parameters('adminPassword')]",
+            "adminUsername": "notused",
+            "computerName": "[variables('basename')]",
+            "customData": "[base64(variables('customData'))]"
+        },
+        "pipName": "[concat('pip', variables('basename'))]",
+        "plan": {
+            "name": "sg-byol",
+            "product": "[variables('imageOffer')]",
+            "publisher": "[variables('imagePublisher')]"
+        },
+        "publicIPAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))]",
+        "publicIPAddressLB1Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name))]",
+        "publicIPAddressLB3Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[2].name))]",
+        "publicIPAddressLB4Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[4].name))]",
+        "publicIPAddressLB5Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[6].name))]",
+        "publicIPAddressLB6Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[8].name))]",
+        "publicIPAddressLB7Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[9].name))]",
+        "rdsGatewayNicName": "[concat('nicadmin-vm', variables('rdsGateway').basename, '01')]",
+        "rdsGateway": {
+            "basename": "[concat(parameters('globals').baseName, '-rdg')]",
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig",
+                    "properties": {
+                        "privateIPAllocationMethod": "Static",
+                        "privateIPAddress": "[parameters('globals').networkSettings.rdgatewayIPAddress]",
+                        "subnet": {
+                            "id": "[variables('dmzSubnetID')]"
+                        }
+                    }
+                }
+            ]
+        },
+        "vmNamePortal": "[concat('vm', variables('basename'))]",
+        "vnetV2addressSpace": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+    },
+    "resources": [
+        {
+            "name": "networkVnetV2WithRoutesSetup",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').networkVnetV2WithRoutesTemplateLink]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    },
+                    "dnsServers": {
+                        "value": "[parameters('dnsServers')]"
+                    },
+                    "name": {
+                        "value": "[concat(variables('vnetV2name'))]"
+                    },
+                    "asrSuffix": {
+                        "value": "[parameters('asrSuffix')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "[variables('rdsGatewayNicName')]",
+            "condition": "[empty(parameters('asrSuffix'))]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[parameters('globals').apiVersion.nic]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "[variables('rdsGateway').ipConfigurations[0].properties.privateIPAllocationMethod]",
+                            "privateIPAddress": "[variables('rdsGateway').ipConfigurations[0].properties.privateIPAddress]",
+                            "subnet": "[variables('rdsGateway').ipConfigurations[0].properties.subnet]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('pipName')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('globals').apiVersion.pip]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "dnsSettings": {
+                    "domainNameLabel": "[toLower(variables('basename'))]"
+                },
+                "idleTimeoutInMinutes": 30,
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', toLower(variables('basename')))]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))).IpAddress]"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[concat('pip', variables('incomingTraffic')[0].name)]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('globals').apiVersion.pip]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[variables('rdsGatewayNicName')]"
+            ],
+            "properties": {
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[0].name]"
+                },
+                "idleTimeoutInMinutes": 30,
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[0].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name))).IpAddress]"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[concat('pip', variables('incomingTraffic')[2].name)]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('globals').apiVersion.pip]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[2].name]"
+                },
+                "idleTimeoutInMinutes": 30,
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[2].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[2].name))).IpAddress]"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[concat('pip', variables('incomingTraffic')[4].name)]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('globals').apiVersion.pip]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[4].name]"
+                },
+                "idleTimeoutInMinutes": 30,
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[4].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[4].name))).IpAddress]"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[concat('pip', variables('incomingTraffic')[6].name)]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('globals').apiVersion.pip]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[6].name]"
+                },
+                "idleTimeoutInMinutes": 30,
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[6].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[6].name))).IpAddress]"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[concat('pip', variables('incomingTraffic')[8].name)]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('globals').apiVersion.pip]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[8].name]"
+                },
+                "idleTimeoutInMinutes": 30,
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[8].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[8].name))).IpAddress]"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[concat('pip', variables('incomingTraffic')[9].name)]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('globals').apiVersion.pip]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[9].name]"
+                },
+                "idleTimeoutInMinutes": 30,
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[9].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[9].name))).IpAddress]"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('lbName')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "apiVersion": "[parameters('globals').apiVersion.loadBalancer]",
+            "dependsOn": [
+                "[variables('publicIPAddressLB1Id')]",
+                "[variables('publicIPAddressLB3Id')]",
+                "[variables('publicIPAddressLB4Id')]",
+                "[variables('publicIPAddressLB5Id')]",
+                "[variables('publicIPAddressLB6Id')]",
+                "[variables('publicIPAddressLB7Id')]"
+            ],
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LB1FrontEnd",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[variables('publicIPAddressLB1Id')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "LB3FrontEnd",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[variables('publicIPAddressLB3Id')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "LB4FrontEnd",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[variables('publicIPAddressLB4Id')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "LB5FrontEnd",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[variables('publicIPAddressLB5Id')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "LB6FrontEnd",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[variables('publicIPAddressLB6Id')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "LB7FrontEnd",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[variables('publicIPAddressLB7Id')]"
+                            }
+                        }
+                    }
+                ],
+                "inboundNatRules": [
+                    {
+                        "name": "[variables('incomingTraffic')[0].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[0].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB1IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[0].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[2].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[2].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB3IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[2].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[3].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[3].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB3IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[3].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[4].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[4].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB4IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[4].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[5].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[5].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB4IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[5].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[6].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[6].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB5IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[6].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[7].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[7].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB5IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[7].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[8].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[8].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB6IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[8].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    },
+                    {
+                        "name": "[variables('incomingTraffic')[9].name]",
+                        "properties": {
+                            "backendPort": "[variables('incomingTraffic')[9].backendPort]",
+                            "frontendIPConfiguration": {
+                                "id": "[variables('LB7IPConfigId')]"
+                            },
+                            "frontendPort": "[variables('incomingTraffic')[9].frontendPort]",
+                            "protocol": "tcp"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('nic1Name')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[parameters('globals').apiVersion.nic]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'networkVnetV2WithRoutesSetup')]",
+                "[variables('lbId')]",
+                "[variables('publicIPAddressId')]"
+            ],
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "enableIPForwarding": true,
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "[parameters('globals').networkSettings.gatewayExternalIPAddress]",
+                            "privateIPAllocationMethod": "Static",
+                            "PublicIpAddress": {
+                                "Id": "[variables('publicIPAddressId')]"
+                            },
+                            "subnet": {
+                                "Id": "[variables('gatewayExternalSubnetID')]"
+                            },
+                            "loadBalancerInboundNatRules": [
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[0].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[2].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[3].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[4].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[5].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[6].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[7].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[8].name)]"
+                                },
+                                {
+                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[9].name)]"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('nic2Name')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[parameters('globals').apiVersion.nic]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'networkVnetV2WithRoutesSetup')]"
+            ],
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "enableIPForwarding": true,
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig2",
+                        "properties": {
+                            "privateIPAddress": "[parameters('globals').networkSettings.gatewayInternalIPAddress]",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[variables('gatewayInternalSubnetID')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('vmNamePortal')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "[parameters('globals').apiVersion.virtualMachine]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('nic1Name'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('nic2Name'))]"
+            ],
+            "location": "[resourceGroup().location]",
+            "plan": "[variables('plan')]",
+            "properties": {
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": "true",
+                        "storageUri": "[concat('http://', parameters('globals').storageAccountDiagnostics, replace(parameters('asrSuffix'),'-',''), '.blob.core.windows.net')]"
+                    }
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_D2_v2"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic1Name'))]",
+                            "properties": {
+                                "primary": true
+                            }
+                        },
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic2Name'))]",
+                            "properties": {
+                                "primary": false
+                            }
+                        }
+                    ]
+                },
+                "osProfile": "[variables('osProfile')]",
+                "storageProfile": {
+                    "imageReference": "[variables('imageReference')]",
+                    "osDisk": {
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage",
+                        "name": "[concat('vm', variables('basename'))]",
+                        "vhd": {
+                            "uri": "[concat('http://', parameters('globals').storageAccountAdmin, replace(parameters('asrSuffix'),'-',''),'.blob.core.windows.net/', parameters('globals').vhdContainerName, '/', variables('vmNamePortal'), '-OS.vhd')]"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "vpnPublicIps",
+            "condition": "[and(equals(parameters('globals').networkSettings.publicVpnIps, 'true'), empty(parameters('asrSuffix')))]",
+            "resourceGroup": "[resourcegroup().name]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('globals').apiVersion.deployment]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('globals').templateLinkPublicVpnIps]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "globals": {
+                        "value": "[parameters('globals')]"
+                    }
+                }
+            }
+        }
+    ]
+}
