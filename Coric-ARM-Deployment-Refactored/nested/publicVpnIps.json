@@ -47,14 +47,14 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('pipVpnRdgDns')]"
+                    "domainNameLabel": "[variables('pipVpnRdgName')]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipVpnRdgDns'))]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('pipVpnRdgName'))]",
             "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
