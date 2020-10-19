@@ -213,11 +213,22 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[toLower(variables('basename'))]",
-                    "fqdn": "[concat(toLower(variables('basename')), '.', parameters('globals').childDnsZoneName)]"
+                    "domainNameLabel": "[toLower(variables('basename'))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', toLower(variables('basename')))]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))).IpAddress]"
+                    }
+                ]
             }
         },
         {
@@ -230,11 +241,22 @@
             ],
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[0].name]",
-                    "fqdn": "[concat(variables('incomingTraffic')[0].name, '.', parameters('globals').childDnsZoneName)]"
+                    "domainNameLabel": "[variables('incomingTraffic')[0].name]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[0].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[0].name))).IpAddress]"
+                    }
+                ]
             }
         },
         {
@@ -244,11 +266,22 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[2].name]",
-                    "fqdn": "[concat(variables('incomingTraffic')[2].name, '.', parameters('globals').childDnsZoneName)]"
+                    "domainNameLabel": "[variables('incomingTraffic')[2].name]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[2].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[2].name))).IpAddress]"
+                    }
+                ]
             }
         },
         {
@@ -258,11 +291,22 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[4].name]",
-                    "fqdn": "[concat(variables('incomingTraffic')[4].name, '.', parameters('globals').childDnsZoneName)]"
+                    "domainNameLabel": "[variables('incomingTraffic')[4].name]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[4].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[4].name))).IpAddress]"
+                    }
+                ]
             }
         },
         {
@@ -272,11 +316,22 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[6].name]",
-                    "fqdn": "[concat(variables('incomingTraffic')[6].name, '.', parameters('globals').childDnsZoneName)]"
+                    "domainNameLabel": "[variables('incomingTraffic')[6].name]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[6].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[6].name))).IpAddress]"
+                    }
+                ]
             }
         },
         {
@@ -286,11 +341,22 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[8].name]",
-                    "fqdn": "[concat(variables('incomingTraffic')[8].name, '.', parameters('globals').childDnsZoneName)]"
+                    "domainNameLabel": "[variables('incomingTraffic')[8].name]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[8].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[8].name))).IpAddress]"
+                    }
+                ]
             }
         },
         {
@@ -300,11 +366,22 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[9].name]",
-                    "fqdn": "[concat(variables('incomingTraffic')[9].name, '.', parameters('globals').childDnsZoneName)]"
+                    "domainNameLabel": "[variables('incomingTraffic')[9].name]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[9].name)]",
+            "type": "Microsoft.Network/dnsZones/A",
+            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
+            "properties": {
+                "ARecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[9].name))).IpAddress]"
+                    }
+                ]
             }
         },
         {
