@@ -286,19 +286,19 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[if(empty(parameters('globals').clientAcronym), variables('incomingTraffic')[3].name, replace(variables('incomingTraffic')[4].name, parameters('globals').baseName, parameters('globals').clientAcronym))]"
+                    "domainNameLabel": "[if(empty(parameters('globals').clientAcronym), variables('incomingTraffic')[4].name, replace(variables('incomingTraffic')[4].name, parameters('globals').baseName, parameters('globals').clientAcronym))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[3].name)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[4].name)]",
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "CNAMERecord": {
-                    "cname": "[concat(variables('incomingTraffic')[3].name, variables('azureDnsZone'))]"
+                    "cname": "[concat(variables('incomingTraffic')[4].name, variables('azureDnsZone'))]"
                 }
             }
         },

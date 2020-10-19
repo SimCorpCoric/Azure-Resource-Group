@@ -41,7 +41,7 @@
 
   "resources": [
     {
-        "name": "[concat(variables('pipVpnRdgName'),'-vpn')]",
+        "name": "[variables('pipVpnRdgDns')]",
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "[parameters('globals').apiVersion.pip]",
         "location": "[resourceGroup().location]",
