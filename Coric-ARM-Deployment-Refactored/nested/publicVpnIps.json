@@ -47,6 +47,7 @@
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
+                "domainNameLabel": "[variables('pipVpnRdgDns')]",
                 "fqdn": "[concat(variables('pipVpnRdgDns'), '.', parameters('globals').childDnsZoneName)]"
             },
             "idleTimeoutInMinutes": 30,
@@ -72,6 +73,7 @@
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
+                "domainNameLabel": "[variables('pipVpnFtpDns')]",
                 "fqdn": "[concat(variables('pipVpnFtpDns'), '.', parameters('globals').childDnsZoneName)]"
             },
             "idleTimeoutInMinutes": 30,
@@ -97,6 +99,7 @@
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
+                "domainNameLabel": "[variables('pipDevSqlDns')]",
                 "fqdn": "[concat(variables('pipDevSqlDns'), '.', parameters('globals').childDnsZoneName)]"
 
             },
@@ -123,6 +126,7 @@
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
+                "domainNameLabel": "[variables('pipUatSqlDns')]",
                 "fqdn": "[concat(variables('pipUatSqlDns'), '.', parameters('globals').childDnsZoneName)]"
             },
             "idleTimeoutInMinutes": 30,
@@ -148,6 +152,7 @@
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
+                "domainNameLabel": "[variables('pipPrdSqlDns')]",
                 "fqdn": "[concat(variables('pipPrdSqlDns'), '.', parameters('globals').childDnsZoneName)]"
             },
             "idleTimeoutInMinutes": 30,
@@ -173,6 +178,7 @@
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
+                "domainNameLabel": "[variables('pipDevIisDns')]",
                 "fqdn": "[concat(variables('pipDevIisDns'), '.', parameters('globals').childDnsZoneName)]"
             },
             "idleTimeoutInMinutes": 30,
@@ -198,6 +204,7 @@
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
+                "domainNameLabel": "[variables('pipUatIisDns')]",
                 "fqdn": "[concat(variables('pipUatIisDns'), '.', parameters('globals').childDnsZoneName)]"
             },
             "idleTimeoutInMinutes": 30,
@@ -223,6 +230,7 @@
         "location": "[resourceGroup().location]",
         "properties": {
             "dnsSettings": {
+                "domainNameLabel": "[variables('pipPrdIisDns')]",
                 "fqdn": "[concat(variables('pipPrdIisDns'), '.', parameters('globals').childDnsZoneName)]"
             },
             "idleTimeoutInMinutes": 30,

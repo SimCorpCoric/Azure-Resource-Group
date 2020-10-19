@@ -214,6 +214,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
+                    "domainNameLabel": "[toLower(variables('basename'))]",
                     "fqdn": "[concat(toLower(variables('basename')), '.', parameters('globals').childDnsZoneName)]"
                 },
                 "idleTimeoutInMinutes": 30,
@@ -242,6 +243,7 @@
             ],
             "properties": {
                 "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[0].name]",
                     "fqdn": "[concat(variables('incomingTraffic')[0].name, '.', parameters('globals').childDnsZoneName)]"
                 },
                 "idleTimeoutInMinutes": 30,
@@ -267,6 +269,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[2].name]",
                     "fqdn": "[concat(variables('incomingTraffic')[2].name, '.', parameters('globals').childDnsZoneName)]"
                 },
                 "idleTimeoutInMinutes": 30,
@@ -292,6 +295,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[4].name]",
                     "fqdn": "[concat(variables('incomingTraffic')[4].name, '.', parameters('globals').childDnsZoneName)]"
                 },
                 "idleTimeoutInMinutes": 30,
@@ -317,6 +321,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[6].name]",
                     "fqdn": "[concat(variables('incomingTraffic')[6].name, '.', parameters('globals').childDnsZoneName)]"
                 },
                 "idleTimeoutInMinutes": 30,
@@ -342,6 +347,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[8].name]",
                     "fqdn": "[concat(variables('incomingTraffic')[8].name, '.', parameters('globals').childDnsZoneName)]"
                 },
                 "idleTimeoutInMinutes": 30,
@@ -367,6 +373,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
+                    "domainNameLabel": "[variables('incomingTraffic')[9].name]",
                     "fqdn": "[concat(variables('incomingTraffic')[9].name, '.', parameters('globals').childDnsZoneName)]"
                 },
                 "idleTimeoutInMinutes": 30,
