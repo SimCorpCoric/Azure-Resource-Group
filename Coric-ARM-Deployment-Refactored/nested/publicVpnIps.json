@@ -58,7 +58,6 @@
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
-            "TTL": 3600,
             "CNAMERecord": {
                 "cname": "[concat(variables('pipVpnRdgDns'), variables('azureDnsZone'))]"
             }
@@ -82,7 +81,6 @@
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
-            "TTL": 3600,
             "CNAMERecord": {
                 "cname": "[concat(variables('pipVpnFtpDns'), variables('azureDnsZone'))]"
             }
@@ -106,7 +104,6 @@
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
-            "TTL": 3600,
             "CNAMERecord": {
                 "cname": "[concat(variables('pipDevSqlDns'), variables('azureDnsZone'))]"
             }
@@ -130,7 +127,6 @@
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
-            "TTL": 3600,
             "CNAMERecord": {
                 "cname": "[concat(variables('pipUatSqlDns'), variables('azureDnsZone'))]"
             }
@@ -154,7 +150,6 @@
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
-            "TTL": 3600,
             "CNAMERecord": {
                 "cname": "[concat(variables('pipPrdSqlDns'), variables('azureDnsZone'))]"
             }
@@ -178,7 +173,6 @@
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
-            "TTL": 3600,
             "CNAMERecord": {
                 "cname": "[concat(variables('pipDevIisDns'), variables('azureDnsZone'))]"
             }
@@ -202,7 +196,6 @@
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
-            "TTL": 3600,
             "CNAMERecord": {
                 "cname": "[concat(variables('pipUatIisDns'), variables('azureDnsZone'))]"
             }
@@ -226,7 +219,6 @@
         "type": "Microsoft.Network/dnsZones/CNAME",
         "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
         "properties": {
-            "TTL": 3600,
             "CNAMERecord": {
                 "cname": "[concat(variables('pipPrdIisDns'), variables('azureDnsZone'))]"
             }
