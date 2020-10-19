@@ -58,13 +58,13 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('pipVpnRdgDns'), variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', variables('pipVpnRdgDns'))]"
                 }
             }
         },
         {
-            "name": "[variables('pipVpnFtpName')]",
+            "name": "[variables('pipVpnFtpDns')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -81,13 +81,13 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('pipVpnFtpDns'), variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', variables('pipVpnFtpDns'))]"
                 }
             }
         },
         {
-            "name": "[variables('pipDevSqlName')]",
+            "name": "[variables('pipDevSqlDns')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -104,13 +104,13 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('pipDevSqlDns'), variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', variables('pipDevSqlDns'))]"
                 }
             }
         },
         {
-            "name": "[variables('pipUatSqlName')]",
+            "name": "[variables('pipUatSqlDns')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -127,13 +127,13 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('pipUatSqlDns'), variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', variables('pipUatSqlDns'))]"
                 }
             }
         },
         {
-            "name": "[variables('pipPrdSqlName')]",
+            "name": "[variables('pipPrdSqlDns')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -150,13 +150,13 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('pipPrdSqlDns'), variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', variables('pipPrdSqlDns'))]"
                 }
             }
         },
         {
-            "name": "[variables('pipDevIisName')]",
+            "name": "[variables('pipDevIisDns')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -173,13 +173,13 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('pipDevIisDns'), variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', variables('pipDevIisDns'))]"
                 }
             }
         },
         {
-            "name": "[variables('pipUatIisName')]",
+            "name": "[variables('pipUatIisDns')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -196,13 +196,13 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('pipUatIisDns'), variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', variables('pipUatIisDns'))]"
                 }
             }
         },
         {
-            "name": "[variables('pipPrdIisName')]",
+            "name": "[variables('pipPrdIisDns')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('globals').apiVersion.pip]",
             "location": "[resourceGroup().location]",
@@ -219,8 +219,8 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('pipPrdIisDns'), variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', variables('pipPrdIisDns'))]"
                 }
             }
         }

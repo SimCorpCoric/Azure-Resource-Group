@@ -225,8 +225,8 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(toLower(variables('basename')), variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', variables('pipName'))]"
                 }
             }
         },
@@ -251,8 +251,8 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('incomingTraffic')[0].name, variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat('pip', variables('incomingTraffic')[0].name))]"
                 }
             }
         },
@@ -274,8 +274,8 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('incomingTraffic')[2].name, variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat('pip', variables('incomingTraffic')[2].name))]"
                 }
             }
         },
@@ -297,8 +297,8 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('incomingTraffic')[4].name, variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat('pip', variables('incomingTraffic')[4].name))]"
                 }
             }
         },
@@ -320,8 +320,8 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('incomingTraffic')[6].name, variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat('pip', variables('incomingTraffic')[6].name))]"
                 }
             }
         },
@@ -343,8 +343,8 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('incomingTraffic')[8].name, variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat('pip', variables('incomingTraffic')[8].name))]"
                 }
             }
         },
@@ -366,8 +366,8 @@
             "type": "Microsoft.Network/dnsZones/CNAME",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
-                "CNAMERecord": {
-                    "cname": "[concat(variables('incomingTraffic')[9].name, variables('azureDnsZone'))]"
+                "targetResource": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat('pip', variables('incomingTraffic')[0].name))]"
                 }
             }
         },
