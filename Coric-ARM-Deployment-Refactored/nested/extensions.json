@@ -77,9 +77,10 @@
     },
 
     {
-        "type": "Microsoft.Resources/deployments",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
         "name": "[concat(parameters('vmName'), '/KeyVaultExtForWindows')]",
         "apiVersion": "[parameters('globals').apiVersion.deployment]",
+        "location": "[resourceGroup().location]",
         "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), '/extensions/bgInfoExt')]"
         ],
