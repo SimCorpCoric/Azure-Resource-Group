@@ -1,5 +1,5 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "globals": {
@@ -40,7 +40,6 @@
         }
     },
     "variables": {
-        "azureDnsZone": "[concat('.', resourceGroup().location, '.cloudapp.azure.com')]",
         "vnetV2Name": "[concat(parameters('globals').networkSettings.vnetV2name, parameters('asrSuffix'))]",
         "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetV2Name'))]",
         "gatewayExternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', parameters('globals').networkSettings.vnetV2name, '-admin-external')]",
@@ -99,12 +98,12 @@
                 "backendPort": 9443
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-d-iis01-acme')]",
+                "name": "[concat(parameters('globals').baseName,'-d-iis01')]",
                 "frontendPort": 80,
                 "backendPort": 9580
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-u-iis01-acme')]",
+                "name": "[concat(parameters('globals').baseName,'-u-iis01')]",
                 "frontendPort": 80,
                 "backendPort": 9680
             }
@@ -159,7 +158,7 @@
             ]
         },
         "vmNamePortal": "[concat('vm', variables('basename'))]",
-        "vnetV2addressSpace": "[parameters('globals').networkSettings.vnetV2addressSpace]",
+        "vnetV2addressSpace": "[parameters('globals').networkSettings.vnetV2addressSpace]"
     },
     "resources": [
         {
