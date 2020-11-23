@@ -532,7 +532,9 @@
                 "linkOnRenewal": false,
                 "certificateStoreLocation": "LocalMachine",
                 "requireInitialSync": true,
-                "observedCertificates": "[concat('https://',parameters('keyVaultName'),'.vault.azure.net/secrets/', replace(variables('childDnsZoneName'), '.', 'DOT'))]"
+                "observedCertificates": [
+                    "[concat('https://',parameters('keyVaultName'),'.vault.azure.net/secrets/', replace(variables('childDnsZoneName'), '.', 'DOT'))]"
+                ]
             },
             "keyVaultCertificateUri": "[concat(parameters('keyVaultName'))]",
             "dmzServerSubnet": "[parameters('dmzServerSubnet')]",
