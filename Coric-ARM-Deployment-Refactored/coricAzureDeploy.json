@@ -447,14 +447,26 @@
             "type": "string",
             "allowedValues": [
                 "",
-                "simcorpcloud.com"
+                "simcorpcloud.com",
+                "simcorpext.net"
             ],
-            "defaultValue": "simcorpcloud.com"
+            "defaultValue": "simcorpext.net",
+            "metadata": {
+                "description": "The parent DNS zone name; e.g.: simcorpext.net"
+            }
+        },
+        "dnsChildZone": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The child DNS zone name; e.g.: troweprice."
+            }
         }
     },
     "variables": {
         "adminVnetID": "[resourceId('Microsoft.Network/virtualNetworks', concat('vn', variables('baseName'), '-v2'))]",
         "baseName": "[concat(parameters('prefix'), variables('paddedClientID'))]",
+        "childDnsZoneName": "[if(empty(parameters('dnsChildZone')), concat(parameters('clientAcronym'), '.', parameters('dnsParentZone')),  concat(parameters('dnsChildZone'), '.', parameters('dnsParentZone')))]",
         "domainSuffix": "Hosted",
         "environmentShortNameAdmin": "admin",
         "environmentShortNameDevelopment": "dev",
@@ -486,7 +498,7 @@
             "baseName": "[variables('baseName')]",
             "checkPointOffer": "[parameters('checkPointOffer')]",
             "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
-            "childDnsZoneName": "[concat(parameters('clientAcronym'), '.', parameters('dnsParentZone'))]",
+            "childDnsZoneName": "[variables('childDnsZoneName')]",
             "clientID": "[parameters('clientID')]",
             "clientAcronym": "[parameters('clientAcronym')]",
             "customScript": {
@@ -514,6 +526,15 @@
                 "sequenceVersion": "[parameters('sequenceVersion')]",
                 "vmEncryptionTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/diskEncryption.json')]"
             },
+            "keyVaultExtForWindowsSettings": {
+                "pollingIntervalInS": "3600",
+                "certificateStoreName": "MY",
+                "linkOnRenewal": false,
+                "certificateStoreLocation": "LocalMachine",
+                "requireInitialSync": true,
+                "observedCertificates": "[concat('https://',parameters('keyVaultName'),'.vault.azure.net/secrets/', replace(variables('childDnsZoneName'), '.', 'DOT'))]"
+            },
+            "keyVaultCertificateUri": "[concat(parameters('keyVaultName'))]",
             "dmzServerSubnet": "[parameters('dmzServerSubnet')]",
             "domainAdminUsername": "[parameters('domainAdminUsername')]",
             "domainName": "[concat(variables('baseName'), '.', variables('domainSuffix'))]",
