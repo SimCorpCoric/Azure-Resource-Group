@@ -451,9 +451,6 @@
             "condition": "[empty(parameters('asrSuffix'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[parameters('globals').apiVersion.deployment]",
-            "dependsOn": [
-                "UpdatingDNStoPrimaryADVM"
-            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
