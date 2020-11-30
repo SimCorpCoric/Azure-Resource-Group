@@ -461,6 +461,13 @@
             "metadata": {
                 "description": "The child DNS zone name; e.g.: troweprice."
             }
+        },
+        "certificatesKeyVaultName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Name of the Key Vault store for certificates, if any."
+            }
         }
     },
     "variables": {
@@ -496,6 +503,7 @@
             },
             "asrBuild": "[parameters('asrBuild')]",
             "baseName": "[variables('baseName')]",
+            "certificatesKeyVaultName": "[parameters('certificatesKeyVaultName')]",
             "checkPointOffer": "[parameters('checkPointOffer')]",
             "checkPointTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/checkPoint.json')]",
             "childDnsZoneName": "[variables('childDnsZoneName')]",
@@ -533,7 +541,7 @@
                 "certificateStoreLocation": "LocalMachine",
                 "requireInitialSync": true,
                 "observedCertificates": [
-                    "[concat('https://',parameters('keyVaultName'),'.vault.azure.net/secrets/', replace(variables('childDnsZoneName'), '.', 'DOT'))]"
+                    "[concat('https://',parameters('certificatesKeyVaultName'),'.vault.azure.net/secrets/', replace(variables('childDnsZoneName'), '.', 'DOT'))]"
                 ]
             },
             "keyVaultCertificateUri": "[concat(parameters('keyVaultName'))]",
