@@ -79,6 +79,7 @@
     {
         "type": "Microsoft.Compute/virtualMachines/extensions",
         "name": "[concat(parameters('vmName'), '/KeyVaultExtForWindows')]",
+        "condition": "[not(empty(parameters('globals').certificatesKeyVaultName))]",
         "apiVersion": "[parameters('globals').apiVersion.extension]",
         "location": "[resourceGroup().location]",
         "dependsOn": [
