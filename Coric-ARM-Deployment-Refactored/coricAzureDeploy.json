@@ -168,6 +168,20 @@
             "defaultValue": "",
             "type": "string"
         },
+        "extraEnv2Name": {
+            "metadata": {
+                "Description": "Name of a second extra environment to be built, will also trigger extra subnet deployment."
+            },
+            "defaultValue": "",
+            "type": "string"
+        },
+        "extraEnv2ShortName": {
+            "metadata": {
+                "Description": "Short name of a second extra environment to be built, if 'extraEnv2Name' is also provided."
+            },
+            "defaultValue": "",
+            "type": "string"
+        },
         "publicVpnIps": {
             "metadata": {
                 "Description": "If true, create public VPN IPs not be attached to any VPNs - used only in the VPN."
@@ -481,6 +495,10 @@
         "environmentShortNameUAT": "uat",
         "environmentShortNameWeb": "web",
         "extraEnv1ShortName": "[toLower(parameters('extraEnv1ShortName'))]",
+        "extraEnv2ShortName": "[toLower(parameters('extraEnv2ShortName'))]",
+        "networkEnv1Exists": "[if(empty(parameters('extraEnv1Name')), 0, 1)]",
+        "networkEnv2Exists": "[if(empty(parameters('extraEnv2Name')), 0, 1)]",
+        "networkExtraEnvCount": "[add(variables('networkEnv1Exists'), variables('networkEnv2Exists'))]",
         "globals": {
             "adminResourceGroupName": "[variables('baseName')]",
             "apiVersion": {
@@ -589,6 +607,7 @@
                 "adminSecurityID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-security')]",
                 "insightVMIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),4),'.132')]",
                 "extraEnv1ShortName": "[variables('extraEnv1ShortName')]",
+                "extraEnv2ShortName": "[variables('extraEnv2ShortName')]",
                 "gatewayExternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/', 'sn', variables('vnetV2name'), '-admin-external')]",
                 "gatewayExternalIPAddress": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',variables('octetsArr')[2],'.4')]",
                 "gatewayInternalSubnetID": "[concat(variables('adminVnetID'), '/subnets/','sn', variables('vnetV2name'), '-admin-internalgateway')]",
@@ -727,11 +746,36 @@
                     "id": 34,
                     "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv1ShortName'), '-dmz')]",
                     "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),7),'.0/26')]"
+                },
+                "subnetextraenv2desktop": {
+                    "id": 30,
+                    "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv2ShortName'), '-desktop')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),6),'.0/26')]"
+                },
+                "subnetextraenv2web": {
+                    "id": 31,
+                    "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv2ShortName'), '-web')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),6),'.64/26')]"
+                },
+                "subnetextraenv2application": {
+                    "id": 32,
+                    "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv2ShortName'), '-application')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),6),'.128/26')]"
+                },
+                "subnetextraenv2database": {
+                    "id": 33,
+                    "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv2ShortName'), '-database')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),6),'.192/26')]"
+                },
+                "subnetextraenv2dmz": {
+                    "id": 34,
+                    "name": "[concat('sn', variables('vnetV2name'), '-', variables('extraEnv2ShortName'), '-dmz')]",
+                    "prefix": "[concat(variables('octetsArr')[0],'.',variables('octetsArr')[1],'.',add(int(variables('octetsArr')[2]),7),'.64/26')]"
                 }
             },
             "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
-            "networkVnetV2TemplateLink": "[if(empty(parameters('extraEnv1Name')), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithExtraEnv1.json'))]",
-            "networkVnetV2WithRoutesTemplateLink": "[if(empty(parameters('extraEnv1Name')), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json'),  uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutesWithExtraEnv1.json'))]",
+            "networkVnetV2TemplateLink": "[if(equals(variables('networkExtraEnvCount'), 0), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json'),  uri(deployment().properties.templateLink.uri, concat('nested/networkNewVnetWithExtraEnv', variables('networkExtraEnvCount'), '.json')))]",
+            "networkVnetV2WithRoutesTemplateLink": "[if(equals(variables('networkExtraEnvCount'), 0), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json'), uri(deployment().properties.templateLink.uri, concat('nested/networkNewVnetWithExtraEnv', variables('networkExtraEnvCount'), '.json')))]",
             "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
             "ou": {
                 "serverRoles": "OU=Coric Computers;",

@@ -12,8 +12,6 @@
     },
 
     "variables": {
-        "azureDnsZone": "[concat('.', resourceGroup().location, '.cloudapp.azure.com')]",
-
         "pipVpnRdgName": "[concat('pip', parameters('globals').baseName, '-rdg01')]",
         "pipVpnRdgDns": "[toLower(concat(variables('pipVpnRdgName'),'-vpn'))]",
 

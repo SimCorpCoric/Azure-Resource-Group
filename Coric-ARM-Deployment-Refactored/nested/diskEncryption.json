@@ -53,6 +53,9 @@
       ],
       "name": "[parameters('vmName')]",
       "location": "[resourceGroup().location]",
+        "identity": {
+            "type": "SystemAssigned"
+        },
       "properties": {
         "storageProfile": {
           "osDisk": {

@@ -628,6 +628,9 @@
                 "[concat('Microsoft.Network/networkInterfaces/', variables('nic2Name'))]"
             ],
             "location": "[resourceGroup().location]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
             "plan": "[variables('plan')]",
             "properties": {
                 "diagnosticsProfile": {

@@ -34,6 +34,9 @@
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('vmName')]",
       "location": "[resourceGroup().location]",
+        "identity": {
+            "type": "SystemAssigned"
+        },
       "properties": {
         "storageProfile": {
           "dataDisks": "[parameters('machineSettings').dataDisks]"
