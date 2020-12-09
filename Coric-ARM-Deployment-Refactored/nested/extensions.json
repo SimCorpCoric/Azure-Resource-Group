@@ -77,38 +77,11 @@
     },
 
     {
-        "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(parameters('vmName'), '/KeyVaultExtForWindows')]",
-        "condition": "[not(empty(parameters('globals').certificatesKeyVaultName))]",
-        "apiVersion": "[parameters('globals').apiVersion.extension]",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), '/extensions/bgInfoExt')]"
-        ],
-        "properties": {
-            "publisher": "Microsoft.Azure.KeyVault",
-            "type": "KeyVaultForWindows",
-            "typeHandlerVersion": "1.0",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-                "secretsManagementSettings": {
-                    "pollingIntervalInS": "[parameters('globals').keyVaultExtForWindowsSettings.pollingIntervalInS]",
-                    "certificateStoreName": "[parameters('globals').keyVaultExtForWindowsSettings.certificateStoreName]",
-                    "linkOnRenewal": "[parameters('globals').keyVaultExtForWindowsSettings.linkOnRenewal]",
-                    "certificateStoreLocation": "[parameters('globals').keyVaultExtForWindowsSettings.certificateStoreLocation]",
-                    "requireInitialSync": "[parameters('globals').keyVaultExtForWindowsSettings.requireInitialSync]",
-                    "observedCertificates": "[parameters('globals').keyVaultExtForWindowsSettings.observedCertificates]"
-                }
-            }
-        }
-    },
-
-    {
       "type": "Microsoft.Resources/deployments",
       "name": "[concat(parameters('vmName'), '-Encryption')]",
       "apiVersion": "[parameters('globals').apiVersion.deployment]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), '/extensions/KeyVaultExtForWindows')]"
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), '/extensions/bgInfoExt')]"
       ],
       "properties": {
         "mode": "Incremental",
