@@ -775,7 +775,7 @@
             },
             "networkTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/network.json')]",
             "networkVnetV2TemplateLink": "[if(equals(variables('networkExtraEnvCount'), 0), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnet.json'),  uri(deployment().properties.templateLink.uri, concat('nested/networkNewVnetWithExtraEnv', variables('networkExtraEnvCount'), '.json')))]",
-            "networkVnetV2WithRoutesTemplateLink": "[if(equals(variables('networkExtraEnvCount'), 0), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json'), uri(deployment().properties.templateLink.uri, concat('nested/networkNewVnetWithExtraEnv', variables('networkExtraEnvCount'), '.json')))]",
+            "networkVnetV2WithRoutesTemplateLink": "[if(equals(variables('networkExtraEnvCount'), 0), uri(deployment().properties.templateLink.uri, 'nested/networkNewVnetWithRoutes.json'), uri(deployment().properties.templateLink.uri, concat('nested/networkNewVnetWithRoutesWithExtraEnv', variables('networkExtraEnvCount'), '.json')))]",
             "networkWithDNSTemplateLink": "[uri(deployment().properties.templateLink.uri, 'nested/networkWithDNS.json')]",
             "ou": {
                 "serverRoles": "OU=Coric Computers;",
