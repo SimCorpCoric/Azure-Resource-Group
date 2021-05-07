@@ -341,29 +341,6 @@
             }
         },
         {
-            "name": "[concat('pip', variables('incomingTraffic')[9].name)]",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "[parameters('globals').apiVersion.pip]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[9].name]"
-                },
-                "idleTimeoutInMinutes": 30,
-                "publicIPAllocationMethod": "Static"
-            }
-        },
-        {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[9].name)]",
-            "type": "Microsoft.Network/dnsZones/A",
-            "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
-            "properties": {
-                "targetResource": {
-                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat('pip', variables('incomingTraffic')[0].name))]"
-                }
-            }
-        },
-        {
             "name": "[variables('lbName')]",
             "type": "Microsoft.Network/loadBalancers",
             "apiVersion": "[parameters('globals').apiVersion.loadBalancer]",
