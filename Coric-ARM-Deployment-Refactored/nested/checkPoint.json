@@ -262,7 +262,7 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[2].name)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', split(variables('incomingTraffic')[2].name, '-')[1], split(variables('incomingTraffic')[2].name, '-')[2])]",
             "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
@@ -285,7 +285,7 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[4].name)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', split(variables('incomingTraffic')[4].name, '-')[1], split(variables('incomingTraffic')[4].name, '-')[2])]",
             "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
@@ -308,7 +308,7 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[6].name)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', split(variables('incomingTraffic')[6].name, '-')[1], split(variables('incomingTraffic')[6].name, '-')[2])]",
             "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
