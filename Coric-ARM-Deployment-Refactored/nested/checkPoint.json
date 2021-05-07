@@ -324,7 +324,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "dnsSettings": {
-                    "domainNameLabel": "[variables('incomingTraffic')[8].name]"
+                    "domainNameLabel": "[if(empty(parameters('globals').clientAcronym), variables('incomingTraffic')[8].name, replace(variables('incomingTraffic')[8].name, parameters('globals').baseName, parameters('globals').clientAcronym))]"
                 },
                 "idleTimeoutInMinutes": 30,
                 "publicIPAllocationMethod": "Static"
