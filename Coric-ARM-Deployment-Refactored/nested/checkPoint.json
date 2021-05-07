@@ -98,7 +98,7 @@
                 "backendPort": 9443
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-ftp01')]",
+                "name": "[concat(parameters('globals').baseName,'-ftp01-public')]",
                 "frontendPort": 22,
                 "backendPort": 9522
             }
@@ -331,7 +331,7 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', last(split(variables('incomingTraffic')[8].name, '-')))]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', 'ftp')]",
             "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
