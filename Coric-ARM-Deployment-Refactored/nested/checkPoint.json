@@ -98,14 +98,9 @@
                 "backendPort": 9443
             },
             {
-                "name": "[concat(parameters('globals').baseName,'-d-iis01')]",
-                "frontendPort": 80,
-                "backendPort": 9580
-            },
-            {
-                "name": "[concat(parameters('globals').baseName,'-u-iis01')]",
-                "frontendPort": 80,
-                "backendPort": 9680
+                "name": "[concat(parameters('globals').baseName,'-ftp01')]",
+                "frontendPort": 22,
+                "backendPort": 9522
             }
         ],
         "installSecurityGateway": true,
@@ -115,7 +110,6 @@
         "LB4IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB4FrontEnd')]",
         "LB5IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB5FrontEnd')]",
         "LB6IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB6FrontEnd')]",
-        "LB7IPConfigId": "[concat(variables('lbId'), '/frontendIPConfigurations/LB7FrontEnd')]",
         "lbId": "[resourceId('Microsoft.Network/loadBalancers', variables('lbName'))]",
         "lbName": "lbCheckPointGateway",
         "managementGUIClientNetwork": "0.0.0.0/0",
@@ -140,7 +134,6 @@
         "publicIPAddressLB4Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[4].name))]",
         "publicIPAddressLB5Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[6].name))]",
         "publicIPAddressLB6Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[8].name))]",
-        "publicIPAddressLB7Id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', variables('incomingTraffic')[9].name))]",
         "rdsGatewayNicName": "[concat('nicadmin-vm', variables('rdsGateway').basename, '01')]",
         "rdsGateway": {
             "basename": "[concat(parameters('globals').baseName, '-rdg')]",
@@ -379,8 +372,7 @@
                 "[variables('publicIPAddressLB3Id')]",
                 "[variables('publicIPAddressLB4Id')]",
                 "[variables('publicIPAddressLB5Id')]",
-                "[variables('publicIPAddressLB6Id')]",
-                "[variables('publicIPAddressLB7Id')]"
+                "[variables('publicIPAddressLB6Id')]"
             ],
             "location": "[resourceGroup().location]",
             "properties": {
@@ -422,14 +414,6 @@
                         "properties": {
                             "publicIPAddress": {
                                 "id": "[variables('publicIPAddressLB6Id')]"
-                            }
-                        }
-                    },
-                    {
-                        "name": "LB7FrontEnd",
-                        "properties": {
-                            "publicIPAddress": {
-                                "id": "[variables('publicIPAddressLB7Id')]"
                             }
                         }
                     }
@@ -522,17 +506,6 @@
                             "frontendPort": "[variables('incomingTraffic')[8].frontendPort]",
                             "protocol": "tcp"
                         }
-                    },
-                    {
-                        "name": "[variables('incomingTraffic')[9].name]",
-                        "properties": {
-                            "backendPort": "[variables('incomingTraffic')[9].backendPort]",
-                            "frontendIPConfiguration": {
-                                "id": "[variables('LB7IPConfigId')]"
-                            },
-                            "frontendPort": "[variables('incomingTraffic')[9].frontendPort]",
-                            "protocol": "tcp"
-                        }
                     }
                 ]
             }
@@ -585,9 +558,6 @@
                                 },
                                 {
                                     "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[8].name)]"
-                                },
-                                {
-                                    "id": "[concat(variables('lbId'), '/inboundNatRules/', variables('incomingTraffic')[9].name)]"
                                 }
                             ]
                         }
