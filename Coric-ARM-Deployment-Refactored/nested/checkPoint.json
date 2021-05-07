@@ -331,12 +331,12 @@
             }
         },
         {
-            "name": "[concat(parameters('globals').childDnsZoneName, '/', variables('incomingTraffic')[8].name)]",
+            "name": "[concat(parameters('globals').childDnsZoneName, '/', last(split(variables('incomingTraffic')[8].name, '-')))]",
             "type": "Microsoft.Network/dnsZones/A",
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
-                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', last(split(variables('incomingTraffic')[8].name, '-')))]"
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat('pip', variables('incomingTraffic')[8].name))]"
                 }
             }
         },
