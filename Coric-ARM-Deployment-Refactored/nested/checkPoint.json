@@ -336,7 +336,7 @@
             "apiVersion": "[parameters('globals').apiVersion.dnsZone]",
             "properties": {
                 "targetResource": {
-                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat('pip', variables('incomingTraffic')[8].name))]"
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses/', last(split(variables('incomingTraffic')[8].name, '-')))]"
                 }
             }
         },
